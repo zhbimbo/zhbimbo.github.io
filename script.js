@@ -6,16 +6,36 @@ ymaps.ready(() => {
 
     let placemarks = []; // Массив для хранения всех маркеров
 
+    // Функция для определения иконки по рейтингу
+    const getIconByRating = (rating) => {
+        if (rating >= 4) {
+            return 'icons/star-green.png'; // Зелёная звезда
+        } else if (rating >= 3) {
+            return 'icons/star-yellow.png'; // Жёлтая звезда
+        } else {
+            return 'icons/star-red.png'; // Красная звезда
+        }
+    };
+
     // Загрузка данных о заведениях
     fetch('data.json')
         .then(response => response.json())
         .then(data => {
             data.forEach(place => {
+                const rating = parseFloat(place.description.match(/\d\.\d/)[0]); // Извлекаем рейтинг
+                const icon = getIconByRating(rating); // Определяем иконку
+
                 const placemark = new ymaps.Placemark(
                     place.coordinates,
                     {
                         balloonContentHeader: place.name,
                         balloonContentBody: `${place.description} <br> <a href="${place.reviewLink}" target="_blank">Читать обзор</a>`
+                    },
+                    {
+                        iconLayout: 'default#image',
+                        iconImageHref: icon, // Указываем иконку
+                        iconImageSize: [30, 30], // Размер иконки
+                        iconImageOffset: [-15, -15] // Смещение иконки
                     }
                 );
                 placemarks.push(placemark); // Сохраняем маркер
