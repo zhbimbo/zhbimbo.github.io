@@ -32,10 +32,8 @@ ymaps.ready(() => {
 
         // Фильтруем заведения
         if (selectedRating === 'all') {
-            // Если выбрано "Все", показываем все маркеры
             placemarks.forEach(placemark => map.geoObjects.add(placemark));
         } else {
-            // Иначе показываем только заведения с выбранным рейтингом
             placemarks.forEach(placemark => {
                 const rating = parseFloat(placemark.properties.get('balloonContentBody').match(/\d\.\d/)[0]);
                 if (rating >= parseFloat(selectedRating)) {
@@ -43,5 +41,21 @@ ymaps.ready(() => {
                 }
             });
         }
+    });
+
+    // Поиск по названию или адресу
+    document.getElementById('searchInput').addEventListener('input', (event) => {
+        const query = event.target.value.toLowerCase(); // Введённый текст
+
+        // Сначала удаляем все маркеры с карты
+        placemarks.forEach(placemark => map.geoObjects.remove(placemark));
+
+        // Фильтруем заведения
+        placemarks.forEach(placemark => {
+            const name = placemark.properties.get('balloonContentHeader').toLowerCase();
+            if (name.includes(query)) {
+                map.geoObjects.add(placemark);
+            }
+        });
     });
 });
