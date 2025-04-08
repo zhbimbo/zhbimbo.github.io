@@ -1,3 +1,4 @@
+/* Базовые стили */
 body {
     font-family: Arial, sans-serif;
     margin: 0;
@@ -7,9 +8,37 @@ body {
 h1 {
     text-align: center;
     margin: 20px 0;
+    font-size: 1.5rem; /* Уменьшаем размер заголовка */
 }
 
 #map {
     width: 100%;
-    height: 80vh;
+    height: 70vh; /* Уменьшаем высоту карты для мобильных устройств */
+}
+
+/* Поле поиска и фильтр */
+#ratingFilter,
+#searchInput {
+    width: 90%; /* Занимают почти всю ширину экрана */
+    padding: 10px; /* Увеличиваем отступы для удобства касания */
+    font-size: 1rem; /* Увеличиваем размер текста */
+    margin: 10px auto; /* Центрируем элементы */
+    display: block;
+}
+
+/* Медиа-запросы для мобильных устройств */
+@media (max-width: 600px) {
+    h1 {
+        font-size: 1.2rem; /* Ещё меньше заголовок */
+    }
+
+    #map {
+        height: 60vh; /* Уменьшаем высоту карты */
+    }
+
+    #ratingFilter,
+    #searchInput {
+        width: 95%; /* Занимают ещё больше места */
+        font-size: 1.2rem; /* Увеличиваем размер текста */
+    }
 }
