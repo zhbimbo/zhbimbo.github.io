@@ -4,15 +4,12 @@ ymaps.ready(() => {
         zoom: 12
     });
 
+    let placemarks = []; // Массив для хранения всех маркеров
+
+    // Загрузка данных о заведениях
     fetch('data.json')
-        .then(response => {
-            if (!response.ok) {
-                throw new Error(`Ошибка загрузки данных: ${response.status}`);
-            }
-            return response.json();
-        })
+        .then(response => response.json())
         .then(data => {
-            console.log('Данные успешно загружены:', data); // Проверка в консоли
             data.forEach(place => {
                 const placemark = new ymaps.Placemark(
                     place.coordinates,
@@ -21,10 +18,30 @@ ymaps.ready(() => {
                         balloonContentBody: `${place.description} <br> <a href="${place.reviewLink}" target="_blank">Читать обзор</a>`
                     }
                 );
-                map.geoObjects.add(placemark);
+                placemarks.push(placemark); // Сохраняем маркер
+                map.geoObjects.add(placemark); // Добавляем маркер на карту
             });
-        })
-        .catch(error => {
-            console.error('Ошибка:', error); // Вывод ошибки в консоль
         });
+
+    // Фильтрация по рейтингу
+    document.getElementById('ratingFilter').addEventListener('change', (event) => {
+        const selectedRating = event.target.value;
+
+        // Сначала удаляем все маркеры с карты
+        placemarks.forEach(placemark => map.geoObjects.remove(placemark));
+
+        // Фильтруем заведения
+        if (selectedRating === 'all') {
+            // Если выбрано "Все", показываем все маркеры
+            placemarks.forEach(placemark => map.geoObjects.add(placemark));
+        } else {
+            // Иначе показываем только заведения с выбранным рейтингом
+            placemarks.forEach(placemark => {
+                const rating = parseFloat(placemark.properties.get('balloonContentBody').match(/\d\.\d/)[0]);
+                if (rating >= parseFloat(selectedRating)) {
+                    map.geoObjects.add(placemark);
+                }
+            });
+        }
+    });
 });
