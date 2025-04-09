@@ -145,15 +145,10 @@ document.getElementById('searchInput')?.addEventListener('input', (event) => {
     updateStats(filteredPlacemarks.length);
 });
 
-// Обработчики событий для кнопок управления фильтрами и легендой
+// Обработчики событий для кнопок управления фильтрами
 document.getElementById('toggleFilters')?.addEventListener('click', () => {
     const filtersPanel = document.getElementById('filters-panel');
     filtersPanel.classList.toggle('visible');
-});
-
-document.getElementById('toggleLegend')?.addEventListener('click', () => {
-    const legend = document.getElementById('legend');
-    legend.classList.toggle('hidden');
 });
 
 // Функция для открытия кастомного всплывающего окна
@@ -191,15 +186,41 @@ document.getElementById('close-balloon')?.addEventListener('click', () => {
 // Drag-and-drop для кастомного всплывающего окна
 interact('#custom-balloon')
     .draggable({
+        modifiers: [
+            interact.modifiers.restrictEdges({
+                outer: 'parent',
+                endOnly: true
+            }),
+            interact.modifiers.restrict({
+                restriction: 'parent',
+                endOnly: true,
+                elementRect: { top: 0, left: 0, bottom: 1, right: 1 }
+            })
+        ],
+        inertia: true,
         listeners: {
             move(event) {
                 const target = event.target;
-                const x = (parseFloat(target.getAttribute('data-x')) || 0) + event.dx;
                 const y = (parseFloat(target.getAttribute('data-y')) || 0) + event.dy;
 
-                target.style.transform = `translate(${x}px, ${y}px)`;
-                target.setAttribute('data-x', x);
-                target.setAttribute('data-y', y);
+                // Ограничиваем перемещение по оси Y
+                if (y > 0 && y < window.innerHeight * 0.8) {
+                    target.style.transform = `translateY(${y}px)`;
+                    target.setAttribute('data-y', y);
+                }
+            },
+            end(event) {
+                const target = event.target;
+                const y = parseFloat(target.getAttribute('data-y')) || 0;
+
+                // Если блок вытянут больше чем на половину экрана, открываем его полностью
+                if (y > window.innerHeight * 0.4) {
+                    target.style.transform = `translateY(0)`;
+                    target.setAttribute('data-y', 0);
+                } else {
+                    target.style.transform = `translateY(100%)`;
+                    target.setAttribute('data-y', window.innerHeight);
+                }
             }
         }
     });
