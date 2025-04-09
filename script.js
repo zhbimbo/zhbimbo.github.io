@@ -119,4 +119,3 @@ ymaps.ready(() => {
         // Обновляем статистику
         updateStats(filteredPlacemarks.length);
     });
-});
