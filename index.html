@@ -59,5 +59,23 @@
     <div id="stats" style="text-align: center; margin-top: 20px; font-size: 1.2rem; color: #333;">
         Найдено: <span id="count">0</span> заведений
     </div>
+
+    <!-- Кастомное всплывающее окно -->
+    <div id="custom-balloon" class="hidden">
+        <div id="balloon-content">
+            <div id="balloon-header">
+                <h2 id="balloon-title"></h2>
+                <button id="close-balloon">✖</button>
+            </div>
+            <div id="balloon-body">
+                <img id="balloon-image" alt="Фото заведения">
+                <p><b>Адрес:</b> <span id="balloon-address"></span></p>
+                <p><b>Телефон:</b> <span id="balloon-phone"></span></p>
+                <p><b>Режим работы:</b> <span id="balloon-hours"></span></p>
+                <p><b>Рейтинг:</b> <span id="balloon-rating"></span></p>
+                <a id="balloon-review-link" target="_blank">Читать обзор</a>
+            </div>
+        </div>
+    </div>
 </body>
 </html>
