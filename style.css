@@ -1,3 +1,56 @@
+/* Общий стиль */
+body {
+    margin: 0;
+    font-family: Arial, sans-serif;
+    background-color: #f9f9f9;
+}
+
+/* Заголовок поверх карты */
+#header {
+    position: absolute;
+    top: 20px;
+    left: 50%;
+    transform: translateX(-50%);
+    z-index: 1000;
+    background-color: rgba(255, 255, 255, 0.9);
+    padding: 10px 20px;
+    border-radius: 10px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+#header h1 {
+    margin: 0;
+    font-size: 1.5rem;
+    color: #333;
+    text-align: center;
+}
+
+/* Кнопки управления */
+#controls {
+    position: absolute;
+    top: 70px;
+    right: 20px;
+    z-index: 1000;
+    display: flex;
+    gap: 10px;
+}
+
+#controls button {
+    padding: 10px 15px;
+    font-size: 0.9rem;
+    background-color: #fff;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+#controls button:hover {
+    background-color: #007bff;
+    color: #fff;
+    border-color: #007bff;
+}
+
 /* Карта */
 #map {
     position: relative;
@@ -11,16 +64,22 @@
 /* Панель фильтров */
 #filters-panel {
     position: absolute;
-    top: 20px;
+    top: 120px;
     right: 20px;
     z-index: 1000;
-    display: flex;
-    flex-direction: column;
-    gap: 10px;
     background-color: #fff;
     padding: 15px;
     border-radius: 10px;
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    max-height: 60vh;
+    overflow-y: auto;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.hidden {
+    display: none;
 }
 
 #filters-panel select,
@@ -50,6 +109,7 @@
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
     font-size: 0.9rem;
     line-height: 1.5;
+    max-width: 200px;
 }
 
 #legend img {
@@ -61,15 +121,10 @@
 /* Адаптивность */
 @media (max-width: 600px) {
     #filters-panel {
-        flex-direction: row;
-        flex-wrap: wrap;
-        gap: 5px;
-    }
-
-    #filters-panel select,
-    #filters-panel input {
-        flex: 1;
-        min-width: 100px;
+        top: 100px;
+        right: 10px;
+        padding: 10px;
+        max-height: 50vh;
     }
 
     #legend {
@@ -80,25 +135,33 @@
     }
 }
 
-/* Скрываем кнопку "Слои" */
-.ymaps-2-1-79-controls-pane .ymaps-2-1-79-control {
-    display: none !important;
+/* Улучшение балунов */
+.ymaps-2-1-79-balloon__content {
+    background-color: #fff;
+    border-radius: 10px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    padding: 15px;
+    font-size: 0.9rem;
+    color: #333;
+    max-width: 300px;
 }
 
-/* Контейнер для кастомного маркера */
-.custom-placemark {
-    position: relative;
-    display: flex;
-    justify-content: center;
-    align-items: center;
+.ymaps-2-1-79-balloon__close-button {
+    display: none;
 }
 
-/* Эффект свечения */
-.custom-placemark img {
-    filter: drop-shadow(0 0 10px rgba(255, 255, 0, 0.8)); /* Жёлтое свечение */
-    transition: filter 0.3s ease; /* Плавный переход */
+/* Анимация появления балуна */
+.ymaps-2-1-79-balloon__pane {
+    animation: fadeIn 0.3s ease;
 }
 
-.custom-placemark img:hover {
-    filter: drop-shadow(0 0 15px rgba(255, 255, 0, 1)); /* Усиленное свечение при наведении */
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(-10px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
 }
