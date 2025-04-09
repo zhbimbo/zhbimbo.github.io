@@ -28,8 +28,17 @@ ymaps.ready(() => {
                 const placemark = new ymaps.Placemark(
                     place.coordinates,
                     {
-                        balloonContentHeader: place.name,
-                        balloonContentBody: `${place.description} <br> <a href="${place.reviewLink}" target="_blank">Читать обзор</a>`
+                        balloonContentHeader: `<b>${place.name}</b>`,
+                        balloonContentBody: `
+                            <div style="text-align: center;">
+                                <img src="${place.photo}" alt="${place.name}" style="width: 100%; max-width: 200px; margin-bottom: 10px;">
+                                <p><b>Адрес:</b> ${place.address}</p>
+                                <p><b>Телефон:</b> ${place.phone}</p>
+                                <p><b>Режим работы:</b> ${place.hours}</p>
+                                <p><b>Рейтинг:</b> ${place.description}</p>
+                                <a href="${place.reviewLink}" target="_blank" style="color: blue;">Читать обзор</a>
+                            </div>
+                        `
                     },
                     {
                         iconLayout: 'default#image',
