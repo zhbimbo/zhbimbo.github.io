@@ -38,7 +38,6 @@ ymaps.ready(() => {
             }
 
             data.forEach(place => {
-                console.log('Место:', place); // Проверяем каждое место
                 const rating = parseFloat(place.description.match(/\d\.\d/)[0]); // Извлекаем рейтинг
                 const icon = getIconByRating(rating); // Определяем иконку
 
@@ -68,6 +67,11 @@ ymaps.ready(() => {
 
                 placemarks.push(placemark);
                 map.geoObjects.add(placemark); // Добавляем маркер на карту
+
+                // Обработчик клика на маркер
+                placemark.events.add('click', () => {
+                    openCustomBalloon(place);
+                });
             });
 
             updateStats(placemarks.length); // Обновляем статистику
@@ -145,4 +149,36 @@ document.getElementById('toggleFilters')?.addEventListener('click', () => {
 document.getElementById('toggleLegend')?.addEventListener('click', () => {
     const legend = document.getElementById('legend');
     legend.classList.toggle('hidden');
+});
+
+// Функция для открытия кастомного всплывающего окна
+const openCustomBalloon = (place) => {
+    const balloon = document.getElementById('custom-balloon');
+    const title = document.getElementById('balloon-title');
+    const image = document.getElementById('balloon-image');
+    const address = document.getElementById('balloon-address');
+    const phone = document.getElementById('balloon-phone');
+    const hours = document.getElementById('balloon-hours');
+    const rating = document.getElementById('balloon-rating');
+    const reviewLink = document.getElementById('balloon-review-link');
+
+    // Заполняем данные
+    title.textContent = place.name;
+    image.src = place.photo;
+    address.textContent = place.address;
+    phone.textContent = place.phone;
+    hours.textContent = place.hours;
+    rating.textContent = place.description;
+    reviewLink.href = place.reviewLink;
+
+    // Открываем всплывающее окно
+    balloon.classList.remove('hidden');
+    balloon.classList.add('visible');
+};
+
+// Закрытие кастомного всплывающего окна
+document.getElementById('close-balloon')?.addEventListener('click', () => {
+    const balloon = document.getElementById('custom-balloon');
+    balloon.classList.remove('visible');
+    balloon.classList.add('hidden');
 });
