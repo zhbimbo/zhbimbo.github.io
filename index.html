@@ -5,6 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Кальянный Патруль</title>
     <script src="https://api-maps.yandex.ru/2.1/?apikey=767b6b86-29dc-4346-b485-2ec344f0e567&lang=ru_RU" type="text/javascript"></script>
+    <script src="https://cdn.jsdelivr.net/npm/interactjs/dist/interact.min.js"></script>
     <link rel="stylesheet" href="style.css">
     <script src="script.js" defer></script>
 </head>
@@ -22,6 +23,11 @@
 
     <!-- Карта -->
     <div id="map"></div>
+
+    <!-- Блок статистики поверх карты -->
+    <div id="stats-overlay">
+        Найдено: <span id="count">0</span> заведений
+    </div>
 
     <!-- Панель фильтров -->
     <div id="filters-panel" class="hidden">
@@ -49,19 +55,14 @@
     </div>
 
     <!-- Легенда -->
-    <div id="legend" class="hidden">
+    <div id="legend">
         <p><img src="icons/star-green.png" alt="Зелёная звезда"> ⭐ 4+</p>
         <p><img src="icons/star-yellow.png" alt="Жёлтая звезда"> ⭐ 3–3.9</p>
         <p><img src="icons/star-red.png" alt="Красная звезда"> ⭐ 2 и ниже</p>
     </div>
 
-    <!-- Блок для статистики -->
-    <div id="stats" style="text-align: center; margin-top: 20px; font-size: 1.2rem; color: #333;">
-        Найдено: <span id="count">0</span> заведений
-    </div>
-
     <!-- Кастомное всплывающее окно -->
-    <div id="custom-balloon" class="hidden">
+    <div id="custom-balloon" class="hidden draggable">
         <div id="balloon-content">
             <div id="balloon-header">
                 <h2 id="balloon-title"></h2>
