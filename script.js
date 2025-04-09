@@ -51,6 +51,8 @@ ymaps.ready(() => {
                 placemarks.push(placemark); // Сохраняем маркер
                 map.geoObjects.add(placemark); // Добавляем маркер на карту
             });
+
+            updateStats(placemarks.length); // Обновляем статистику
         });
 
     // Функция для фильтрации маркеров
@@ -63,7 +65,7 @@ ymaps.ready(() => {
         placemarks.forEach(placemark => map.geoObjects.remove(placemark));
 
         // Фильтруем заведения
-        placemarks.forEach(placemark => {
+        const filteredPlacemarks = placemarks.filter(placemark => {
             const rating = parseFloat(placemark.properties.get('balloonContentBody').match(/\d\.\d/)[0]);
             const district = placemark.properties.get('balloonContentBody').match(/<b>Адрес:<\/b> ([^<]+)/)[1].split(',')[1].trim();
             const hours = placemark.properties.get('balloonContentBody').match(/<b>Режим работы:<\/b> ([^<]+)/)[1];
@@ -72,10 +74,19 @@ ymaps.ready(() => {
             const matchesDistrict = selectedDistrict === 'all' || district === selectedDistrict;
             const matchesHours = selectedHours === 'all' || hours === selectedHours;
 
-            if (matchesRating && matchesDistrict && matchesHours) {
-                map.geoObjects.add(placemark);
-            }
+            return matchesRating && matchesDistrict && matchesHours;
         });
+
+        // Добавляем подходящие маркеры на карту
+        filteredPlacemarks.forEach(placemark => map.geoObjects.add(placemark));
+
+        // Обновляем статистику
+        updateStats(filteredPlacemarks.length);
+    };
+
+    // Функция для обновления статистики
+    const updateStats = (count) => {
+        document.getElementById('count').innerText = count;
     };
 
     // Обработчики событий для фильтров
@@ -91,11 +102,15 @@ ymaps.ready(() => {
         placemarks.forEach(placemark => map.geoObjects.remove(placemark));
 
         // Фильтруем заведения
-        placemarks.forEach(placemark => {
+        const filteredPlacemarks = placemarks.filter(placemark => {
             const name = placemark.properties.get('balloonContentHeader').toLowerCase();
-            if (name.includes(query)) {
-                map.geoObjects.add(placemark);
-            }
+            return name.includes(query);
         });
+
+        // Добавляем подходящие маркеры на карту
+        filteredPlacemarks.forEach(placemark => map.geoObjects.add(placemark));
+
+        // Обновляем статистику
+        updateStats(filteredPlacemarks.length);
     });
 });
