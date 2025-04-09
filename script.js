@@ -74,7 +74,6 @@ fetch('data.json')
     .catch(error => {
         console.error('Ошибка загрузки данных:', error);
     });
-});
 const updateStats = (count) => {
     const countElement = document.getElementById('count');
     if (countElement) {
