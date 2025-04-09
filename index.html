@@ -4,71 +4,46 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Кальянный Патруль</title>
+    <script src="https://api-maps.yandex.ru/2.1/?apikey=ВАШ_КЛЮЧ_API&lang=ru_RU" type="text/javascript"></script>
     <link rel="stylesheet" href="style.css">
-    <script src="https://api-maps.yandex.ru/2.1/?apikey=767b6b86-29dc-4346-b485-2ec344f0e567&lang=ru_RU" type="text/javascript"></script>
     <script src="script.js" defer></script>
 </head>
 <body>
-    <h1>📍 Карта Кальянного Патруля</h1>
+    <h1 style="text-align: center;">📍 Карта Кальянного Патруля</h1>
 
-    <!-- Выбор рейтинга -->
-    <div style="text-align: center; margin-bottom: 20px;">
-        <label for="ratingFilter">Фильтр по рейтингу:</label>
-        <select id="ratingFilter">
-            <option value="all">Все</option>
-            <option value="5">⭐ 5+</option>
-            <option value="4">⭐ 4+</option>
-            <option value="3">⭐ 3+</option>
-            <option value="2">⭐ 2+</option>
-            <option value="1">⭐ 1+</option>
-        </select>
-    </div>
+    <!-- Карта -->
+    <div id="map">
+        <!-- Панель фильтров -->
+        <div id="filters-panel">
+            <select id="ratingFilter">
+                <option value="all">⭐ Все рейтинги</option>
+                <option value="5">⭐ 5+</option>
+                <option value="4">⭐ 4+</option>
+                <option value="3">⭐ 3+</option>
+                <option value="2">⭐ 2+</option>
+                <option value="1">⭐ 1+</option>
+            </select>
+            <select id="districtFilter">
+                <option value="all">📍 Все районы</option>
+                <option value="САО">📍 САО</option>
+                <option value="ЦАО">📍 ЦАО</option>
+                <option value="ЮВАО">📍 ЮВАО</option>
+            </select>
+            <select id="hoursFilter">
+                <option value="all">🕒 Любой режим</option>
+                <option value="Круглосуточно">🕒 Круглосуточно</option>
+                <option value="Пн–Вс: 12:00–02:00">🕒 Пн–Вс: 12:00–02:00</option>
+                <option value="Пн–Вс: 12:00–03:00">🕒 Пн–Вс: 12:00–03:00</option>
+            </select>
+            <input type="text" id="searchInput" placeholder="🔍 Поиск по названию или адресу...">
+        </div>
 
-
-    <!-- Выбор района -->
-    <div style="text-align: center; margin-bottom: 20px;">
-        <label for="districtFilter">Фильтр по району:</label>
-        <select id="districtFilter">
-            <option value="all">Все районы</option>
-            <option value="САО">САО</option>
-            <option value="ЮВАО">ЮВАО</option>
-        </select>
-    </div>
-
-    <!-- Выбор режима работы -->
-    <div style="text-align: center; margin-bottom: 20px;">
-        <label for="hoursFilter">Фильтр по режиму работы:</label>
-        <select id="hoursFilter">
-            <option value="all">Любой режим</option>
-            <option value="Круглосуточно">Круглосуточно</option>
-            <option value="Пн–Вс: 12:00–02:00">Пн–Вс: 12:00–02:00</option>
-            <option value="Пн–Вс: 12:00–03:00">Пн–Вс: 12:00–03:00</option>
-        </select>
-    </div>
-
-    <!-- Поле для поиска -->
-    <div style="text-align: center; margin-bottom: 20px;">
-        <input type="text" id="searchInput" placeholder="Поиск по названию или адресу..." style="padding: 5px; width: 80%;">
-    </div>
-
-    <div id="map"></div>
-
-    <!-- Легенда -->
-    <div id="legend" style="text-align: center; margin-top: 20px;">
-        <h3>Легенда</h3>
-        <p>
-            🟩 Зелёная звезда: ⭐ 4+<br>
-            🟨 Жёлтая звезда: ⭐ 3–3.9<br>
-            🟥 Красная звезда: ⭐ 2 и ниже
-        </p>
-    </div>
-
-    <!-- Статистика -->
-    <div id="stats" style="text-align: center; margin-top: 20px; font-size: 1.2rem; color: #333;">
-        Найдено: <span id="count">0</span> заведений
+        <!-- Легенда -->
+        <div id="legend">
+            <p><img src="icons/star-green.png" alt="Зелёная звезда"> ⭐ 4+</p>
+            <p><img src="icons/star-yellow.png" alt="Жёлтая звезда"> ⭐ 3–3.9</p>
+            <p><img src="icons/star-red.png" alt="Красная звезда"> ⭐ 2 и ниже</p>
+        </div>
     </div>
 </body>
 </html>
-
-
- 
