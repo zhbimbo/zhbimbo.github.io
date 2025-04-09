@@ -14,14 +14,14 @@ const getIconByRating = (rating) => {
 
 // Инициализация карты
 ymaps.ready(() => {
-    console.log('API Яндекс.Карт загружен.'); // Проверяем загрузку API
-    map = new ymaps.Map('map', { // Глобальная переменная map
+    console.log('API Яндекс.Карт загружен.');
+    map = new ymaps.Map('map', {
         center: [55.7558, 37.6173], // Центр Москвы
         zoom: 12,
         controls: [] // Убираем стандартные элементы управления
     });
 
-    console.log('Карта инициализирована.'); // Проверяем инициализацию карты
+    console.log('Карта инициализирована.');
 
     // Загрузка данных о заведениях
     fetch('data.json')
@@ -32,13 +32,9 @@ ymaps.ready(() => {
             return response.json();
         })
         .then(data => {
-            console.log('Загруженные данные:', data); // Выводим данные в консоль
-            if (data.length === 0) {
-                console.error('Данные пусты или отсутствуют.');
-            }
+            console.log('Загруженные данные:', data);
 
             data.forEach(place => {
-                console.log('Место:', place); // Проверяем каждое место
                 const rating = parseFloat(place.description.match(/\d\.\d/)[0]); // Извлекаем рейтинг
                 const icon = getIconByRating(rating); // Определяем иконку
 
@@ -67,7 +63,7 @@ ymaps.ready(() => {
                 );
 
                 placemarks.push(placemark);
-                map.geoObjects.add(placemark); // Добавляем маркер на карту
+                map.geoObjects.add(placemark);
             });
 
             updateStats(placemarks.length); // Обновляем статистику
@@ -116,11 +112,6 @@ const filterMarkers = () => {
     updateStats(filteredPlacemarks.length);
 };
 
-// Обработчики событий для фильтров
-document.getElementById('ratingFilter')?.addEventListener('change', filterMarkers);
-document.getElementById('districtFilter')?.addEventListener('change', filterMarkers);
-document.getElementById('hoursFilter')?.addEventListener('change', filterMarkers);
-
 // Поиск по названию или адресу
 document.getElementById('searchInput')?.addEventListener('input', (event) => {
     const query = event.target.value.toLowerCase(); // Введённый текст
@@ -139,4 +130,15 @@ document.getElementById('searchInput')?.addEventListener('input', (event) => {
 
     // Обновляем статистику
     updateStats(filteredPlacemarks.length);
+});
+
+// Обработчики событий для кнопок управления фильтрами и легендой
+document.getElementById('toggleFilters')?.addEventListener('click', () => {
+    const filtersPanel = document.getElementById('filters-panel');
+    filtersPanel.classList.toggle('hidden');
+});
+
+document.getElementById('toggleLegend')?.addEventListener('click', () => {
+    const legend = document.getElementById('legend');
+    legend.classList.toggle('hidden');
 });
