@@ -84,3 +84,52 @@
 .ymaps-2-1-79-controls-pane .ymaps-2-1-79-control {
     display: none !important;
 }
+const placemark = new ymaps.Placemark(
+    place.coordinates,
+    {
+        balloonContentHeader: `<b>${place.name}</b>`,
+        balloonContentBody: `
+            <div style="text-align: center;">
+                <img src="${place.photo}" alt="${place.name}" style="width: 100%; max-width: 200px; margin-bottom: 10px;">
+                <p><b>Адрес:</b> ${place.address}</p>
+                <p><b>Телефон:</b> ${place.phone}</p>
+                <p><b>Режим работы:</b> ${place.hours}</p>
+                <p><b>Рейтинг:</b> ${place.description}</p>
+                <a href="${place.reviewLink}" target="_blank" style="color: blue;">Читать обзор</a>
+            </div>
+        `,
+        district: place.district
+    },
+    {
+        iconLayout: 'default#image',
+        iconImageHref: icon, // Указываем иконку
+        iconImageSize: [30, 30], // Размер иконки
+        iconImageOffset: [-15, -15], // Смещение иконки
+        className: 'custom-placemark' // Добавляем класс для стилизации
+    }
+);
+/* Эффект свечения для маркеров */
+.custom-placemark {
+    filter: drop-shadow(0 0 10px rgba(255, 255, 0, 0.8)); /* Жёлтое свечение */
+    transition: filter 0.3s ease; /* Плавный переход */
+}
+
+.custom-placemark:hover {
+    filter: drop-shadow(0 0 15px rgba(255, 255, 0, 1)); /* Усиленное свечение при наведении */
+}
+/* Анимация свечения */
+@keyframes glow-pulse {
+    0% {
+        filter: drop-shadow(0 0 5px rgba(255, 255, 0, 0.6));
+    }
+    50% {
+        filter: drop-shadow(0 0 15px rgba(255, 255, 0, 1));
+    }
+    100% {
+        filter: drop-shadow(0 0 5px rgba(255, 255, 0, 0.6));
+    }
+}
+
+.custom-placemark {
+    animation: glow-pulse 2s infinite; /* Бесконечная анимация */
+}
