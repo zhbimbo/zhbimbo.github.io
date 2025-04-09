@@ -171,6 +171,10 @@ const openCustomBalloon = (place) => {
     rating.textContent = place.description;
     reviewLink.href = place.reviewLink;
 
+    // Сбрасываем позицию блока перед открытием
+    balloon.style.transform = 'translateY(100%)';
+    balloon.setAttribute('data-y', window.innerHeight);
+
     // Открываем всплывающее окно
     balloon.classList.remove('hidden');
     balloon.classList.add('visible');
