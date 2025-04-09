@@ -42,15 +42,16 @@ fetch('data.json')
                             <a href="${place.reviewLink}" target="_blank" style="color: blue;">Читать обзор</a>
                         </div>
                     `,
-                    district: place.district // Добавляем район в свойства маркера
+                    district: place.district
                 },
                 {
                     iconLayout: 'default#image',
                     iconImageHref: icon, // Указываем иконку
                     iconImageSize: [30, 30], // Размер иконки
-                    iconImageOffset: [-15, -15] // Смещение иконки
+                    iconImageOffset: [-15, -15], // Смещение иконки
+                    className: 'custom-placemark' // Добавляем класс для стилизации
                 }
-            );
+);
 
             placemarks.push(placemark); // Сохраняем маркер
             map.geoObjects.add(placemark); // Добавляем маркер на карту
