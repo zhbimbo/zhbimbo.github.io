@@ -13,12 +13,15 @@ const getIconByRating = (rating) => {
 };
 
 ymaps.ready(() => {
-    // Инициализация карты
-    map = new ymaps.Map('map', {
-        center: [55.7558, 37.6173], // Центр Москвы
+    console.log('API Яндекс.Карт загружен.'); // Проверяем загрузку API
+    const map = new ymaps.Map('map', {
+        center: [55.7558, 37.6173],
         zoom: 12,
-        controls: [] // Убираем все стандартные элементы управления
+        controls: []
     });
+
+    console.log('Карта инициализирована.'); // Проверяем инициализацию карты
+});
 
     // Загрузка данных о заведениях
 fetch('data.json')
