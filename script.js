@@ -21,45 +21,46 @@ ymaps.ready(() => {
     });
 
     // Загрузка данных о заведениях
-    fetch('data.json')
-        .then(response => response.json())
-        .then(data => {
-            data.forEach(place => {
-                const rating = parseFloat(place.description.match(/\d\.\d/)[0]); // Извлекаем рейтинг
-                const icon = getIconByRating(rating); // Определяем иконку
+fetch('data.json')
+    .then(response => response.json())
+    .then(data => {
+        data.forEach(place => {
+            const rating = parseFloat(place.description.match(/\d\.\d/)[0]); // Извлекаем рейтинг
+            const icon = getIconByRating(rating); // Определяем иконку
 
-                const placemark = new ymaps.Placemark(
-                    place.coordinates,
-                    {
-                        balloonContentHeader: `<b>${place.name}</b>`,
-                        balloonContentBody: `
-                            <div style="text-align: center;">
-                                <img src="${place.photo}" alt="${place.name}" style="width: 100%; max-width: 200px; margin-bottom: 10px;">
-                                <p><b>Адрес:</b> ${place.address}</p>
-                                <p><b>Телефон:</b> ${place.phone}</p>
-                                <p><b>Режим работы:</b> ${place.hours}</p>
-                                <p><b>Рейтинг:</b> ${place.description}</p>
-                                <a href="${place.reviewLink}" target="_blank" style="color: blue;">Читать обзор</a>
-                            </div>
-                        `
-                    },
-                    {
-                        iconLayout: 'default#image',
-                        iconImageHref: icon, // Указываем иконку
-                        iconImageSize: [30, 30], // Размер иконки
-                        iconImageOffset: [-15, -15] // Смещение иконки
-                    }
-                );
+            const placemark = new ymaps.Placemark(
+                place.coordinates,
+                {
+                    balloonContentHeader: `<b>${place.name}</b>`,
+                    balloonContentBody: `
+                        <div style="text-align: center;">
+                            <img src="${place.photo}" alt="${place.name}" style="width: 100%; max-width: 200px; margin-bottom: 10px;">
+                            <p><b>Адрес:</b> ${place.address}</p>
+                            <p><b>Телефон:</b> ${place.phone}</p>
+                            <p><b>Режим работы:</b> ${place.hours}</p>
+                            <p><b>Рейтинг:</b> ${place.description}</p>
+                            <a href="${place.reviewLink}" target="_blank" style="color: blue;">Читать обзор</a>
+                        </div>
+                    `,
+                    district: place.district // Добавляем район в свойства маркера
+                },
+                {
+                    iconLayout: 'default#image',
+                    iconImageHref: icon, // Указываем иконку
+                    iconImageSize: [30, 30], // Размер иконки
+                    iconImageOffset: [-15, -15] // Смещение иконки
+                }
+            );
 
-                placemarks.push(placemark); // Сохраняем маркер
-                map.geoObjects.add(placemark); // Добавляем маркер на карту
-            });
-
-            updateStats(placemarks.length); // Обновляем статистику
-        })
-        .catch(error => {
-            console.error('Ошибка загрузки данных:', error);
+            placemarks.push(placemark); // Сохраняем маркер
+            map.geoObjects.add(placemark); // Добавляем маркер на карту
         });
+
+        updateStats(placemarks.length); // Обновляем статистику
+    })
+    .catch(error => {
+        console.error('Ошибка загрузки данных:', error);
+    });
 });
 
 // Функция для фильтрации маркеров
@@ -74,7 +75,7 @@ const filterMarkers = () => {
     // Фильтруем заведения
     const filteredPlacemarks = placemarks.filter(placemark => {
         const rating = parseFloat(placemark.properties.get('balloonContentBody').match(/\d\.\d/)[0]);
-        const district = placemark.properties.get('balloonContentBody').match(/<b>Адрес:<\/b> ([^<]+)/)[1].split(',')[1].trim();
+        const district = placemark.properties.get('district'); // Берём район из данных
         const hours = placemark.properties.get('balloonContentBody').match(/<b>Режим работы:<\/b> ([^<]+)/)[1];
 
         const matchesRating = selectedRating === 'all' || rating >= parseFloat(selectedRating);
