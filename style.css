@@ -42,3 +42,34 @@ h1 {
         font-size: 1.2rem; /* Увеличиваем размер текста */
     }
 }
+/* Блок легенды */
+#legend {
+    background-color: #f9f9f9; /* Светлый фон */
+    padding: 15px;
+    border-radius: 5px;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1); /* Лёгкая тень */
+    max-width: 400px;
+    margin: 20px auto; /* Центрирование */
+}
+
+#legend h3 {
+    margin: 0 0 10px 0;
+    font-size: 1.2rem;
+}
+
+#legend p {
+    font-size: 1rem;
+    line-height: 1.5;
+}
+
+/* Адаптация для мобильных устройств */
+@media (max-width: 600px) {
+    #legend {
+        padding: 10px;
+        font-size: 0.9rem;
+    }
+
+    #legend h3 {
+        font-size: 1.1rem;
+    }
+}
