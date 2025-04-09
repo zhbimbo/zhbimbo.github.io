@@ -21,7 +21,7 @@ ymaps.ready(() => {
     fetch('data.json')
         .then(response => response.json())
         .then(data => {
-            data.forEach(place => {
+            data.forEach((place, index) => {
                 const rating = parseFloat(place.description.match(/\d\.\d/)[0]); // Извлекаем рейтинг
                 const icon = getIconByRating(rating); // Определяем иконку
 
@@ -47,8 +47,13 @@ ymaps.ready(() => {
                         iconImageOffset: [-15, -15] // Смещение иконки
                     }
                 );
+
                 placemarks.push(placemark); // Сохраняем маркер
-                map.geoObjects.add(placemark); // Добавляем маркер на карту
+
+                // Добавляем маркер на карту с задержкой для анимации
+                setTimeout(() => {
+                    map.geoObjects.add(placemark);
+                }, index * 200); // Задержка для каждого маркера
             });
         });
 
