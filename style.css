@@ -1,83 +1,82 @@
-/* Общие стили */
-body {
-    font-family: Arial, sans-serif;
-    margin: 0;
-    padding: 0;
-    background-color: #f4f4f9; /* Лёгкий фон */
-}
-
-h1 {
-    text-align: center;
-    margin: 20px 0;
-    font-size: 1.5rem;
-    color: #333; /* Тёмный текст */
-    transition: all 0.3s ease; /* Плавное изменение при наведении */
-}
-
-h1:hover {
-    transform: scale(1.05); /* Лёгкое увеличение при наведении */
-}
-
+/* Карта */
 #map {
+    position: relative;
     width: 100%;
-    height: 70vh;
+    height: 80vh;
     margin-top: 20px;
-    border-radius: 10px; /* Закруглённые углы */
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* Лёгкая тень */
-    transition: transform 0.3s ease; /* Плавное изменение размера */
+    border-radius: 10px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
 }
 
-#map:hover {
-    transform: scale(1.01); /* Лёгкое увеличение при наведении */
+/* Панель фильтров */
+#filters-panel {
+    position: absolute;
+    top: 20px;
+    right: 20px;
+    z-index: 1000;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    background-color: #fff;
+    padding: 15px;
+    border-radius: 10px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
 }
 
-/* Поле поиска и фильтр */
-#ratingFilter,
-#searchInput {
-    width: 90%;
+#filters-panel select,
+#filters-panel input {
     padding: 10px;
     font-size: 1rem;
-    margin: 10px auto;
-    display: block;
-    border: 1px solid #ccc; /* Лёгкая граница */
-    border-radius: 5px; /* Закруглённые углы */
-    transition: all 0.3s ease; /* Плавное изменение */
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    outline: none;
+    transition: all 0.3s ease;
 }
 
-#ratingFilter:focus,
-#searchInput:focus {
-    border-color: #007bff; /* Изменение цвета границы при фокусе */
-    box-shadow: 0 0 5px rgba(0, 123, 255, 0.5); /* Лёгкая тень */
+#filters-panel select:hover,
+#filters-panel input:hover {
+    border-color: #007bff;
 }
 
 /* Легенда */
 #legend {
-    background-color: #ffffff; /* Белый фон */
+    position: absolute;
+    bottom: 20px;
+    left: 20px;
+    z-index: 1000;
+    background-color: #fff;
     padding: 15px;
-    border-radius: 5px;
-    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
-    max-width: 400px;
-    margin: 20px auto;
-    transition: all 0.3s ease; /* Плавное изменение */
+    border-radius: 10px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    font-size: 0.9rem;
+    line-height: 1.5;
 }
 
-#legend:hover {
-    transform: scale(1.02); /* Лёгкое увеличение при наведении */
+#legend img {
+    width: 20px;
+    height: 20px;
+    margin-right: 10px;
 }
 
-/* Медиа-запросы для мобильных устройств */
+/* Адаптивность */
 @media (max-width: 600px) {
-    h1 {
-        font-size: 1.2rem;
+    #filters-panel {
+        flex-direction: row;
+        flex-wrap: wrap;
+        gap: 5px;
     }
 
-    #map {
-        height: 60vh;
+    #filters-panel select,
+    #filters-panel input {
+        flex: 1;
+        min-width: 100px;
     }
 
-    #ratingFilter,
-    #searchInput {
-        font-size: 1.2rem;
+    #legend {
+        bottom: 10px;
+        left: 10px;
+        padding: 10px;
+        font-size: 0.8rem;
     }
 }
 
