@@ -73,9 +73,11 @@ ymaps.ready(() => {
                 placemark.events.add('click', () => {
                     openCustomBalloon(place);
 
-                    // Выделяем текущий маркер
-                    placemarks.forEach(p => p.options.set('iconImageHref', getIconByRating(parseFloat(p.properties.get('balloonContentBody').match(/\d\.\d/)[0]))));
-                    placemark.options.set('iconImageHref', 'icons/star-selected.png'); // Иконка для выбранного маркера
+                    // Убираем выделение с других маркеров
+                    placemarks.forEach(p => p.options.unset('iconImageSelected'));
+
+                    // Добавляем выделение текущему маркеру
+                    placemark.options.set('iconImageSelected', true);
                 });
             });
 
