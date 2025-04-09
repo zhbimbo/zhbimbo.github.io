@@ -9,45 +9,55 @@
     <script src="script.js" defer></script>
 </head>
 <body>
-    <h1 style="text-align: center;">📍 Карта Кальянного Патруля</h1>
+    <!-- Заголовок поверх карты -->
+    <div id="header">
+        <h1>📍 Карта Кальянного Патруля</h1>
+    </div>
+
+    <!-- Кнопки управления фильтрами и легендой -->
+    <div id="controls">
+        <button id="toggleFilters">🔍 Фильтры</button>
+        <button id="toggleLegend">📚 Легенда</button>
+    </div>
 
     <!-- Карта -->
-    <div id="map">
-        <!-- Панель фильтров -->
-        <div id="filters-panel">
-            <select id="ratingFilter">
-                <option value="all">⭐ Все рейтинги</option>
-                <option value="5">⭐ 5+</option>
-                <option value="4">⭐ 4+</option>
-                <option value="3">⭐ 3+</option>
-                <option value="2">⭐ 2+</option>
-                <option value="1">⭐ 1+</option>
-            </select>
-            <select id="districtFilter">
-                <option value="all">📍 Все районы</option>
-                <option value="САО">📍 САО</option>
-                <option value="ЦАО">📍 ЦАО</option>
-                <option value="ЮВАО">📍 ЮВАО</option>
-            </select>
-            <select id="hoursFilter">
-                <option value="all">🕒 Любой режим</option>
-                <option value="Круглосуточно">🕒 Круглосуточно</option>
-                <option value="Пн–Вс: 12:00–02:00">🕒 Пн–Вс: 12:00–02:00</option>
-                <option value="Пн–Вс: 12:00–03:00">🕒 Пн–Вс: 12:00–03:00</option>
-            </select>
-            <input type="text" id="searchInput" placeholder="🔍 Поиск по названию или адресу...">
-        </div>
+    <div id="map"></div>
 
-        <!-- Легенда -->
-        <div id="legend">
-            <p><img src="icons/star-green.png" alt="Зелёная звезда"> ⭐ 4+</p>
-            <p><img src="icons/star-yellow.png" alt="Жёлтая звезда"> ⭐ 3–3.9</p>
-            <p><img src="icons/star-red.png" alt="Красная звезда"> ⭐ 2 и ниже</p>
-        </div>
+    <!-- Панель фильтров -->
+    <div id="filters-panel" class="hidden">
+        <select id="ratingFilter">
+            <option value="all">⭐ Все рейтинги</option>
+            <option value="5">⭐ 5+</option>
+            <option value="4">⭐ 4+</option>
+            <option value="3">⭐ 3+</option>
+            <option value="2">⭐ 2+</option>
+            <option value="1">⭐ 1+</option>
+        </select>
+        <select id="districtFilter">
+            <option value="all">📍 Все районы</option>
+            <option value="САО">📍 САО</option>
+            <option value="ЦАО">📍 ЦАО</option>
+            <option value="ЮВАО">📍 ЮВАО</option>
+        </select>
+        <select id="hoursFilter">
+            <option value="all">🕒 Любой режим</option>
+            <option value="Круглосуточно">🕒 Круглосуточно</option>
+            <option value="Пн–Вс: 12:00–02:00">🕒 Пн–Вс: 12:00–02:00</option>
+            <option value="Пн–Вс: 12:00–03:00">🕒 Пн–Вс: 12:00–03:00</option>
+        </select>
+        <input type="text" id="searchInput" placeholder="🔍 Поиск по названию или адресу...">
     </div>
-        <!-- Блок для статистики -->
-        <div id="stats" style="text-align: center; margin-top: 20px; font-size: 1.2rem; color: #333;">
-             Найдено: <span id="count">0</span> заведений
-        </div>
+
+    <!-- Легенда -->
+    <div id="legend" class="hidden">
+        <p><img src="icons/star-green.png" alt="Зелёная звезда"> ⭐ 4+</p>
+        <p><img src="icons/star-yellow.png" alt="Жёлтая звезда"> ⭐ 3–3.9</p>
+        <p><img src="icons/star-red.png" alt="Красная звезда"> ⭐ 2 и ниже</p>
+    </div>
+
+    <!-- Блок для статистики -->
+    <div id="stats" style="text-align: center; margin-top: 20px; font-size: 1.2rem; color: #333;">
+        Найдено: <span id="count">0</span> заведений
+    </div>
 </body>
 </html>
