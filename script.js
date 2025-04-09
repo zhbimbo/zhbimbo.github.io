@@ -68,6 +68,14 @@ fetch('data.json')
         console.error('Ошибка загрузки данных:', error);
     });
 });
+const updateStats = (count) => {
+    const countElement = document.getElementById('count');
+    if (countElement) {
+        countElement.innerText = count;
+    } else {
+        console.error('Элемент с id="count" не найден в DOM.');
+    }
+};
 
 // Функция для фильтрации маркеров
 const filterMarkers = () => {
