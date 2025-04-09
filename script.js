@@ -22,60 +22,60 @@ ymaps.ready(() => {
     });
 
     console.log('Карта инициализирована.'); // Проверяем инициализацию карты
-});
 
-// Загрузка данных о заведениях
-fetch('data.json')
-    .then(response => {
-        if (!response.ok) {
-            throw new Error(`Ошибка загрузки данных: ${response.status}`);
-        }
-        return response.json();
-    })
-    .then(data => {
-        console.log('Загруженные данные:', data); // Выводим данные в консоль
-        if (data.length === 0) {
-            console.error('Данные пусты или отсутствуют.');
-        }
+    // Загрузка данных о заведениях
+    fetch('data.json')
+        .then(response => {
+            if (!response.ok) {
+                throw new Error(`Ошибка загрузки данных: ${response.status}`);
+            }
+            return response.json();
+        })
+        .then(data => {
+            console.log('Загруженные данные:', data); // Выводим данные в консоль
+            if (data.length === 0) {
+                console.error('Данные пусты или отсутствуют.');
+            }
 
-        data.forEach(place => {
-            console.log('Место:', place); // Проверяем каждое место
-            const rating = parseFloat(place.description.match(/\d\.\d/)[0]); // Извлекаем рейтинг
-            const icon = getIconByRating(rating); // Определяем иконку
+            data.forEach(place => {
+                console.log('Место:', place); // Проверяем каждое место
+                const rating = parseFloat(place.description.match(/\d\.\d/)[0]); // Извлекаем рейтинг
+                const icon = getIconByRating(rating); // Определяем иконку
 
-            const placemark = new ymaps.Placemark(
-                place.coordinates,
-                {
-                    balloonContentHeader: `<b>${place.name}</b>`,
-                    balloonContentBody: `
-                        <div style="text-align: center;">
-                            <img src="${place.photo}" alt="${place.name}" style="width: 100%; max-width: 200px; margin-bottom: 10px;">
-                            <p><b>Адрес:</b> ${place.address}</p>
-                            <p><b>Телефон:</b> ${place.phone}</p>
-                            <p><b>Режим работы:</b> ${place.hours}</p>
-                            <p><b>Рейтинг:</b> ${place.description}</p>
-                            <a href="${place.reviewLink}" target="_blank" style="color: blue;">Читать обзор</a>
-                        </div>
-                    `,
-                    district: place.district
-                },
-                {
-                    iconLayout: 'default#image',
-                    iconImageHref: icon,
-                    iconImageSize: [30, 30],
-                    iconImageOffset: [-15, -15]
-                }
-            );
+                const placemark = new ymaps.Placemark(
+                    place.coordinates,
+                    {
+                        balloonContentHeader: `<b>${place.name}</b>`,
+                        balloonContentBody: `
+                            <div style="text-align: center;">
+                                <img src="${place.photo}" alt="${place.name}" style="width: 100%; max-width: 200px; margin-bottom: 10px;">
+                                <p><b>Адрес:</b> ${place.address}</p>
+                                <p><b>Телефон:</b> ${place.phone}</p>
+                                <p><b>Режим работы:</b> ${place.hours}</p>
+                                <p><b>Рейтинг:</b> ${place.description}</p>
+                                <a href="${place.reviewLink}" target="_blank" style="color: blue;">Читать обзор</a>
+                            </div>
+                        `,
+                        district: place.district
+                    },
+                    {
+                        iconLayout: 'default#image',
+                        iconImageHref: icon,
+                        iconImageSize: [30, 30],
+                        iconImageOffset: [-15, -15]
+                    }
+                );
 
-            placemarks.push(placemark);
-            map.geoObjects.add(placemark); // Добавляем маркер на карту
+                placemarks.push(placemark);
+                map.geoObjects.add(placemark); // Добавляем маркер на карту
+            });
+
+            updateStats(placemarks.length); // Обновляем статистику
+        })
+        .catch(error => {
+            console.error('Ошибка загрузки данных:', error);
         });
-
-        updateStats(placemarks.length); // Обновляем статистику
-    })
-    .catch(error => {
-        console.error('Ошибка загрузки данных:', error);
-    });
+});
 
 // Функция для обновления статистики
 const updateStats = (count) => {
