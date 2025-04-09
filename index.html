@@ -24,6 +24,28 @@
         </select>
     </div>
 
+    <!-- Выбор района -->
+    <div style="text-align: center; margin-bottom: 20px;">
+        <label for="districtFilter">Фильтр по району:</label>
+        <select id="districtFilter">
+            <option value="all">Все районы</option>
+            <option value="СВАО">СВАО</option>
+            <option value="ЦАО">ЦАО</option>
+            <option value="ЮВАО">ЮВАО</option>
+        </select>
+    </div>
+
+    <!-- Выбор режима работы -->
+    <div style="text-align: center; margin-bottom: 20px;">
+        <label for="hoursFilter">Фильтр по режиму работы:</label>
+        <select id="hoursFilter">
+            <option value="all">Любой режим</option>
+            <option value="Круглосуточно">Круглосуточно</option>
+            <option value="Пн–Вс: 12:00–02:00">Пн–Вс: 12:00–02:00</option>
+            <option value="Пн–Вс: 12:00–03:00">Пн–Вс: 12:00–03:00</option>
+        </select>
+    </div>
+
     <!-- Поле для поиска -->
     <div style="text-align: center; margin-bottom: 20px;">
         <input type="text" id="searchInput" placeholder="Поиск по названию или адресу..." style="padding: 5px; width: 80%;">
