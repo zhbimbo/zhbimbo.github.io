@@ -85,12 +85,20 @@
     display: none !important;
 }
 
-/* Эффект свечения для маркеров */
+/* Контейнер для кастомного маркера */
 .custom-placemark {
+    position: relative;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+/* Эффект свечения */
+.custom-placemark img {
     filter: drop-shadow(0 0 10px rgba(255, 255, 0, 0.8)); /* Жёлтое свечение */
     transition: filter 0.3s ease; /* Плавный переход */
 }
 
-.custom-placemark:hover {
+.custom-placemark img:hover {
     filter: drop-shadow(0 0 15px rgba(255, 255, 0, 1)); /* Усиленное свечение при наведении */
 }
