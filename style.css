@@ -32,61 +32,6 @@ body {
     }
 }
 
-/* Блок статистики поверх карты */
-#stats-overlay {
-    position: absolute;
-    bottom: 20px;
-    left: 20px;
-    z-index: 1000;
-    background-color: rgba(255, 255, 255, 0.9);
-    padding: 10px 20px;
-    border-radius: 10px;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-    font-size: 1rem;
-    color: #333;
-}
-
-@media (max-width: 600px) {
-    #stats-overlay {
-        font-size: 0.8rem;
-        padding: 8px 12px;
-    }
-}
-
-/* Легенда поверх карты */
-#legend {
-    position: absolute;
-    bottom: 20px;
-    right: 20px;
-    z-index: 1000;
-    background-color: rgba(255, 255, 255, 0.9);
-    padding: 10px 20px;
-    border-radius: 10px;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-    display: flex;
-    gap: 10px;
-    align-items: center;
-    font-size: 0.9rem;
-}
-
-#legend img {
-    width: 20px;
-    height: 20px;
-}
-
-@media (max-width: 600px) {
-    #legend {
-        font-size: 0.7rem;
-        padding: 8px 12px;
-        gap: 5px;
-    }
-
-    #legend img {
-        width: 15px;
-        height: 15px;
-    }
-}
-
 /* Кнопки управления */
 #controls {
     position: absolute;
@@ -121,6 +66,61 @@ body {
     margin-top: 20px;
     border-radius: 10px;
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+/* Блок статистики в нижней части карты (слева) */
+#stats-overlay {
+    position: absolute;
+    bottom: 20px;
+    left: 20px;
+    z-index: 1000;
+    background-color: rgba(255, 255, 255, 0.9);
+    padding: 10px 20px;
+    border-radius: 10px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    font-size: 1rem;
+    color: #333;
+}
+
+@media (max-width: 600px) {
+    #stats-overlay {
+        font-size: 0.8rem;
+        padding: 8px 12px;
+    }
+}
+
+/* Легенда в нижней части карты (справа) */
+#legend {
+    position: absolute;
+    bottom: 20px;
+    right: 20px;
+    z-index: 1000;
+    background-color: rgba(255, 255, 255, 0.9);
+    padding: 10px 20px;
+    border-radius: 10px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    display: flex;
+    gap: 10px;
+    align-items: center;
+    font-size: 0.9rem;
+}
+
+#legend img {
+    width: 20px;
+    height: 20px;
+}
+
+@media (max-width: 600px) {
+    #legend {
+        font-size: 0.7rem;
+        padding: 8px 12px;
+        gap: 5px;
+    }
+
+    #legend img {
+        width: 15px;
+        height: 15px;
+    }
 }
 
 /* Панель фильтров */
