@@ -1,75 +1,82 @@
-/* Базовые стили */
+/* Общие стили */
 body {
     font-family: Arial, sans-serif;
     margin: 0;
     padding: 0;
+    background-color: #f4f4f9; /* Лёгкий фон */
 }
 
 h1 {
     text-align: center;
     margin: 20px 0;
-    font-size: 1.5rem; /* Уменьшаем размер заголовка */
+    font-size: 1.5rem;
+    color: #333; /* Тёмный текст */
+    transition: all 0.3s ease; /* Плавное изменение при наведении */
+}
+
+h1:hover {
+    transform: scale(1.05); /* Лёгкое увеличение при наведении */
 }
 
 #map {
     width: 100%;
-    height: 70vh; /* Уменьшаем высоту карты для мобильных устройств */
+    height: 70vh;
+    margin-top: 20px;
+    border-radius: 10px; /* Закруглённые углы */
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* Лёгкая тень */
+    transition: transform 0.3s ease; /* Плавное изменение размера */
+}
+
+#map:hover {
+    transform: scale(1.01); /* Лёгкое увеличение при наведении */
 }
 
 /* Поле поиска и фильтр */
 #ratingFilter,
 #searchInput {
-    width: 90%; /* Занимают почти всю ширину экрана */
-    padding: 10px; /* Увеличиваем отступы для удобства касания */
-    font-size: 1rem; /* Увеличиваем размер текста */
-    margin: 10px auto; /* Центрируем элементы */
+    width: 90%;
+    padding: 10px;
+    font-size: 1rem;
+    margin: 10px auto;
     display: block;
+    border: 1px solid #ccc; /* Лёгкая граница */
+    border-radius: 5px; /* Закруглённые углы */
+    transition: all 0.3s ease; /* Плавное изменение */
+}
+
+#ratingFilter:focus,
+#searchInput:focus {
+    border-color: #007bff; /* Изменение цвета границы при фокусе */
+    box-shadow: 0 0 5px rgba(0, 123, 255, 0.5); /* Лёгкая тень */
+}
+
+/* Легенда */
+#legend {
+    background-color: #ffffff; /* Белый фон */
+    padding: 15px;
+    border-radius: 5px;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+    max-width: 400px;
+    margin: 20px auto;
+    transition: all 0.3s ease; /* Плавное изменение */
+}
+
+#legend:hover {
+    transform: scale(1.02); /* Лёгкое увеличение при наведении */
 }
 
 /* Медиа-запросы для мобильных устройств */
 @media (max-width: 600px) {
     h1 {
-        font-size: 1.2rem; /* Ещё меньше заголовок */
+        font-size: 1.2rem;
     }
 
     #map {
-        height: 60vh; /* Уменьшаем высоту карты */
+        height: 60vh;
     }
 
     #ratingFilter,
     #searchInput {
-        width: 95%; /* Занимают ещё больше места */
-        font-size: 1.2rem; /* Увеличиваем размер текста */
-    }
-}
-/* Блок легенды */
-#legend {
-    background-color: #f9f9f9; /* Светлый фон */
-    padding: 15px;
-    border-radius: 5px;
-    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1); /* Лёгкая тень */
-    max-width: 400px;
-    margin: 20px auto; /* Центрирование */
-}
-
-#legend h3 {
-    margin: 0 0 10px 0;
-    font-size: 1.2rem;
-}
-
-#legend p {
-    font-size: 1rem;
-    line-height: 1.5;
-}
-
-/* Адаптация для мобильных устройств */
-@media (max-width: 600px) {
-    #legend {
-        padding: 10px;
-        font-size: 0.9rem;
-    }
-
-    #legend h3 {
-        font-size: 1.1rem;
+        font-size: 1.2rem;
     }
 }
