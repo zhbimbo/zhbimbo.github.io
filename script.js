@@ -14,14 +14,14 @@ const getIconByRating = (rating) => {
 
 // Инициализация карты
 ymaps.ready(() => {
-    console.log('API Яндекс.Карт загружен.');
-    map = new ymaps.Map('map', {
+    console.log('API Яндекс.Карт загружен.'); // Проверяем загрузку API
+    map = new ymaps.Map('map', { // Глобальная переменная map
         center: [55.7558, 37.6173], // Центр Москвы
         zoom: 12,
         controls: [] // Убираем стандартные элементы управления
     });
 
-    console.log('Карта инициализирована.');
+    console.log('Карта инициализирована.'); // Проверяем инициализацию карты
 
     // Загрузка данных о заведениях
     fetch('data.json')
@@ -32,9 +32,13 @@ ymaps.ready(() => {
             return response.json();
         })
         .then(data => {
-            console.log('Загруженные данные:', data);
+            console.log('Загруженные данные:', data); // Выводим данные в консоль
+            if (data.length === 0) {
+                console.error('Данные пусты или отсутствуют.');
+            }
 
             data.forEach(place => {
+                console.log('Место:', place); // Проверяем каждое место
                 const rating = parseFloat(place.description.match(/\d\.\d/)[0]); // Извлекаем рейтинг
                 const icon = getIconByRating(rating); // Определяем иконку
 
@@ -63,7 +67,7 @@ ymaps.ready(() => {
                 );
 
                 placemarks.push(placemark);
-                map.geoObjects.add(placemark);
+                map.geoObjects.add(placemark); // Добавляем маркер на карту
             });
 
             updateStats(placemarks.length); // Обновляем статистику
