@@ -21,7 +21,7 @@ ymaps.ready(() => {
     fetch('data.json')
         .then(response => response.json())
         .then(data => {
-            data.forEach((place, index) => {
+            data.forEach(place => {
                 const rating = parseFloat(place.description.match(/\d\.\d/)[0]); // Извлекаем рейтинг
                 const icon = getIconByRating(rating); // Определяем иконку
 
@@ -49,33 +49,39 @@ ymaps.ready(() => {
                 );
 
                 placemarks.push(placemark); // Сохраняем маркер
-
-                // Добавляем маркер на карту с задержкой для анимации
-                setTimeout(() => {
-                    map.geoObjects.add(placemark);
-                }, index * 200); // Задержка для каждого маркера
+                map.geoObjects.add(placemark); // Добавляем маркер на карту
             });
         });
 
-    // Фильтрация по рейтингу
-    document.getElementById('ratingFilter').addEventListener('change', (event) => {
-        const selectedRating = event.target.value;
+    // Функция для фильтрации маркеров
+    const filterMarkers = () => {
+        const selectedRating = document.getElementById('ratingFilter').value;
+        const selectedDistrict = document.getElementById('districtFilter').value;
+        const selectedHours = document.getElementById('hoursFilter').value;
 
         // Сначала удаляем все маркеры с карты
         placemarks.forEach(placemark => map.geoObjects.remove(placemark));
 
         // Фильтруем заведения
-        if (selectedRating === 'all') {
-            placemarks.forEach(placemark => map.geoObjects.add(placemark));
-        } else {
-            placemarks.forEach(placemark => {
-                const rating = parseFloat(placemark.properties.get('balloonContentBody').match(/\d\.\d/)[0]);
-                if (rating >= parseFloat(selectedRating)) {
-                    map.geoObjects.add(placemark);
-                }
-            });
-        }
-    });
+        placemarks.forEach(placemark => {
+            const rating = parseFloat(placemark.properties.get('balloonContentBody').match(/\d\.\d/)[0]);
+            const district = placemark.properties.get('balloonContentBody').match(/<b>Адрес:<\/b> ([^<]+)/)[1].split(',')[1].trim();
+            const hours = placemark.properties.get('balloonContentBody').match(/<b>Режим работы:<\/b> ([^<]+)/)[1];
+
+            const matchesRating = selectedRating === 'all' || rating >= parseFloat(selectedRating);
+            const matchesDistrict = selectedDistrict === 'all' || district === selectedDistrict;
+            const matchesHours = selectedHours === 'all' || hours === selectedHours;
+
+            if (matchesRating && matchesDistrict && matchesHours) {
+                map.geoObjects.add(placemark);
+            }
+        });
+    };
+
+    // Обработчики событий для фильтров
+    document.getElementById('ratingFilter').addEventListener('change', filterMarkers);
+    document.getElementById('districtFilter').addEventListener('change', filterMarkers);
+    document.getElementById('hoursFilter').addEventListener('change', filterMarkers);
 
     // Поиск по названию или адресу
     document.getElementById('searchInput').addEventListener('input', (event) => {
