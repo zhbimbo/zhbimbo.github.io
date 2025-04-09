@@ -29,8 +29,12 @@ fetch('data.json')
         return response.json();
     })
     .then(data => {
-        console.log('Загруженные данные:', data); // Проверяем данные в консоли
+        console.log('Загруженные данные:', data); // Выводим данные в консоль
+        if (data.length === 0) {
+            console.error('Данные пусты или отсутствуют.');
+        }
         data.forEach(place => {
+            console.log('Место:', place); // Проверяем каждое место
             const rating = parseFloat(place.description.match(/\d\.\d/)[0]); // Извлекаем рейтинг
             const icon = getIconByRating(rating); // Определяем иконку
 
