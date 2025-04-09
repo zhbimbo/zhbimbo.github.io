@@ -25,6 +25,20 @@ body {
     text-align: center;
 }
 
+/* Блок статистики поверх карты */
+#stats-overlay {
+    position: absolute;
+    bottom: 20px;
+    left: 20px;
+    z-index: 1000;
+    background-color: rgba(255, 255, 255, 0.9);
+    padding: 10px 20px;
+    border-radius: 10px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    font-size: 1rem;
+    color: #333;
+}
+
 /* Кнопки управления */
 #controls {
     position: absolute;
@@ -76,63 +90,36 @@ body {
     display: flex;
     flex-direction: column;
     gap: 10px;
+    transform: translateX(100%);
+    transition: transform 0.3s ease;
+}
+
+#filters-panel.visible {
+    transform: translateX(0);
 }
 
 .hidden {
     display: none;
 }
 
-#filters-panel select,
-#filters-panel input {
-    padding: 10px;
-    font-size: 1rem;
-    border: 1px solid #ccc;
-    border-radius: 5px;
-    outline: none;
-    transition: all 0.3s ease;
-}
-
-#filters-panel select:hover,
-#filters-panel input:hover {
-    border-color: #007bff;
-}
-
 /* Легенда */
 #legend {
     position: absolute;
     bottom: 20px;
-    left: 20px;
+    right: 20px;
     z-index: 1000;
-    background-color: #fff;
-    padding: 15px;
+    background-color: rgba(255, 255, 255, 0.9);
+    padding: 10px 20px;
     border-radius: 10px;
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-    font-size: 0.9rem;
-    line-height: 1.5;
-    max-width: 200px;
+    display: flex;
+    gap: 10px;
+    align-items: center;
 }
 
 #legend img {
     width: 20px;
     height: 20px;
-    margin-right: 10px;
-}
-
-/* Адаптивность */
-@media (max-width: 600px) {
-    #filters-panel {
-        top: 100px;
-        right: 10px;
-        padding: 10px;
-        max-height: 50vh;
-    }
-
-    #legend {
-        bottom: 10px;
-        left: 10px;
-        padding: 10px;
-        font-size: 0.8rem;
-    }
 }
 
 /* Кастомное всплывающее окно */
@@ -199,5 +186,24 @@ body {
 
     #custom-balloon.visible {
         transform: translateX(0);
+    }
+}
+
+/* Анимация выбора маркера */
+.custom-placemark.selected {
+    outline: 2px solid #007bff;
+    outline-offset: 2px;
+    animation: pulse 0.5s infinite;
+}
+
+@keyframes pulse {
+    0% {
+        transform: scale(1);
+    }
+    50% {
+        transform: scale(1.1);
+    }
+    100% {
+        transform: scale(1);
     }
 }
