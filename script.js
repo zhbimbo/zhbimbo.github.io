@@ -28,31 +28,34 @@ fetch('data.json')
             const rating = parseFloat(place.description.match(/\d\.\d/)[0]); // Извлекаем рейтинг
             const icon = getIconByRating(rating); // Определяем иконку
 
-            const placemark = new ymaps.Placemark(
-                place.coordinates,
-                {
-                    balloonContentHeader: `<b>${place.name}</b>`,
-                    balloonContentBody: `
-                        <div style="text-align: center;">
-                            <img src="${place.photo}" alt="${place.name}" style="width: 100%; max-width: 200px; margin-bottom: 10px;">
-                            <p><b>Адрес:</b> ${place.address}</p>
-                            <p><b>Телефон:</b> ${place.phone}</p>
-                            <p><b>Режим работы:</b> ${place.hours}</p>
-                            <p><b>Рейтинг:</b> ${place.description}</p>
-                            <a href="${place.reviewLink}" target="_blank" style="color: blue;">Читать обзор</a>
-                        </div>
-                    `,
-                    district: place.district
-                },
-                {
-                    iconLayout: 'default#image',
-                    iconImageHref: icon, // Указываем иконку
-                    iconImageSize: [30, 30], // Размер иконки
-                    iconImageOffset: [-15, -15], // Смещение иконки
-                    className: 'custom-placemark' // Добавляем класс для стилизации
-                }
+          const placemark = new ymaps.Placemark(
+    place.coordinates,
+    {
+        balloonContentHeader: `<b>${place.name}</b>`,
+        balloonContentBody: `
+            <div style="text-align: center;">
+                <img src="${place.photo}" alt="${place.name}" style="width: 100%; max-width: 200px; margin-bottom: 10px;">
+                <p><b>Адрес:</b> ${place.address}</p>
+                <p><b>Телефон:</b> ${place.phone}</p>
+                <p><b>Режим работы:</b> ${place.hours}</p>
+                <p><b>Рейтинг:</b> ${place.description}</p>
+                <a href="${place.reviewLink}" target="_blank" style="color: blue;">Читать обзор</a>
+            </div>
+        `,
+        district: place.district
+    },
+    {
+        iconLayout: 'default#image',
+        iconImageHref: '', // Оставляем пустым, так как будем использовать HTML
+        iconImageSize: [30, 30],
+        iconImageOffset: [-15, -15],
+        iconContentLayout: ymaps.templateLayoutFactory.createClass(`
+            <div class="custom-placemark">
+                <img src="${icon}" alt="Иконка" style="width: 30px; height: 30px;">
+            </div>
+        `)
+    }
 );
-
             placemarks.push(placemark); // Сохраняем маркер
             map.geoObjects.add(placemark); // Добавляем маркер на карту
         });
