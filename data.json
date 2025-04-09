@@ -4,17 +4,29 @@
         "description": "1.6/5",
         "coordinates": [55.798358, 37.527462],
         "reviewLink": "https://t.me/KudaHookah/7"
+        "photo": "https://avatars.mds.yandex.net/get-altay/1546430/2a0000016ce304cb92798b379a97ed1dc2bf/XXXL",
+        "address": "ул. Викторенко, 4, корп. 1",
+        "phone": "+7 (968) 430-82-82",
+        "hours": "Круглосуточно"
     },
     {
         "name": "MistyWood Парк Мира",
         "description": "4.2/5",
         "coordinates": [55.800595, 37.636680],
         "reviewLink": "https://t.me/KudaHookah/11"
+        "photo": "https://avatars.mds.yandex.net/get-altay/5485499/2a0000017e7c753f72263912131ec6850b30/XXXL",
+        "address": "просп. Мира, 102, корп. 1",
+        "phone": "+7 (499) 455-55-45 (доб. 3)",
+        "hours": "Пн–Вс: 12:00–02:00"
     }
         {
-        "name": "Мята Signature Symbol",
+        "name": "Мята Platinum Symbol",
         "description": "4.6/5",
         "coordinates": [55.750683, 37.706840],
         "reviewLink": "https://t.me/KudaHookah/13"
+        "photo": "https://avatars.mds.yandex.net/get-altay/16230048/2a0000019513cf4ccc9b8af1dea577852068/XXXL",
+        "address": "ул. Крузенштерна, 12, корп. 3",
+        "phone": "+7 (903) 770-77-11",
+        "hours": "Пн–Вс: 12:00–03:00"
     },
 ]
