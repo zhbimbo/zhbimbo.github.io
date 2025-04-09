@@ -61,7 +61,8 @@ ymaps.ready(() => {
                         iconLayout: 'default#image',
                         iconImageHref: icon,
                         iconImageSize: [30, 30],
-                        iconImageOffset: [-15, -15]
+                        iconImageOffset: [-15, -15],
+                        disableDefaultBalloon: true // Отключаем стандартный балун
                     }
                 );
 
@@ -71,6 +72,10 @@ ymaps.ready(() => {
                 // Обработчик клика на маркер
                 placemark.events.add('click', () => {
                     openCustomBalloon(place);
+
+                    // Выделяем текущий маркер
+                    placemarks.forEach(p => p.options.set('iconImageHref', getIconByRating(parseFloat(p.properties.get('balloonContentBody').match(/\d\.\d/)[0]))));
+                    placemark.options.set('iconImageHref', 'icons/star-selected.png'); // Иконка для выбранного маркера
                 });
             });
 
@@ -143,7 +148,7 @@ document.getElementById('searchInput')?.addEventListener('input', (event) => {
 // Обработчики событий для кнопок управления фильтрами и легендой
 document.getElementById('toggleFilters')?.addEventListener('click', () => {
     const filtersPanel = document.getElementById('filters-panel');
-    filtersPanel.classList.toggle('hidden');
+    filtersPanel.classList.toggle('visible');
 });
 
 document.getElementById('toggleLegend')?.addEventListener('click', () => {
@@ -182,3 +187,19 @@ document.getElementById('close-balloon')?.addEventListener('click', () => {
     balloon.classList.remove('visible');
     balloon.classList.add('hidden');
 });
+
+// Drag-and-drop для кастомного всплывающего окна
+interact('#custom-balloon')
+    .draggable({
+        listeners: {
+            move(event) {
+                const target = event.target;
+                const x = (parseFloat(target.getAttribute('data-x')) || 0) + event.dx;
+                const y = (parseFloat(target.getAttribute('data-y')) || 0) + event.dy;
+
+                target.style.transform = `translate(${x}px, ${y}px)`;
+                target.setAttribute('data-x', x);
+                target.setAttribute('data-y', y);
+            }
+        }
+    });
