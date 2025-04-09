@@ -12,18 +12,19 @@ const getIconByRating = (rating) => {
     }
 };
 
+// Инициализация карты
 ymaps.ready(() => {
     console.log('API Яндекс.Карт загружен.'); // Проверяем загрузку API
-    const map = new ymaps.Map('map', {
-        center: [55.7558, 37.6173],
+    map = new ymaps.Map('map', { // Глобальная переменная map
+        center: [55.7558, 37.6173], // Центр Москвы
         zoom: 12,
-        controls: []
+        controls: [] // Убираем стандартные элементы управления
     });
 
     console.log('Карта инициализирована.'); // Проверяем инициализацию карты
 });
 
-    // Загрузка данных о заведениях
+// Загрузка данных о заведениях
 fetch('data.json')
     .then(response => {
         if (!response.ok) {
@@ -36,6 +37,7 @@ fetch('data.json')
         if (data.length === 0) {
             console.error('Данные пусты или отсутствуют.');
         }
+
         data.forEach(place => {
             console.log('Место:', place); // Проверяем каждое место
             const rating = parseFloat(place.description.match(/\d\.\d/)[0]); // Извлекаем рейтинг
@@ -66,7 +68,7 @@ fetch('data.json')
             );
 
             placemarks.push(placemark);
-            map.geoObjects.add(placemark);
+            map.geoObjects.add(placemark); // Добавляем маркер на карту
         });
 
         updateStats(placemarks.length); // Обновляем статистику
@@ -74,6 +76,8 @@ fetch('data.json')
     .catch(error => {
         console.error('Ошибка загрузки данных:', error);
     });
+
+// Функция для обновления статистики
 const updateStats = (count) => {
     const countElement = document.getElementById('count');
     if (countElement) {
@@ -112,18 +116,13 @@ const filterMarkers = () => {
     updateStats(filteredPlacemarks.length);
 };
 
-// Функция для обновления статистики
-const updateStats = (count) => {
-    document.getElementById('count').innerText = count;
-};
-
 // Обработчики событий для фильтров
-document.getElementById('ratingFilter').addEventListener('change', filterMarkers);
-document.getElementById('districtFilter').addEventListener('change', filterMarkers);
-document.getElementById('hoursFilter').addEventListener('change', filterMarkers);
+document.getElementById('ratingFilter')?.addEventListener('change', filterMarkers);
+document.getElementById('districtFilter')?.addEventListener('change', filterMarkers);
+document.getElementById('hoursFilter')?.addEventListener('change', filterMarkers);
 
 // Поиск по названию или адресу
-document.getElementById('searchInput').addEventListener('input', (event) => {
+document.getElementById('searchInput')?.addEventListener('input', (event) => {
     const query = event.target.value.toLowerCase(); // Введённый текст
 
     // Сначала удаляем все маркеры с карты
