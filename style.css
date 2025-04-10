@@ -86,101 +86,6 @@ body {
     font-size: 0.9rem;
 }
 
-/* Всплывающее окно */
-#custom-balloon {
-    position: fixed;
-    bottom: 0;
-    left: 0;
-    width: 100%;
-    max-height: 60vh;
-    background: white;
-    transform: translateY(100%);
-    transition: transform 0.3s ease;
-    z-index: 2000;
-    overflow-y: auto;
-    border-radius: 15px 15px 0 0;
-    box-shadow: 0 -5px 15px rgba(0,0,0,0.2);
-}
-
-#custom-balloon.visible {
-    transform: translateY(0);
-}
-
-#balloon-content {
-    padding: 20px;
-}
-
-#balloon-header {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    margin-bottom: 15px;
-}
-
-#balloon-image {
-    width: 100%;
-    max-height: 200px;
-    object-fit: cover;
-    border-radius: 8px;
-    margin-bottom: 10px;
-}
-
-#close-balloon {
-    background: none;
-    border: none;
-    font-size: 1.5rem;
-    cursor: pointer;
-}
-/* Боковая панель для ПК */
-#desktop-sidebar {
-    position: fixed;
-    left: -400px;
-    top: 0;
-    width: 350px;
-    height: 100vh;
-    background: white;
-    z-index: 2000;
-    box-shadow: 2px 0 10px rgba(0,0,0,0.1);
-    transition: left 0.3s ease;
-    overflow-y: auto;
-}
-
-#desktop-sidebar.visible {
-    left: 0;
-}
-
-#sidebar-content {
-    padding: 20px;
-}
-
-#sidebar-image {
-    width: 100%;
-    max-height: 200px;
-    object-fit: cover;
-    border-radius: 8px;
-    margin: 10px 0;
-}
-
-/* Мобильная панель (остаётся как было) */
-#mobile-bottom-sheet {
-    position: fixed;
-    bottom: 0;
-    left: 0;
-    width: 100%;
-    max-height: 60vh;
-    background: white;
-    transform: translateY(100%);
-    transition: transform 0.3s ease;
-    z-index: 2000;
-    overflow-y: auto;
-    border-radius: 15px 15px 0 0;
-    box-shadow: 0 -5px 15px rgba(0,0,0,0.2);
-}
-
-#mobile-bottom-sheet.visible {
-    transform: translateY(0);
-}
-
 /* Определение типа устройства */
 @media (hover: hover) {
     /* Стили для устройств с мышью (ПК) */
@@ -216,5 +121,67 @@ body {
     #filters-panel {
         top: 70px;
         width: 85%;
+    }
+}
+/* ===== Десктопная боковая панель ===== */
+#desktop-sidebar {
+    position: fixed;
+    left: -400px;
+    top: 0;
+    width: 350px;
+    height: 100vh;
+    background: white;
+    z-index: 2000;
+    box-shadow: 2px 0 10px rgba(0,0,0,0.1);
+    transition: left 0.3s ease;
+    overflow-y: auto;
+}
+
+#desktop-sidebar.visible {
+    left: 0;
+}
+
+#sidebar-content {
+    padding: 20px;
+}
+
+#sidebar-image {
+    width: 100%;
+    max-height: 200px;
+    object-fit: cover;
+    border-radius: 8px;
+    margin: 10px 0;
+}
+
+/* ===== Мобильная панель ===== */
+#mobile-bottom-sheet {
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    max-height: 70vh;
+    background: white;
+    transform: translateY(100%);
+    transition: transform 0.3s ease;
+    z-index: 2000;
+    overflow-y: auto;
+    border-radius: 15px 15px 0 0;
+    box-shadow: 0 -5px 15px rgba(0,0,0,0.2);
+}
+
+#mobile-bottom-sheet.visible {
+    transform: translateY(0);
+}
+
+/* ===== Адаптация ===== */
+@media (min-width: 768px) {
+    #mobile-bottom-sheet {
+        display: none !important;
+    }
+}
+
+@media (max-width: 767px) {
+    #desktop-sidebar {
+        display: none !important;
     }
 }
