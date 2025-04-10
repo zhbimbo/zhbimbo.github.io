@@ -1,112 +1,59 @@
-/* Обновлённые стили для мобильных устройств */
-@media (max-width: 600px) {
-    #header {
-        top: 10px;
-        padding: 8px 12px;
-    }
-    
-    #header h1 {
-        font-size: 1rem;
-    }
-    
-    #controls {
-        top: 50px;
-        right: 10px;
-    }
-    
-    #controls button {
-        padding: 8px 12px;
-        font-size: 0.8rem;
-    }
-    
-    #stats-overlay, #legend {
-        bottom: 10px;
-        font-size: 0.7rem;
-        padding: 5px 8px;
-    }
-    
-    #legend {
-        flex-direction: column;
-        align-items: flex-start;
-        gap: 3px;
-        right: 10px;
-    }
-    
-    #filters-panel {
-        top: 80px;
-        right: -100%;
-        width: 80%;
-        max-height: 70vh;
-    }
-    
-    #filters-panel.visible {
-        right: 10px;
-    }
-    
-    #custom-balloon {
-        max-width: 100%;
-        left: 0;
-        transform: translateY(100%);
-        border-radius: 10px 10px 0 0;
-    }
-    
-    #custom-balloon.visible {
-        transform: translateY(0);
-    }
+/* Маркеры */
+.ymaps-2-1-79-placemark-overlay {
+    cursor: pointer !important;
 }
 
-/* Обновлённые стили для панели фильтров */
+/* Панель фильтров */
 #filters-panel {
     position: fixed;
     top: 80px;
-    right: -320px;
-    width: 300px;
+    right: -300px;
+    width: 280px;
     background: white;
-    box-shadow: -2px 0 10px rgba(0,0,0,0.1);
-    transition: right 0.3s ease;
-    z-index: 1000;
     padding: 15px;
+    box-shadow: 0 0 10px rgba(0,0,0,0.2);
     border-radius: 5px;
+    z-index: 1000;
+    transition: right 0.3s ease;
 }
 
 #filters-panel.visible {
     right: 20px;
 }
 
-#filters-panel select, #filters-panel input {
-    width: 100%;
-    padding: 8px;
-    margin-bottom: 10px;
-    border: 1px solid #ddd;
-    border-radius: 4px;
-}
-
-/* Улучшенное всплывающее окно */
+/* Всплывающее окно */
 #custom-balloon {
     position: fixed;
     bottom: 0;
     left: 0;
     width: 100%;
+    max-height: 60vh;
     background: white;
-    box-shadow: 0 -2px 10px rgba(0,0,0,0.1);
     transform: translateY(100%);
     transition: transform 0.3s ease;
     z-index: 2000;
-    max-height: 70vh;
     overflow-y: auto;
+    border-radius: 10px 10px 0 0;
+    box-shadow: 0 -2px 10px rgba(0,0,0,0.2);
 }
 
 #custom-balloon.visible {
     transform: translateY(0);
 }
 
-#balloon-content {
-    padding: 15px;
-}
-
-#balloon-image {
-    width: 100%;
-    height: 150px;
-    object-fit: cover;
-    border-radius: 5px;
+/* Мобильная версия */
+@media (max-width: 600px) {
+    #filters-panel {
+        width: 80%;
+        right: -100%;
+    }
+    
+    #filters-panel.visible {
+        right: 10px;
+    }
+    
+    #stats-overlay, #legend {
+        font-size: 12px;
+        padding: 5px 8px;
+    }
 }
