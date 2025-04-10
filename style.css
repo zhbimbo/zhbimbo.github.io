@@ -185,3 +185,20 @@ body {
         display: none !important;
     }
 }
+/* Принудительное отображение для теста */
+#desktop-sidebar, #mobile-bottom-sheet {
+  display: block !important;
+  background: red !important;
+  opacity: 0.9 !important;
+}
+
+/* Подсветка маркеров */
+.ymaps-2-1-79-placemark-overlay {
+  animation: pulse 1s infinite;
+}
+
+@keyframes pulse {
+  0% { transform: scale(1); }
+  50% { transform: scale(1.2); }
+  100% { transform: scale(1); }
+}
