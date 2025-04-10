@@ -65,7 +65,7 @@
             </div>
         </div>
     </div>
-<!-- Добавьте это перед закрывающим тегом body -->
+<!-- Добавьте это ПЕРЕД закрывающим </body> -->
 <div id="desktop-sidebar" class="hidden">
     <div id="sidebar-content">
         <button id="close-sidebar">✖</button>
@@ -80,8 +80,20 @@
 </div>
 
 <div id="mobile-bottom-sheet" class="hidden">
-    <!-- Содержимое остаётся как в custom-balloon -->
-    <!-- ... -->
+    <div id="balloon-content">
+        <div id="balloon-header">
+            <h2 id="balloon-title"></h2>
+            <button id="close-balloon">✖</button>
+        </div>
+        <div id="balloon-body">
+            <img id="balloon-image" alt="Фото заведения">
+            <p><b>Адрес:</b> <span id="balloon-address"></span></p>
+            <p><b>Телефон:</b> <span id="balloon-phone"></span></p>
+            <p><b>Режим работы:</b> <span id="balloon-hours"></span></p>
+            <p><b>Рейтинг:</b> <span id="balloon-rating"></span></p>
+            <a id="balloon-review-link" target="_blank">Читать обзор</a>
+        </div>
+    </div>
 </div>
 </body>
 </html>
