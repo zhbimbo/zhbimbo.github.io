@@ -36,7 +36,8 @@ ymaps.ready(() => {
                         `,
                         district: place.district,
                         hours: place.hours,
-                        rating: rating
+                        rating: rating,
+                        originalData: place
                     },
                     {
                         iconLayout: 'default#image',
@@ -48,7 +49,11 @@ ymaps.ready(() => {
                 );
 
                 placemark.events.add('click', function() {
-                    openCustomBalloon(place);
+                    openCustomBalloon(this.properties.get('originalData'));
+                    map.panTo(this.geometry.getCoordinates(), {
+                        flying: true,
+                        duration: 300
+                    });
                 });
 
                 placemarks.push(placemark);
@@ -56,11 +61,9 @@ ymaps.ready(() => {
             });
 
             updateStats(data.length);
-        })
-        .catch(error => console.error('Error:', error));
+        });
 });
 
-// Фильтрация маркеров
 function filterMarkers() {
     const ratingValue = parseFloat(document.getElementById('ratingFilter').value) || 0;
     const districtValue = document.getElementById('districtFilter').value;
@@ -75,7 +78,7 @@ function filterMarkers() {
         const district = props.district;
         const hours = props.hours;
         const name = props.balloonContentHeader.toLowerCase();
-        const address = placemark.properties.get('balloonContentBody').toLowerCase();
+        const address = props.originalData.address.toLowerCase();
 
         const ratingMatch = isNaN(ratingValue) || rating >= ratingValue;
         const districtMatch = districtValue === 'all' || district === districtValue;
@@ -91,36 +94,34 @@ function filterMarkers() {
     updateStats(filtered.length);
 }
 
-// Навешиваем обработчики
-document.getElementById('ratingFilter').addEventListener('change', filterMarkers);
-document.getElementById('districtFilter').addEventListener('change', filterMarkers);
-document.getElementById('hoursFilter').addEventListener('change', filterMarkers);
-document.getElementById('searchInput').addEventListener('input', filterMarkers);
-
-// Остальные функции без изменений
 function updateStats(count) {
     document.getElementById('count').textContent = count;
 }
 
 function openCustomBalloon(place) {
-    const balloon = document.getElementById('custom-balloon');
-    balloon.querySelector('#balloon-title').textContent = place.name;
-    balloon.querySelector('#balloon-image').src = place.photo;
-    balloon.querySelector('#balloon-address').textContent = place.address;
-    balloon.querySelector('#balloon-phone').textContent = place.phone;
-    balloon.querySelector('#balloon-hours').textContent = place.hours;
-    balloon.querySelector('#balloon-rating').textContent = place.description;
-    balloon.querySelector('#balloon-review-link').href = place.reviewLink;
+    document.getElementById('balloon-title').textContent = place.name;
+    document.getElementById('balloon-image').src = place.photo;
+    document.getElementById('balloon-address').textContent = place.address;
+    document.getElementById('balloon-phone').textContent = place.phone;
+    document.getElementById('balloon-hours').textContent = place.hours;
+    document.getElementById('balloon-rating').textContent = place.description;
+    document.getElementById('balloon-review-link').href = place.reviewLink;
     
-    balloon.classList.remove('hidden');
-    balloon.classList.add('visible');
+    document.getElementById('custom-balloon').classList.remove('hidden');
+    document.getElementById('custom-balloon').classList.add('visible');
 }
 
+// Обработчики событий
 document.getElementById('close-balloon').addEventListener('click', function() {
     document.getElementById('custom-balloon').classList.remove('visible');
     document.getElementById('custom-balloon').classList.add('hidden');
 });
 
 document.getElementById('toggleFilters').addEventListener('click', function() {
-    document.getElementById('filters-panel').classList.toggle('visible');
+    document.getElementById('filters-panel').classList.toggle('hidden');
 });
+
+document.getElementById('ratingFilter').addEventListener('change', filterMarkers);
+document.getElementById('districtFilter').addEventListener('change', filterMarkers);
+document.getElementById('hoursFilter').addEventListener('change', filterMarkers);
+document.getElementById('searchInput').addEventListener('input', filterMarkers);
