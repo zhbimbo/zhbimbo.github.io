@@ -1,71 +1,55 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="ru">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Кальянный Патруль</title>
-    <script src="https://api-maps.yandex.ru/2.1/?apikey=767b6b86-29dc-4346-b485-2ec344f0e567&lang=ru_RU" type="text/javascript"></script>
-    <script src="https://cdn.jsdelivr.net/npm/interactjs/dist/interact.min.js"></script>
+    <script src="https://api-maps.yandex.ru/2.1/?apikey=ваш_ключ&lang=ru_RU" type="text/javascript"></script>
     <link rel="stylesheet" href="style.css">
     <script src="script.js" defer></script>
 </head>
 <body>
-    <!-- Заголовок поверх карты -->
-    <div id="header">
-        <h1>📍 Карта Кальянного Патруля</h1>
-    </div>
-
-    <!-- Кнопка управления фильтрами -->
-    <div id="controls">
-        <button id="toggleFilters">🔍 Фильтры</button>
-    </div>
-
-    <!-- Карта -->
+    <!-- Контейнер карты -->
     <div id="map">
-        <!-- Блок статистики в нижней части карты (слева) -->
+        <!-- Заголовок на карте -->
+        <div id="header">
+            <h1>📍 Карта Кальянного Патруля</h1>
+            <button id="toggleFilters">🔍 Фильтры</button>
+        </div>
+
+        <!-- Блок статистики -->
         <div id="stats-overlay">
             Найдено: <span id="count">0</span> заведений
         </div>
-
-        <!-- Легенда в нижней части карты (справа) -->
-        <div id="legend">
-            <p><img src="icons/star-green.png" alt="Зелёная звезда"> ⭐ 4+</p>
-            <p><img src="icons/star-yellow.png" alt="Жёлтая звезда"> ⭐ 3–3.9</p>
-            <p><img src="icons/star-red.png" alt="Красная звезда"> ⭐ 2 и ниже</p>
-        </div>
     </div>
 
-<!-- Обновлённая панель фильтров -->
-<div id="filters-panel">
-    <select id="ratingFilter">
-        <option value="all">⭐ Все рейтинги</option>
-        <option value="5">⭐ 5+</option>
-        <option value="4">⭐ 4+</option>
-        <option value="3">⭐ 3+</option>
-        <option value="2">⭐ 2+</option>
-        <option value="1">⭐ 1+</option>
-    </select>
-    
-    <select id="districtFilter">
-        <option value="all">📍 Все районы</option>
-        <option value="САО">📍 САО</option>
-        <option value="ЦАО">📍 ЦАО</option>
-        <option value="ЮВАО">📍 ЮВАО</option>
-    </select>
-    
-    <select id="hoursFilter">
-        <option value="all">🕒 Любой режим</option>
-        <option value="Круглосуточно">🕒 Круглосуточно</option>
-        <option value="Пн–Вс: 12:00–02:00">🕒 Пн–Вс: 12:00–02:00</option>
-        <option value="Пн–Вс: 12:00–03:00">🕒 Пн–Вс: 12:00–03:00</option>
-    </select>
-    
-    <input type="text" id="searchInput" placeholder="🔍 Поиск по названию или адресу...">
-    
-    <button id="applyFilters" style="margin-top: 10px;">Применить фильтры</button>
-</div>
-    <!-- Кастомное всплывающее окно -->
-    <div id="custom-balloon" class="hidden draggable">
+    <!-- Панель фильтров -->
+    <div id="filters-panel" class="hidden">
+        <select id="ratingFilter">
+            <option value="all">⭐ Все рейтинги</option>
+            <option value="5">⭐ 5+</option>
+            <option value="4">⭐ 4+</option>
+            <option value="3">⭐ 3+</option>
+            <option value="2">⭐ 2+</option>
+            <option value="1">⭐ 1+</option>
+        </select>
+        <select id="districtFilter">
+            <option value="all">📍 Все районы</option>
+            <option value="САО">📍 САО</option>
+            <option value="ЦАО">📍 ЦАО</option>
+            <option value="ЮВАО">📍 ЮВАО</option>
+        </select>
+        <select id="hoursFilter">
+            <option value="all">🕒 Любой режим</option>
+            <option value="Круглосуточно">🕒 Круглосуточно</option>
+            <option value="Пн–Вс: 12:00–02:00">🕒 Пн–Вс: 12:00–02:00</option>
+            <option value="Пн–Вс: 12:00–03:00">🕒 Пн–Вс: 12:00–03:00</option>
+        </select>
+        <input type="text" id="searchInput" placeholder="🔍 Поиск по названию...">
+    </div>
+
+    <!-- Всплывающее окно -->
+    <div id="custom-balloon" class="hidden">
         <div id="balloon-content">
             <div id="balloon-header">
                 <h2 id="balloon-title"></h2>
