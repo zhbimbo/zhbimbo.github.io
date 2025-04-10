@@ -7,6 +7,38 @@ const getIconByRating = (rating) => {
     return 'icons/star-red.png';
 };
 
+// Проверка на мобильное устройство
+const isMobile = () => window.innerWidth <= 767;
+
+// Открытие боковой панели (ПК)
+const openDesktopSidebar = (place) => {
+    document.getElementById('sidebar-title').textContent = place.name;
+    document.getElementById('sidebar-image').src = place.photo;
+    document.getElementById('sidebar-address').textContent = place.address;
+    document.getElementById('sidebar-phone').textContent = place.phone;
+    document.getElementById('sidebar-hours').textContent = place.hours;
+    document.getElementById('sidebar-rating').textContent = place.description;
+    document.getElementById('sidebar-review-link').href = place.reviewLink;
+    
+    document.getElementById('desktop-sidebar').classList.remove('hidden');
+    document.getElementById('desktop-sidebar').classList.add('visible');
+};
+
+// Открытие нижней панели (мобилки)
+const openMobileBottomSheet = (place) => {
+    document.getElementById('balloon-title').textContent = place.name;
+    document.getElementById('balloon-image').src = place.photo;
+    document.getElementById('balloon-address').textContent = place.address;
+    document.getElementById('balloon-phone').textContent = place.phone;
+    document.getElementById('balloon-hours').textContent = place.hours;
+    document.getElementById('balloon-rating').textContent = place.description;
+    document.getElementById('balloon-review-link').href = place.reviewLink;
+    
+    document.getElementById('mobile-bottom-sheet').classList.remove('hidden');
+    document.getElementById('mobile-bottom-sheet').classList.add('visible');
+};
+
+// Инициализация карты
 ymaps.ready(() => {
     map = new ymaps.Map('map', {
         center: [55.7558, 37.6173],
@@ -48,93 +80,30 @@ ymaps.ready(() => {
                     }
                 );
 
-                    placemark.events.add('click', function() {
-                        const placeData = this.properties.get('originalData');
-                        
-                        if (isTouchDevice()) {
-                            openMobileBottomSheet(placeData);
-                        } else {
-                            openDesktopSidebar(placeData);
-                        }
-                        
-                        map.panTo(this.geometry.getCoordinates(), {
-                            flying: true,
-                            duration: 300
-                        });
+                placemark.events.add('click', function() {
+                    const placeData = this.properties.get('originalData');
+                    
+                    if (isMobile()) {
+                        openMobileBottomSheet(placeData);
+                    } else {
+                        openDesktopSidebar(placeData);
+                    }
+                    
+                    map.panTo(this.geometry.getCoordinates(), {
+                        flying: true,
+                        duration: 300
                     });
+                });
 
-// Новые функции для открытия панелей
-function openDesktopSidebar(place) {
-    document.getElementById('sidebar-title').textContent = place.name;
-    document.getElementById('sidebar-image').src = place.photo;
-    document.getElementById('sidebar-address').textContent = place.address;
-    document.getElementById('sidebar-phone').textContent = place.phone;
-    document.getElementById('sidebar-hours').textContent = place.hours;
-    document.getElementById('sidebar-rating').textContent = place.description;
-    document.getElementById('sidebar-review-link').href = place.reviewLink;
-    
-    document.getElementById('desktop-sidebar').classList.remove('hidden');
-    document.getElementById('desktop-sidebar').classList.add('visible');
-}
+                placemarks.push(placemark);
+                map.geoObjects.add(placemark);
+            });
 
-function openMobileBottomSheet(place) {
-    document.getElementById('balloon-title').textContent = place.name;
-    document.getElementById('balloon-image').src = place.photo;
-    document.getElementById('balloon-address').textContent = place.address;
-    document.getElementById('balloon-phone').textContent = place.phone;
-    document.getElementById('balloon-hours').textContent = place.hours;
-    document.getElementById('balloon-rating').textContent = place.description;
-    document.getElementById('balloon-review-link').href = place.reviewLink;
-    
-    document.getElementById('mobile-bottom-sheet').classList.remove('hidden');
-    document.getElementById('mobile-bottom-sheet').classList.add('visible');
-}
-
-// Функция определения типа устройства
-function isTouchDevice() {
-    return (('ontouchstart' in window) ||
-        (navigator.maxTouchPoints > 0) ||
-        (navigator.msMaxTouchPoints > 0));
-}
-
-// Закрытие панелей
-document.getElementById('close-sidebar').addEventListener('click', function() {
-    document.getElementById('desktop-sidebar').classList.remove('visible');
-    document.getElementById('desktop-sidebar').classList.add('hidden');
+            updateStats(data.length);
+        });
 });
 
-document.getElementById('close-balloon').addEventListener('click', function() {
-    document.getElementById('mobile-bottom-sheet').classList.remove('visible');
-    document.getElementById('mobile-bottom-sheet').classList.add('hidden');
-});
-
-// Свайп для мобильной панели
-let startY;
-
-document.getElementById('mobile-bottom-sheet').addEventListener('touchstart', function(e) {
-    startY = e.touches[0].clientY;
-}, {passive: true});
-
-document.getElementById('mobile-bottom-sheet').addEventListener('touchmove', function(e) {
-    const currentY = e.touches[0].clientY;
-    const diff = startY - currentY;
-    
-    if (diff < 0) { // Свайп вниз
-        e.preventDefault();
-        this.style.transform = `translateY(${-diff}px)`;
-    }
-}, {passive: false});
-
-document.getElementById('mobile-bottom-sheet').addEventListener('touchend', function(e) {
-    const currentY = e.changedTouches[0].clientY;
-    const diff = startY - currentY;
-    
-    if (diff > 100) { // Если свайпнули достаточно сильно
-        this.classList.remove('visible');
-        this.classList.add('hidden');
-    }
-    this.style.transform = '';
-});
+// Фильтрация маркеров
 function filterMarkers() {
     const ratingValue = parseFloat(document.getElementById('ratingFilter').value) || 0;
     const districtValue = document.getElementById('districtFilter').value;
@@ -165,31 +134,53 @@ function filterMarkers() {
     updateStats(filtered.length);
 }
 
+// Обновление статистики
 function updateStats(count) {
     document.getElementById('count').textContent = count;
 }
 
-function openCustomBalloon(place) {
-    document.getElementById('balloon-title').textContent = place.name;
-    document.getElementById('balloon-image').src = place.photo;
-    document.getElementById('balloon-address').textContent = place.address;
-    document.getElementById('balloon-phone').textContent = place.phone;
-    document.getElementById('balloon-hours').textContent = place.hours;
-    document.getElementById('balloon-rating').textContent = place.description;
-    document.getElementById('balloon-review-link').href = place.reviewLink;
-    
-    document.getElementById('custom-balloon').classList.remove('hidden');
-    document.getElementById('custom-balloon').classList.add('visible');
-}
-
-// Обработчики событий
-document.getElementById('close-balloon').addEventListener('click', function() {
-    document.getElementById('custom-balloon').classList.remove('visible');
-    document.getElementById('custom-balloon').classList.add('hidden');
+// Закрытие панелей
+document.getElementById('close-sidebar').addEventListener('click', function() {
+    document.getElementById('desktop-sidebar').classList.remove('visible');
+    document.getElementById('desktop-sidebar').classList.add('hidden');
 });
 
+document.getElementById('close-balloon').addEventListener('click', function() {
+    document.getElementById('mobile-bottom-sheet').classList.remove('visible');
+    document.getElementById('mobile-bottom-sheet').classList.add('hidden');
+});
+
+// Свайп для мобильной панели
+let startY;
+
+document.getElementById('mobile-bottom-sheet').addEventListener('touchstart', function(e) {
+    startY = e.touches[0].clientY;
+}, {passive: true});
+
+document.getElementById('mobile-bottom-sheet').addEventListener('touchmove', function(e) {
+    const currentY = e.touches[0].clientY;
+    const diff = startY - currentY;
+    
+    if (diff < 0) {
+        e.preventDefault();
+        this.style.transform = `translateY(${-diff}px)`;
+    }
+}, {passive: false});
+
+document.getElementById('mobile-bottom-sheet').addEventListener('touchend', function(e) {
+    const currentY = e.changedTouches[0].clientY;
+    const diff = startY - currentY;
+    
+    if (diff > 100) {
+        this.classList.remove('visible');
+        this.classList.add('hidden');
+    }
+    this.style.transform = '';
+});
+
+// Обработчики фильтров
 document.getElementById('toggleFilters').addEventListener('click', function() {
-    document.getElementById('filters-panel').classList.toggle('hidden');
+    document.getElementById('filters-panel').classList.toggle('visible');
 });
 
 document.getElementById('ratingFilter').addEventListener('change', filterMarkers);
