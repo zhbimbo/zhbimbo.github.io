@@ -3,6 +3,7 @@ let map;
 let placemarks = [];
 let isDragging = false;
 let startY = 0;
+let selectedPlacemark = null;
 
 // Определение типа устройства
 const isMobile = () => {
@@ -17,10 +18,24 @@ const getIconByRating = (rating) => {
   return 'icons/star-red.png';
 };
 
+// Подсветка выбранного маркера
+const highlightPlacemark = (placemark) => {
+  // Сбрасываем подсветку у всех маркеров
+  placemarks.forEach(p => {
+    p.options.set('iconImageSize', [30, 30]);
+    p.options.set('iconImageOffset', [-15, -15]);
+  });
+  
+  // Подсвечиваем выбранный
+  if (placemark) {
+    placemark.options.set('iconImageSize', [40, 40]);
+    placemark.options.set('iconImageOffset', [-20, -20]);
+  }
+  selectedPlacemark = placemark;
+};
+
 // Открытие боковой панели (ПК)
 const openDesktopSidebar = (place) => {
-  console.log('Opening desktop sidebar for:', place.name);
-  
   document.getElementById('sidebar-title').textContent = place.name;
   document.getElementById('sidebar-image').src = place.photo;
   document.getElementById('sidebar-address').textContent = place.address;
@@ -36,8 +51,6 @@ const openDesktopSidebar = (place) => {
 
 // Открытие нижней панели (мобильные)
 const openMobileBottomSheet = (place) => {
-  console.log('Opening mobile bottom sheet for:', place.name);
-  
   document.getElementById('balloon-title').textContent = place.name;
   document.getElementById('balloon-image').src = place.photo;
   document.getElementById('balloon-address').textContent = place.address;
@@ -58,6 +71,8 @@ const closePanels = () => {
   
   document.getElementById('mobile-bottom-sheet').classList.remove('visible');
   document.getElementById('mobile-bottom-sheet').classList.add('hidden');
+  
+  highlightPlacemark(null);
 };
 
 // Обработчик свайпа для мобильной панели
@@ -123,6 +138,7 @@ const filterMarkers = () => {
 
   filtered.forEach(placemark => map.geoObjects.add(placemark));
   updateStats(filtered.length);
+  closePanels();
 };
 
 // Обновление статистики
@@ -133,8 +149,6 @@ const updateStats = (count) => {
 // Инициализация карты
 const initMap = () => {
   ymaps.ready(() => {
-    console.log('Yandex Maps API loaded');
-    
     map = new ymaps.Map('map', {
       center: [55.7558, 37.6173],
       zoom: 12,
@@ -148,8 +162,6 @@ const initMap = () => {
         return response.json();
       })
       .then(data => {
-        console.log('Loaded places:', data.length);
-        
         data.forEach(place => {
           const ratingMatch = place.description.match(/\d\.\d|\d/);
           const rating = ratingMatch ? parseFloat(ratingMatch[0]) : 0;
@@ -183,7 +195,6 @@ const initMap = () => {
 
           // Обработчик клика
           placemark.events.add('click', function(e) {
-            console.log('Placemark clicked:', place.name);
             const placeData = this.properties.get('originalData');
             
             if (isMobile()) {
@@ -192,6 +203,7 @@ const initMap = () => {
               openDesktopSidebar(placeData);
             }
             
+            highlightPlacemark(this);
             map.panTo(this.geometry.getCoordinates(), {
               flying: true,
               duration: 300
@@ -216,8 +228,6 @@ const initMap = () => {
 
 // Инициализация при загрузке
 document.addEventListener('DOMContentLoaded', () => {
-  console.log('DOM fully loaded');
-  
   initMap();
   setupSwipeHandlers();
   
@@ -225,8 +235,11 @@ document.addEventListener('DOMContentLoaded', () => {
   document.getElementById('close-sidebar').addEventListener('click', closePanels);
   document.getElementById('close-balloon').addEventListener('click', closePanels);
   
-  document.getElementById('toggleFilters').addEventListener('click', function() {
-    document.getElementById('filters-panel').classList.toggle('visible');
+  // Исправленный обработчик кнопки фильтров
+  document.getElementById('toggleFilters').addEventListener('click', function(e) {
+    e.stopPropagation();
+    const filtersPanel = document.getElementById('filters-panel');
+    filtersPanel.classList.toggle('visible');
   });
 
   // Обработчики фильтров
@@ -235,7 +248,13 @@ document.addEventListener('DOMContentLoaded', () => {
   document.getElementById('hoursFilter').addEventListener('change', filterMarkers);
   document.getElementById('searchInput').addEventListener('input', filterMarkers);
   
-  // Логирование для отладки
-  console.log('Event listeners attached');
-  window.testMarkers = () => console.log('Markers:', placemarks);
+  // Закрытие фильтров при клике вне панели
+  document.addEventListener('click', (e) => {
+    const filtersPanel = document.getElementById('filters-panel');
+    const toggleBtn = document.getElementById('toggleFilters');
+    
+    if (!filtersPanel.contains(e.target) && e.target !== toggleBtn) {
+      filtersPanel.classList.remove('visible');
+    }
+  });
 });
