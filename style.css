@@ -1,24 +1,89 @@
-/* Маркеры */
-.ymaps-2-1-79-placemark-overlay {
-    cursor: pointer !important;
+/* Основные стили */
+body {
+    margin: 0;
+    font-family: Arial, sans-serif;
+    overflow: hidden;
+}
+
+/* Контейнер карты */
+#map {
+    width: 100vw;
+    height: 100vh;
+    position: relative;
+}
+
+/* Заголовок на карте */
+#header {
+    position: absolute;
+    top: 20px;
+    left: 50%;
+    transform: translateX(-50%);
+    z-index: 1000;
+    background: rgba(255, 255, 255, 0.9);
+    padding: 10px 15px;
+    border-radius: 10px;
+    box-shadow: 0 2px 10px rgba(0,0,0,0.2);
+    display: flex;
+    align-items: center;
+    gap: 15px;
+}
+
+#header h1 {
+    margin: 0;
+    font-size: 1.2rem;
+    white-space: nowrap;
+}
+
+#toggleFilters {
+    background: none;
+    border: none;
+    font-size: 1.2rem;
+    cursor: pointer;
+    padding: 5px;
+}
+
+/* Блок статистики */
+#stats-overlay {
+    position: absolute;
+    bottom: 20px;
+    left: 20px;
+    z-index: 1000;
+    background: rgba(255, 255, 255, 0.9);
+    padding: 8px 12px;
+    border-radius: 10px;
+    font-size: 0.9rem;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.1);
 }
 
 /* Панель фильтров */
 #filters-panel {
-    position: fixed;
+    position: absolute;
     top: 80px;
-    right: -300px;
-    width: 280px;
-    background: white;
-    padding: 15px;
-    box-shadow: 0 0 10px rgba(0,0,0,0.2);
-    border-radius: 5px;
+    left: 50%;
+    transform: translateX(-50%);
     z-index: 1000;
-    transition: right 0.3s ease;
+    background: rgba(255, 255, 255, 0.95);
+    padding: 15px;
+    border-radius: 10px;
+    box-shadow: 0 4px 15px rgba(0,0,0,0.2);
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    width: 90%;
+    max-width: 400px;
+    max-height: 70vh;
+    overflow-y: auto;
 }
 
-#filters-panel.visible {
-    right: 20px;
+#filters-panel.hidden {
+    display: none;
+}
+
+#filters-panel select, #filters-panel input {
+    padding: 8px 12px;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+    font-size: 0.9rem;
 }
 
 /* Всплывающее окно */
@@ -33,27 +98,60 @@
     transition: transform 0.3s ease;
     z-index: 2000;
     overflow-y: auto;
-    border-radius: 10px 10px 0 0;
-    box-shadow: 0 -2px 10px rgba(0,0,0,0.2);
+    border-radius: 15px 15px 0 0;
+    box-shadow: 0 -5px 15px rgba(0,0,0,0.2);
 }
 
 #custom-balloon.visible {
     transform: translateY(0);
 }
 
-/* Мобильная версия */
+#balloon-content {
+    padding: 20px;
+}
+
+#balloon-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 15px;
+}
+
+#balloon-image {
+    width: 100%;
+    max-height: 200px;
+    object-fit: cover;
+    border-radius: 8px;
+    margin-bottom: 10px;
+}
+
+#close-balloon {
+    background: none;
+    border: none;
+    font-size: 1.5rem;
+    cursor: pointer;
+}
+
+/* Адаптивность */
 @media (max-width: 600px) {
+    #header {
+        top: 10px;
+        padding: 8px 12px;
+    }
+    
+    #header h1 {
+        font-size: 1rem;
+    }
+    
+    #stats-overlay {
+        bottom: 10px;
+        left: 10px;
+        font-size: 0.8rem;
+        padding: 6px 10px;
+    }
+    
     #filters-panel {
-        width: 80%;
-        right: -100%;
-    }
-    
-    #filters-panel.visible {
-        right: 10px;
-    }
-    
-    #stats-overlay, #legend {
-        font-size: 12px;
-        padding: 5px 8px;
+        top: 70px;
+        width: 85%;
     }
 }
