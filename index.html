@@ -35,31 +35,35 @@
         </div>
     </div>
 
-    <!-- Панель фильтров -->
-    <div id="filters-panel" class="hidden">
-        <select id="ratingFilter">
-            <option value="all">⭐ Все рейтинги</option>
-            <option value="5">⭐ 5+</option>
-            <option value="4">⭐ 4+</option>
-            <option value="3">⭐ 3+</option>
-            <option value="2">⭐ 2+</option>
-            <option value="1">⭐ 1+</option>
-        </select>
-        <select id="districtFilter">
-            <option value="all">📍 Все районы</option>
-            <option value="САО">📍 САО</option>
-            <option value="ЦАО">📍 ЦАО</option>
-            <option value="ЮВАО">📍 ЮВАО</option>
-        </select>
-        <select id="hoursFilter">
-            <option value="all">🕒 Любой режим</option>
-            <option value="Круглосуточно">🕒 Круглосуточно</option>
-            <option value="Пн–Вс: 12:00–02:00">🕒 Пн–Вс: 12:00–02:00</option>
-            <option value="Пн–Вс: 12:00–03:00">🕒 Пн–Вс: 12:00–03:00</option>
-        </select>
-        <input type="text" id="searchInput" placeholder="🔍 Поиск по названию или адресу...">
-    </div>
-
+<!-- Обновлённая панель фильтров -->
+<div id="filters-panel">
+    <select id="ratingFilter">
+        <option value="all">⭐ Все рейтинги</option>
+        <option value="5">⭐ 5+</option>
+        <option value="4">⭐ 4+</option>
+        <option value="3">⭐ 3+</option>
+        <option value="2">⭐ 2+</option>
+        <option value="1">⭐ 1+</option>
+    </select>
+    
+    <select id="districtFilter">
+        <option value="all">📍 Все районы</option>
+        <option value="САО">📍 САО</option>
+        <option value="ЦАО">📍 ЦАО</option>
+        <option value="ЮВАО">📍 ЮВАО</option>
+    </select>
+    
+    <select id="hoursFilter">
+        <option value="all">🕒 Любой режим</option>
+        <option value="Круглосуточно">🕒 Круглосуточно</option>
+        <option value="Пн–Вс: 12:00–02:00">🕒 Пн–Вс: 12:00–02:00</option>
+        <option value="Пн–Вс: 12:00–03:00">🕒 Пн–Вс: 12:00–03:00</option>
+    </select>
+    
+    <input type="text" id="searchInput" placeholder="🔍 Поиск по названию или адресу...">
+    
+    <button id="applyFilters" style="margin-top: 10px;">Применить фильтры</button>
+</div>
     <!-- Кастомное всплывающее окно -->
     <div id="custom-balloon" class="hidden draggable">
         <div id="balloon-content">
