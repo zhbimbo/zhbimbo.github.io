@@ -125,7 +125,7 @@ document.getElementById('close-sidebar').addEventListener('click', () => {
     }
 });
 
-// Закрытие мобильной панели
+// Обработчик закрытия мобильной панели
 document.getElementById('close-balloon').addEventListener('click', closeMobilePanel);
 
 // Фильтры
