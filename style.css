@@ -30,14 +30,14 @@ body {
 
 #header h1 {
     margin: 0;
-    font-size: 1.2rem;
+    font-size: 1rem; /* Вернул размер заголовка */
     white-space: nowrap;
 }
 
 #toggleFilters {
     background: none;
     border: none;
-    font-size: 1.2rem;
+    font-size: 1rem; /* Вернул размер кнопки */
     cursor: pointer;
     padding: 5px;
 }
