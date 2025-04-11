@@ -4,12 +4,14 @@ body {
     font-family: Arial, sans-serif;
     overflow: hidden;
 }
+
 /* Контейнер карты */
 #map {
     width: 100vw;
     height: 100vh;
     position: relative;
 }
+
 /* Заголовок на карте */
 #header {
     position: absolute;
@@ -20,16 +22,18 @@ body {
     background: rgba(255, 255, 255, 0.9);
     padding: 10px 15px;
     border-radius: 10px;
-    box-shadow: 0 2px 10px rgba(0,0,0,0.2);
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.2);
     display: flex;
     align-items: center;
     gap: 15px;
 }
+
 #header h1 {
     margin: 0;
     font-size: 1.2rem;
     white-space: nowrap;
 }
+
 #toggleFilters {
     background: none;
     border: none;
@@ -37,6 +41,7 @@ body {
     cursor: pointer;
     padding: 5px;
 }
+
 /* Блок статистики */
 #stats-overlay {
     position: absolute;
@@ -47,8 +52,9 @@ body {
     padding: 8px 12px;
     border-radius: 10px;
     font-size: 0.9rem;
-    box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
 }
+
 /* Панель фильтров */
 #filters-panel {
     position: absolute;
@@ -59,8 +65,8 @@ body {
     background: rgba(255, 255, 255, 0.95);
     padding: 15px;
     border-radius: 10px;
-    box-shadow: 0 4px 15px rgba(0,0,0,0.2);
-    display: flex;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+    display: none;
     flex-direction: column;
     gap: 10px;
     width: 90%;
@@ -68,49 +74,34 @@ body {
     max-height: 70vh;
     overflow-y: auto;
 }
-#filters-panel.hidden {
-    display: none;
+
+#filters-panel.visible {
+    display: block;
 }
+
 #filters-panel select, #filters-panel input {
     padding: 8px 12px;
     border: 1px solid #ddd;
     border-radius: 5px;
     font-size: 0.9rem;
 }
-/* Определение типа устройства */
+
+/* Адаптивность */
 @media (hover: hover) {
     /* Стили для устройств с мышью (ПК) */
     #mobile-bottom-sheet {
         display: none;
     }
 }
+
 @media (hover: none) {
     /* Стили для сенсорных устройств (мобилки) */
     #desktop-sidebar {
         display: none;
     }
 }
-/* Адаптивность */
-@media (max-width: 600px) {
-    #header {
-        top: 10px;
-        padding: 8px 12px;
-    }
-    #header h1 {
-        font-size: 1rem;
-    }
-    #stats-overlay {
-        bottom: 10px;
-        left: 10px;
-        font-size: 0.8rem;
-        padding: 6px 10px;
-    }
-    #filters-panel {
-        top: 70px;
-        width: 85%;
-    }
-}
-/* ===== Десктопная боковая панель ===== */
+
+/* Десктопная боковая панель */
 #desktop-sidebar {
     position: fixed;
     left: -400px;
@@ -119,16 +110,19 @@ body {
     height: 100vh;
     background: white;
     z-index: 2000;
-    box-shadow: 2px 0 10px rgba(0,0,0,0.1);
+    box-shadow: 2px 0 10px rgba(0, 0, 0, 0.1);
     transition: left 0.3s ease;
     overflow-y: auto;
 }
+
 #desktop-sidebar.visible {
     left: 0;
 }
+
 #sidebar-content {
     padding: 20px;
 }
+
 #sidebar-image {
     width: 100%;
     max-height: 200px;
@@ -136,7 +130,8 @@ body {
     border-radius: 8px;
     margin: 10px 0;
 }
-/* ===== Мобильная панель ===== */
+
+/* Мобильная панель */
 #mobile-bottom-sheet {
     position: fixed;
     bottom: 0;
@@ -149,16 +144,19 @@ body {
     z-index: 2000;
     overflow-y: auto;
     border-radius: 15px 15px 0 0;
-    box-shadow: 0 -5px 15px rgba(0,0,0,0.2);
+    box-shadow: 0 -5px 15px rgba(0, 0, 0, 0.2);
     touch-action: none;
 }
+
 #mobile-bottom-sheet.visible {
     transform: translateY(-30%);
 }
+
 #mobile-bottom-sheet.fullscreen {
     transform: translateY(-70%);
     max-height: 100vh;
 }
+
 #balloon-header {
     padding: 15px;
     background: #f8f8f8;
@@ -167,6 +165,7 @@ body {
     z-index: 10;
     touch-action: none;
 }
+
 #close-balloon {
     position: absolute;
     right: 15px;
@@ -176,29 +175,10 @@ body {
     font-size: 1.5rem;
     cursor: pointer;
 }
-/* ===== Адаптация ===== */
-@media (min-width: 768px) {
-    #mobile-bottom-sheet {
-        display: none !important;
-    }
-}
-@media (max-width: 767px) {
-    #desktop-sidebar {
-        display: none !important;
-    }
-}
-/* Принудительное отображение для теста */
-#desktop-sidebar, #mobile-bottom-sheet {
-    display: block !important;
-    background: red !important;
-    opacity: 0.9 !important;
-}
-/* Подсветка маркеров */
-.ymaps-2-1-79-placemark-overlay {
-    animation: pulse 1s infinite;
-}
-@keyframes pulse {
-    0% { transform: scale(1); }
-    50% { transform: scale(1.2); }
-    100% { transform: scale(1); }
+
+/* Фото на мобильной панели */
+#balloon-image {
+    max-width: 100px;
+    height: auto;
+    margin-bottom: 10px;
 }
