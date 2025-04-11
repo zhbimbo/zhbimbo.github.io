@@ -86,7 +86,7 @@ const setupBottomSheet = () => {
 
   header.addEventListener('touchstart', (e) => {
     startY = e.touches[0].clientY;
-    currentY = parseInt(bottomSheet.style.transform.replace('translateY(', '').replace('px)', '') || 0;
+    currentY = parseInt(bottomSheet.style.transform.replace('translateY(', '').replace('px)', '')) || 0; // Исправлено здесь
     isDragging = true;
     bottomSheet.style.transition = 'none';
   }, {passive: true});
