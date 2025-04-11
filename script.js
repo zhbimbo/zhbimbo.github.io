@@ -189,20 +189,15 @@ ymaps.ready(() => {
 document.getElementById('close-sidebar').addEventListener('click', () => {
   document.getElementById('desktop-sidebar').classList.remove('visible');
   document.getElementById('desktop-sidebar').classList.add('hidden');
+  
   if (selectedPlacemark) {
     selectedPlacemark.options.set('iconImageSize', [30, 30]);
     selectedPlacemark = null;
   }
 });
 
-  document.getElementById('close-balloon').addEventListener('click', closeMobilePanel);
-  document.getElementById('mobile-bottom-sheet').classList.remove('visible');
-  document.getElementById('mobile-bottom-sheet').classList.add('hidden');
-  if (selectedPlacemark) {
-    selectedPlacemark.options.set('iconImageSize', [30, 30]);
-    selectedPlacemark = null;
-  }
-};
+// Обработчик закрытия мобильной панели
+document.getElementById('close-balloon').addEventListener('click', closeMobilePanel);
 
 // Фильтры (исправленный обработчик)
 document.getElementById('toggleFilters').addEventListener('click', (e) => {
