@@ -47,16 +47,23 @@ const createPlacemark = (place) => {
         if (isMobile()) {
             openMobilePanel(placeData);
         } else {
-            openDesktopSidebar(placeData);
+            // Открываем боковую панель на ПК
+            document.getElementById('sidebar-title').textContent = placeData.name;
+            document.getElementById('sidebar-image').src = placeData.photo;
+            document.getElementById('sidebar-address').textContent = placeData.address;
+            document.getElementById('sidebar-phone').textContent = placeData.phone;
+            document.getElementById('sidebar-hours').textContent = placeData.hours;
+            document.getElementById('sidebar-rating').textContent = placeData.description;
+            document.getElementById('sidebar-review-link').href = placeData.reviewLink;
+            document.getElementById('desktop-sidebar').classList.remove('hidden');
+            document.getElementById('desktop-sidebar').classList.add('visible');
         }
-
         // Подсветка маркера
         if (selectedPlacemark) {
             selectedPlacemark.options.set('iconImageSize', [30, 30]);
         }
         e.get('target').options.set('iconImageSize', [40, 40]);
         selectedPlacemark = e.get('target');
-
         // Центрируем карту
         map.panTo(e.get('target').geometry.getCoordinates());
         e.preventDefault();
@@ -65,22 +72,48 @@ const createPlacemark = (place) => {
     return placemark;
 };
 
-// Открытие десктопной панели
-const openDesktopSidebar = (placeData) => {
-    document.getElementById('sidebar-title').textContent = placeData.name;
-    document.getElementById('sidebar-image').src = placeData.photo;
-    document.getElementById('sidebar-address').textContent = placeData.address;
-    document.getElementById('sidebar-phone').textContent = placeData.phone;
-    document.getElementById('sidebar-hours').textContent = placeData.hours;
-    document.getElementById('sidebar-rating').textContent = placeData.description;
-    document.getElementById('sidebar-review-link').href = placeData.reviewLink;
-    document.getElementById('desktop-sidebar').classList.remove('hidden');
-    document.getElementById('desktop-sidebar').classList.add('visible');
+const setupBottomSheet = () => {
+    const bottomSheet = document.getElementById('mobile-bottom-sheet');
+    const header = bottomSheet.querySelector('#balloon-header');
+    header.addEventListener('touchstart', (e) => {
+        startY = e.touches[0].clientY;
+        currentY = parseInt(bottomSheet.style.transform.replace('translateY(', '').replace('px)', '')) || 0; // Исправлено здесь
+        isDragging = true;
+        bottomSheet.style.transition = 'none';
+    }, { passive: true });
+    document.addEventListener('touchmove', (e) => {
+        if (!isDragging) return;
+        const y = e.touches[0].clientY;
+        const diff = y - startY;
+        let newY = currentY + diff;
+        // Ограничиваем перемещение
+        if (newY > 0) newY = 0;
+        if (newY < -window.innerHeight * 0.7) newY = -window.innerHeight * 0.7;
+        bottomSheet.style.transform = `translateY(${newY}px)`;
+    }, { passive: false });
+    document.addEventListener('touchend', (e) => {
+        if (!isDragging) return;
+        isDragging = false;
+        bottomSheet.style.transition = 'transform 0.3s ease';
+        const y = e.changedTouches[0].clientY;
+        const diff = y - startY;
+        const currentPos = parseInt(bottomSheet.style.transform.replace('translateY(', '').replace('px)', '')) || 0;
+        // Определяем, нужно ли закрыть или открыть полностью
+        if (diff > 50) { // Свайп вниз
+            if (currentPos > -window.innerHeight * 0.3) {
+                closeMobilePanel();
+            } else {
+                bottomSheet.style.transform = 'translateY(0)';
+            }
+        } else if (diff < -50) { // Свайп вверх
+            bottomSheet.style.transform = `translateY(${-window.innerHeight * 0.7}px)`;
+        }
+    });
 };
 
-// Открытие мобильной панели
 const openMobilePanel = (placeData) => {
     const bottomSheet = document.getElementById('mobile-bottom-sheet');
+    // Заполняем данные
     document.getElementById('balloon-title').textContent = placeData.name;
     document.getElementById('balloon-image').src = placeData.photo;
     document.getElementById('balloon-address').textContent = placeData.address;
@@ -88,10 +121,7 @@ const openMobilePanel = (placeData) => {
     document.getElementById('balloon-hours').textContent = placeData.hours;
     document.getElementById('balloon-rating').textContent = placeData.description;
     document.getElementById('balloon-review-link').href = placeData.reviewLink;
-
-    // Уменьшение фото
-    document.getElementById('balloon-image').style.maxWidth = '100px';
-
+    // Показываем панель
     bottomSheet.classList.remove('hidden');
     setTimeout(() => {
         bottomSheet.classList.add('visible');
@@ -99,7 +129,6 @@ const openMobilePanel = (placeData) => {
     }, 10);
 };
 
-// Закрытие панелей
 const closeMobilePanel = () => {
     const bottomSheet = document.getElementById('mobile-bottom-sheet');
     bottomSheet.style.transform = 'translateY(100%)';
@@ -113,46 +142,18 @@ const closeMobilePanel = () => {
     }, 300);
 };
 
-document.getElementById('close-sidebar').addEventListener('click', () => {
-    document.getElementById('desktop-sidebar').classList.remove('visible');
-    document.getElementById('desktop-sidebar').classList.add('hidden');
-    if (selectedPlacemark) {
-        selectedPlacemark.options.set('iconImageSize', [30, 30]);
-        selectedPlacemark = null;
-    }
-});
-
-document.getElementById('close-balloon').addEventListener('click', closeMobilePanel);
-
-// Фильтрация маркеров
-const filterPlacemarks = () => {
-    const ratingFilter = document.getElementById('ratingFilter').value;
-    const districtFilter = document.getElementById('districtFilter').value;
-    const searchQuery = document.getElementById('searchInput').value.toLowerCase();
-
-    placemarks.forEach(placemark => {
-        const placeData = placemark.properties.get('customData');
-        const rating = parseFloat(placeData.description.match(/\d\.\d|\d/)[0]);
-        const matchesRating = ratingFilter === 'all' || rating >= parseFloat(ratingFilter);
-        const matchesDistrict = districtFilter === 'all' || placeData.district === districtFilter;
-        const matchesSearch = placeData.name.toLowerCase().includes(searchQuery);
-
-        placemark.options.set('visible', matchesRating && matchesDistrict && matchesSearch);
-    });
-};
-
-// Инициализация карты
+// Загрузка карты
 ymaps.ready(() => {
     map = new ymaps.Map('map', {
         center: [55.7558, 37.6173],
         zoom: 12,
         controls: []
     });
-
+    // Инициализируем мобильную панель (ДОБАВЬТЕ ЭТОТ БЛОК)
     if (isMobile()) {
         setupBottomSheet();
     }
-
+    // Загрузка данных
     fetch('data.json')
         .then(response => response.json())
         .then(data => {
@@ -164,50 +165,31 @@ ymaps.ready(() => {
             document.getElementById('count').textContent = data.length;
         })
         .catch(error => console.error('Ошибка загрузки данных:', error));
-
-    // Обработчики событий для фильтров
-    document.getElementById('ratingFilter').addEventListener('change', filterPlacemarks);
-    document.getElementById('districtFilter').addEventListener('change', filterPlacemarks);
-    document.getElementById('searchInput').addEventListener('input', filterPlacemarks);
 });
 
-// Настройка свайпа для мобильной панели
-const setupBottomSheet = () => {
-    const bottomSheet = document.getElementById('mobile-bottom-sheet');
-    const header = bottomSheet.querySelector('#balloon-header');
+// Закрытие панелей
+document.getElementById('close-sidebar').addEventListener('click', () => {
+    document.getElementById('desktop-sidebar').classList.remove('visible');
+    document.getElementById('desktop-sidebar').classList.add('hidden');
+    if (selectedPlacemark) {
+        selectedPlacemark.options.set('iconImageSize', [30, 30]);
+        selectedPlacemark = null;
+    }
+});
 
-    header.addEventListener('touchstart', (e) => {
-        startY = e.touches[0].clientY;
-        currentY = parseInt(bottomSheet.style.transform.replace('translateY(', '').replace('px)', '')) || 0;
-        isDragging = true;
-        bottomSheet.style.transition = 'none';
-    }, { passive: true });
+// Обработчик закрытия мобильной панели
+document.getElementById('close-balloon').addEventListener('click', closeMobilePanel);
 
-    document.addEventListener('touchmove', (e) => {
-        if (!isDragging) return;
-        const y = e.touches[0].clientY;
-        const diff = y - startY;
-        let newY = currentY + diff;
+// Фильтры (исправленный обработчик)
+document.getElementById('toggleFilters').addEventListener('click', (e) => {
+    e.stopPropagation();
+    const filtersPanel = document.getElementById('filters-panel');
+    filtersPanel.classList.toggle('visible');
+    filtersPanel.style.display = filtersPanel.classList.contains('visible') ? 'block' : 'none';
+});
 
-        if (newY > 0) newY = 0;
-        if (newY < -window.innerHeight * 0.7) newY = -window.innerHeight * 0.7;
-
-        bottomSheet.style.transform = `translateY(${newY}px)`;
-    }, { passive: false });
-
-    document.addEventListener('touchend', (e) => {
-        if (!isDragging) return;
-        isDragging = false;
-        bottomSheet.style.transition = 'transform 0.3s ease';
-
-        const y = e.changedTouches[0].clientY;
-        const diff = y - startY;
-        const currentPos = parseInt(bottomSheet.style.transform.replace('translateY(', '').replace('px)', '')) || 0;
-
-        if (diff > 50) {
-            closeMobilePanel();
-        } else if (diff < -50) {
-            bottomSheet.style.transform = `translateY(${-window.innerHeight * 0.7}px)`;
-        }
-    });
-};
+document.addEventListener('click', (e) => {
+    if (!e.target.closest('#filters-panel') && !e.target.closest('#toggleFilters')) {
+        document.getElementById('filters-panel').classList.remove('visible');
+    }
+});
