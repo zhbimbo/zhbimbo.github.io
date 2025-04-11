@@ -1,22 +1,54 @@
-// Глобальные переменные
+// 1. В начале файла (после объявления переменных)
 let map;
 let placemarks = [];
-let isDragging = false;
-let startY = 0;
 let selectedPlacemark = null;
 
-// Определение типа устройства
-const isMobile = () => {
-  return /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent) || 
-         window.innerWidth <= 768;
-};
+// Функция для определения типа устройства
+const isMobile = () => /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent);
 
-// Получение иконки по рейтингу
+// Функция получения иконки по рейтингу (оставляем как было)
 const getIconByRating = (rating) => {
   if (rating >= 4) return 'icons/star-green.png';
   if (rating >= 3) return 'icons/star-yellow.png';
   return 'icons/star-red.png';
 };
+
+// 2. Добавляем НОВУЮ функцию создания маркеров (вставляем после getIconByRating)
+const createPlacemark = (place) => {
+  const ratingMatch = place.description.match(/\d\.\d|\d/);
+  const rating = ratingMatch ? parseFloat(ratingMatch[0]) : 0;
+  
+  const placemark = new ymaps.Placemark(
+    place.coordinates,
+    {
+      balloonContentHeader: `<b>${place.name}</b>`,
+      balloonContentBody: `
+        <img src="${place.photo}" style="max-width:200px;margin-bottom:10px;">
+        <p><b>Адрес:</b> ${place.address}</p>
+        <p><b>Телефон:</b> ${place.phone}</p>
+        <p><b>Режим работы:</b> ${place.hours}</p>
+        <p><b>Рейтинг:</b> ${place.description}</p>
+        <a href="${place.reviewLink}" target="_blank">Читать обзор</a>
+      `,
+      customData: { // Все данные храним здесь
+        name: place.name,
+        photo: place.photo,
+        address: place.address,
+        phone: place.phone,
+        hours: place.hours,
+        reviewLink: place.reviewLink,
+        district: place.district,
+        rating: rating
+      }
+    },
+    {
+      iconLayout: 'default#image',
+      iconImageHref: getIconByRating(rating),
+      iconImageSize: [30, 30],
+      iconImageOffset: [-15, -15],
+      hideIconOnBalloonOpen: false
+    }
+  );
 
 // Подсветка выбранного маркера
 const highlightPlacemark = (placemark) => {
@@ -146,99 +178,54 @@ const updateStats = (count) => {
   document.getElementById('count').textContent = count;
 };
 
-// Инициализация карты
-const initMap = () => {
-  ymaps.ready(() => {
-    map = new ymaps.Map('map', {
-      center: [55.7558, 37.6173],
-      zoom: 12,
-      controls: []
-    });
-
-    // Загрузка данных
-    fetch('data.json')
-      .then(response => {
-        if (!response.ok) throw new Error('Network response was not ok');
-        return response.json();
-      })
-      .then(data => {
-        data.forEach(place => {
-          const ratingMatch = place.description.match(/\d\.\d|\d/);
-          const rating = ratingMatch ? parseFloat(ratingMatch[0]) : 0;
-          const icon = getIconByRating(rating);
-
-          const placemark = new ymaps.Placemark(
-            place.coordinates,
-            {
-              balloonContentHeader: `<b>${place.name}</b>`,
-              balloonContentBody: `
-                <img src="${place.photo}" style="max-width:200px;max-height:150px;margin-bottom:10px;">
-                <p><b>Адрес:</b> ${place.address}</p>
-                <p><b>Телефон:</b> ${place.phone}</p>
-                <p><b>Режим работы:</b> ${place.hours}</p>
-                <p><b>Рейтинг:</b> ${place.description}</p>
-                <a href="${place.reviewLink}" target="_blank">Читать обзор</a>
-              `,
-              // Добавляем все данные как свойства маркера
-              district: place.district,
-              hours: place.hours,
-              rating: parseFloat(place.description.match(/\d\.\d|\d/)[0]),
-              reviewLink: place.reviewLink,
-              photo: place.photo,
-              address: place.address,
-              phone: place.phone
-            },
-            {
-              iconLayout: 'default#image',
-              iconImageHref: getIconByRating(parseFloat(place.description.match(/\d\.\d|\d/)[0])),
-              iconImageSize: [30, 30],
-              iconImageOffset: [-15, -15],
-              hideIconOnBalloonOpen: false
-            }
-          );
-
-          // Обработчик клика
-         placemark.events.add('click', function(e) {
-          // Получаем данные из свойств маркера
-          const placeData = {
-            name: this.properties.get('balloonContentHeader').replace(/<[^>]+>/g, ''),
-            description: this.properties.get('rating'),
-            coordinates: this.geometry.getCoordinates(),
-            reviewLink: this.properties.get('reviewLink'),
-            photo: this.properties.get('photo'),
-            address: this.properties.get('address'),
-            phone: this.properties.get('phone'),
-            hours: this.properties.get('hours'),
-            district: this.properties.get('district')
-          };
-        
-          if (isMobile()) {
-            openMobileBottomSheet(placeData);
-          } else {
-            openDesktopSidebar(placeData);
-          }
-          
-          highlightPlacemark(this);
-          map.panTo(this.geometry.getCoordinates(), {
-            flying: true,
-            duration: 300
-          });
-          
-          e.preventDefault();
-          return false;
-        });
-
-          placemarks.push(placemark);
-          map.geoObjects.add(placemark);
-        });
-
-        updateStats(data.length);
-      })
-      .catch(error => {
-        console.error('Error loading data:', error);
-        alert('Ошибка загрузки данных. Проверьте консоль для подробностей.');
-      });
+// 4. ЗАМЕНЯЕМ старый код загрузки данных в ymaps.ready():
+ymaps.ready(() => {
+  map = new ymaps.Map('map', {
+    center: [55.7558, 37.6173],
+    zoom: 12,
+    controls: []
   });
+
+  fetch('data.json')
+    .then(response => response.json())
+    .then(data => {
+      data.forEach(place => {
+        const placemark = createPlacemark(place); // Используем новую функцию
+        placemarks.push(placemark);
+        map.geoObjects.add(placemark);
+      });
+      updateStats(data.length);
+    })
+    .catch(error => console.error('Data load error:', error));
+});
+  // 3. Обработчик клика для маркера
+  placemark.events.add('click', (e) => {
+    try {
+      const placeData = e.get('target').properties.get('customData');
+      console.log('Marker clicked, data:', placeData); // Для отладки
+      
+      if (isMobile()) {
+        openMobileBottomSheet(placeData);
+      } else {
+        openDesktopSidebar(placeData);
+      }
+      
+      // Подсветка выбранного маркера
+      if (selectedPlacemark) {
+        selectedPlacemark.options.set('iconImageSize', [30, 30]);
+      }
+      e.get('target').options.set('iconImageSize', [40, 40]);
+      selectedPlacemark = e.get('target');
+      
+      map.panTo(e.get('target').geometry.getCoordinates());
+      e.preventDefault();
+    } catch (err) {
+      console.error('Marker click error:', err);
+    }
+    return false;
+  });
+
+  return placemark;
 };
 
 // Инициализация при загрузке
