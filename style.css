@@ -166,6 +166,10 @@ body {
     touch-action: none;
 }
 
+#balloon-title {
+    font-size: 1.2rem;
+}
+
 #close-balloon {
     position: absolute;
     right: 15px;
