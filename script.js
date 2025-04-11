@@ -31,7 +31,7 @@ const highlightPlacemark = (placemark) => {
     placemark.options.set('iconImageSize', [40, 40]);
     placemark.options.set('iconImageOffset', [-20, -20]);
   }
-  selectedPlacemark = placemark;
+  selectedrk = rk;
 };
 
 // Открытие боковой панели (ПК)
@@ -179,14 +179,18 @@ const initMap = () => {
                 <p><b>Рейтинг:</b> ${place.description}</p>
                 <a href="${place.reviewLink}" target="_blank">Читать обзор</a>
               `,
+              // Добавляем все данные как свойства маркера
               district: place.district,
               hours: place.hours,
-              rating: rating,
-              originalData: place
+              rating: parseFloat(place.description.match(/\d\.\d|\d/)[0]),
+              reviewLink: place.reviewLink,
+              photo: place.photo,
+              address: place.address,
+              phone: place.phone
             },
             {
               iconLayout: 'default#image',
-              iconImageHref: icon,
+              iconImageHref: getIconByRating(parseFloat(place.description.match(/\d\.\d|\d/)[0])),
               iconImageSize: [30, 30],
               iconImageOffset: [-15, -15],
               hideIconOnBalloonOpen: false
@@ -194,24 +198,35 @@ const initMap = () => {
           );
 
           // Обработчик клика
-          placemark.events.add('click', function(e) {
-            const placeData = this.properties.get('originalData');
-            
-            if (isMobile()) {
-              openMobileBottomSheet(placeData);
-            } else {
-              openDesktopSidebar(placeData);
-            }
-            
-            highlightPlacemark(this);
-            map.panTo(this.geometry.getCoordinates(), {
-              flying: true,
-              duration: 300
-            });
-            
-            e.preventDefault();
-            return false;
+         placemark.events.add('click', function(e) {
+          // Получаем данные из свойств маркера
+          const placeData = {
+            name: this.properties.get('balloonContentHeader').replace(/<[^>]+>/g, ''),
+            description: this.properties.get('rating'),
+            coordinates: this.geometry.getCoordinates(),
+            reviewLink: this.properties.get('reviewLink'),
+            photo: this.properties.get('photo'),
+            address: this.properties.get('address'),
+            phone: this.properties.get('phone'),
+            hours: this.properties.get('hours'),
+            district: this.properties.get('district')
+          };
+        
+          if (isMobile()) {
+            openMobileBottomSheet(placeData);
+          } else {
+            openDesktopSidebar(placeData);
+          }
+          
+          highlightPlacemark(this);
+          map.panTo(this.geometry.getCoordinates(), {
+            flying: true,
+            duration: 300
           });
+          
+          e.preventDefault();
+          return false;
+        });
 
           placemarks.push(placemark);
           map.geoObjects.add(placemark);
