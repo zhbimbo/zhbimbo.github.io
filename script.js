@@ -2,6 +2,9 @@
 let map;
 let placemarks = [];
 let selectedPlacemark = null;
+let startY = 0;
+let currentY = 0;
+let isDragging = false;
 
 // Проверка мобильного устройства
 const isMobile = () => /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent);
@@ -74,11 +77,6 @@ const createPlacemark = (place) => {
 
   return placemark;
 };
-
-// Мобильная панель - обработчик свайпа
-let startY = 0;
-let currentY = 0;
-let isDragging = false;
 
 const setupBottomSheet = () => {
   const bottomSheet = document.getElementById('mobile-bottom-sheet');
@@ -204,7 +202,7 @@ document.getElementById('close-sidebar').addEventListener('click', () => {
     selectedPlacemark.options.set('iconImageSize', [30, 30]);
     selectedPlacemark = null;
   }
-});
+};
 
 // Фильтры (исправленный обработчик)
 document.getElementById('toggleFilters').addEventListener('click', (e) => {
