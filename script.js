@@ -89,6 +89,9 @@ const openMobilePanel = (placeData) => {
     document.getElementById('balloon-rating').textContent = placeData.description;
     document.getElementById('balloon-review-link').href = placeData.reviewLink;
 
+    // Уменьшение фото
+    document.getElementById('balloon-image').style.maxWidth = '100px';
+
     bottomSheet.classList.remove('hidden');
     setTimeout(() => {
         bottomSheet.classList.add('visible');
