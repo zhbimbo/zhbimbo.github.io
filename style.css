@@ -30,14 +30,14 @@ body {
 
 #header h1 {
     margin: 0;
-    font-size: 1rem; /* Размер заголовка */
+    font-size: 1rem; /* Вернул размер заголовка */
     white-space: nowrap;
 }
 
 #toggleFilters {
     background: none;
     border: none;
-    font-size: 1rem; /* Размер кнопки */
+    font-size: 1rem; /* Вернул размер кнопки */
     cursor: pointer;
     padding: 5px;
 }
@@ -66,7 +66,7 @@ body {
     padding: 15px;
     border-radius: 10px;
     box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
-    display: flex;
+    display: none;
     flex-direction: column;
     gap: 10px;
     width: 90%;
@@ -84,6 +84,18 @@ body {
     border: 1px solid #ddd;
     border-radius: 5px;
     font-size: 0.9rem;
+}
+
+/* Тактильная зона */
+#touch-zone {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 50px; /* Высота тактильной зоны */
+    background: linear-gradient(to bottom, rgba(255, 255, 255, 0.9) 50%, rgba(0, 0, 0, 0.1) 100%); /* Градиент для выделения */
+    cursor: grab;
+    z-index: 3000; /* Выше всех остальных элементов */
 }
 
 /* Адаптивность */
@@ -138,7 +150,7 @@ body {
     left: 0;
     width: 100%;
     max-height: 70vh;
-    background: white; /* Добавляем белый фон */
+    background: white;
     transform: translateY(100%);
     transition: transform 0.3s ease;
     z-index: 2000;
@@ -178,6 +190,19 @@ body {
     border: none;
     font-size: 1.5rem;
     cursor: pointer;
+}
+
+/* Тактильная зона */
+#touch-zone {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 50px; /* Высота тактильной зоны */
+    background: linear-gradient(to bottom, rgba(255, 255, 255, 0.9) 50%, rgba(0, 0, 0, 0.1) 100%); /* Градиент для выделения */
+    cursor: grab;
+    z-index: 3000; /* Выше всех остальных элементов */
+    touch-action: none; /* Отключаем свайпы для всей панели */
 }
 
 /* Фото на мобильной панели */
