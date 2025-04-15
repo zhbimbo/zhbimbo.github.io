@@ -80,7 +80,7 @@ const openDesktopSidebar = (placeData) => {
 
 // Открытие мобильной панели
 const openMobilePanel = (placeData) => {
-    const bottomSheet = document.getElementById('custom-balloon');
+    const bottomSheet = document.getElementById('mobile-bottom-sheet');
     // Заполняем данные
     document.getElementById('balloon-title').textContent = placeData.name;
     document.getElementById('balloon-image').src = placeData.photo;
@@ -103,7 +103,7 @@ const openMobilePanel = (placeData) => {
 
 // Закрытие мобильной панели
 const closeMobilePanel = () => {
-    const bottomSheet = document.getElementById('custom-balloon');
+    const bottomSheet = document.getElementById('mobile-bottom-sheet');
     bottomSheet.style.transform = 'translateY(100%)';
     setTimeout(() => {
         bottomSheet.classList.remove('visible');
@@ -196,20 +196,20 @@ ymaps.ready(() => {
 
 // Настройка свайпа для мобильной панели
 const setupBottomSheet = () => {
-    const bottomSheet = document.getElementById('custom-balloon');
-    const touchZone = bottomSheet.querySelector('#touch-zone');
+    const bottomSheet = document.getElementById('mobile-bottom-sheet');
+    const touchZone = bottomSheet.querySelector('#balloon-header');
 
     touchZone.addEventListener('touchstart', (e) => {
-        e.stopPropagation(); // Останавливаем распространение клика
+        e.stopPropagation(); // Блокируем передачу событий
         startY = e.touches[0].clientY;
         currentY = parseInt(bottomSheet.style.transform.replace('translateY(', '').replace('px)', '')) || 0;
         isDragging = true;
         bottomSheet.style.transition = 'none';
-    }, { passive: true });
+    }, { passive: false });
 
     document.addEventListener('touchmove', (e) => {
         if (!isDragging) return;
-        e.stopPropagation(); // Останавливаем распространение клика
+        e.stopPropagation(); // Блокируем передачу событий
         const y = e.touches[0].clientY;
         const diff = y - startY;
         let newY = currentY + diff;
@@ -223,6 +223,7 @@ const setupBottomSheet = () => {
 
     document.addEventListener('touchend', (e) => {
         if (!isDragging) return;
+        e.stopPropagation(); // Блокируем передачу событий
         isDragging = false;
         bottomSheet.style.transition = 'transform 0.3s ease';
 
