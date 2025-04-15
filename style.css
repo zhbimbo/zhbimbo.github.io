@@ -66,7 +66,7 @@ body {
     padding: 15px;
     border-radius: 10px;
     box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
-    display: none;
+    display: flex;
     flex-direction: column;
     gap: 10px;
     width: 90%;
@@ -75,8 +75,8 @@ body {
     overflow-y: auto;
 }
 
-#filters-panel.visible {
-    display: block;
+#filters-panel.hidden {
+    display: none;
 }
 
 #filters-panel select, #filters-panel input {
@@ -190,4 +190,11 @@ body {
     background: rgba(0, 0, 0, 0.1);
     cursor: grab;
     z-index: 3000; /* Выше всех остальных элементов */
+}
+
+/* Фото на мобильной панели */
+#balloon-image {
+    max-width: 100px;
+    height: auto;
+    margin-bottom: 10px;
 }
