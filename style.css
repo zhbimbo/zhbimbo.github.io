@@ -138,7 +138,7 @@ body {
     left: 0;
     width: 100%;
     max-height: 70vh;
-    background: white;
+    background: white; /* Добавляем фон */
     transform: translateY(100%);
     transition: transform 0.3s ease;
     z-index: 2000;
@@ -170,6 +170,17 @@ body {
     font-size: 1.2rem;
 }
 
+#close-balloon {
+    position: absolute;
+    right: 15px;
+    top: 15px;
+    background: none;
+    border: none;
+    font-size: 1.5rem;
+    cursor: pointer;
+}
+
+/* Тактильная зона */
 #touch-zone {
     position: absolute;
     top: 0;
@@ -181,6 +192,7 @@ body {
     z-index: 3000; /* Выше всех остальных элементов */
 }
 
+/* Фото на мобильной панели */
 #balloon-image {
     max-width: 100px;
     height: auto;
