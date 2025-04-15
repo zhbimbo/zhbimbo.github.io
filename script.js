@@ -213,8 +213,8 @@ const setupBottomSheet = () => {
         let newY = currentY + diff;
 
         // Ограничиваем перемещение
-        if (newY > 0) newY = 0;
-        if (newY < -window.innerHeight * 0.7) newY = -window.innerHeight * 0.7;
+        if (newY > 0) newY = 0; // Ограничение сверху
+        if (newY < -window.innerHeight * 0.7) newY = -window.innerHeight * 0.7; // Ограничение снизу
 
         bottomSheet.style.transform = `translateY(${newY}px)`;
     }, { passive: false });
