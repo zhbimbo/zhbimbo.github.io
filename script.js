@@ -197,10 +197,10 @@ ymaps.ready(() => {
 // Настройка свайпа для мобильной панели
 const setupBottomSheet = () => {
     const bottomSheet = document.getElementById('mobile-bottom-sheet');
-    const touchZone = bottomSheet.querySelector('#balloon-header');
+    const header = bottomSheet.querySelector('#balloon-header');
 
-    touchZone.addEventListener('touchstart', (e) => {
-        e.stopPropagation(); // Блокируем передачу событий
+    header.addEventListener('touchstart', (e) => {
+        e.stopPropagation(); // Блокируем передачу события
         startY = e.touches[0].clientY;
         currentY = parseInt(bottomSheet.style.transform.replace('translateY(', '').replace('px)', '')) || 0;
         isDragging = true;
@@ -209,21 +209,21 @@ const setupBottomSheet = () => {
 
     document.addEventListener('touchmove', (e) => {
         if (!isDragging) return;
-        e.stopPropagation(); // Блокируем передачу событий
+        e.stopPropagation(); // Блокируем передачу события
         const y = e.touches[0].clientY;
         const diff = y - startY;
         let newY = currentY + diff;
 
         // Ограничиваем перемещение
-        if (newY > 0) newY = 0; // Ограничение сверху
-        if (newY < -window.innerHeight * 0.7) newY = -window.innerHeight * 0.7; // Ограничение снизу
+        if (newY > 0) newY = 0;
+        if (newY < -window.innerHeight * 0.7) newY = -window.innerHeight * 0.7;
 
         bottomSheet.style.transform = `translateY(${newY}px)`;
     }, { passive: false });
 
     document.addEventListener('touchend', (e) => {
         if (!isDragging) return;
-        e.stopPropagation(); // Блокируем передачу событий
+        e.stopPropagation(); // Блокируем передачу события
         isDragging = false;
         bottomSheet.style.transition = 'transform 0.3s ease';
 
@@ -232,10 +232,14 @@ const setupBottomSheet = () => {
         const currentPos = parseInt(bottomSheet.style.transform.replace('translateY(', '').replace('px)', '')) || 0;
 
         // Определяем, нужно ли закрыть или открыть полностью
-        if (diff > 50 && currentPos < -window.innerHeight * 0.3) {
-            closeMobilePanel(); // Закрываем панель при свайпе вниз
-        } else if (diff < -50 && currentPos > -window.innerHeight * 0.7) {
-            bottomSheet.style.transform = `translateY(${-window.innerHeight * 0.7}px)`; // Открываем панель до 70% экрана
+        if (diff > 50) { // Свайп вниз
+            if (currentPos > -window.innerHeight * 0.3) {
+                closeMobilePanel();
+            } else {
+                bottomSheet.style.transform = 'translateY(0)';
+            }
+        } else if (diff < -50) { // Свайп вверх
+            bottomSheet.style.transform = `translateY(${-window.innerHeight * 0.7}px)`;
         }
     });
 };
