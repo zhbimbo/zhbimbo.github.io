@@ -30,14 +30,14 @@ body {
 
 #header h1 {
     margin: 0;
-    font-size: 1.2rem;
+    font-size: 1rem; /* Вернул размер заголовка */
     white-space: nowrap;
 }
 
 #toggleFilters {
     background: none;
     border: none;
-    font-size: 1.2rem;
+    font-size: 1rem; /* Вернул размер кнопки */
     cursor: pointer;
     padding: 5px;
 }
@@ -66,7 +66,7 @@ body {
     padding: 15px;
     border-radius: 10px;
     box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
-    display: flex;
+    display: none;
     flex-direction: column;
     gap: 10px;
     width: 90%;
@@ -84,6 +84,18 @@ body {
     border: 1px solid #ddd;
     border-radius: 5px;
     font-size: 0.9rem;
+}
+
+/* Тактильная зона */
+#touch-zone {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 50px; /* Высота тактильной зоны */
+    background: linear-gradient(to bottom, rgba(255, 255, 255, 0.9) 50%, rgba(0, 0, 0, 0.1) 100%); /* Градиент для выделения */
+    cursor: grab;
+    z-index: 3000; /* Выше всех остальных элементов */
 }
 
 /* Адаптивность */
@@ -145,7 +157,7 @@ body {
     overflow-y: auto;
     border-radius: 15px 15px 0 0;
     box-shadow: 0 -5px 15px rgba(0, 0, 0, 0.2);
-    touch-action: none;
+    touch-action: none; /* Блокируем свайпы для всей панели */
 }
 
 #mobile-bottom-sheet.visible {
@@ -163,7 +175,7 @@ body {
     position: sticky;
     top: 0;
     z-index: 10;
-    touch-action: none;
+    touch-action: none; /* Блокируем свайпы для всей панели */
 }
 
 #balloon-title {
@@ -184,6 +196,18 @@ body {
     cursor: pointer;
 }
 
+/* Тактильная зона */
+#touch-zone {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 50px; /* Высота тактильной зоны */
+    background: linear-gradient(to bottom, rgba(255, 255, 255, 0.9) 50%, rgba(0, 0, 0, 0.1) 100%); /* Градиент для выделения */
+    cursor: grab;
+    z-index: 3000; /* Выше всех остальных элементов */
+}
+
 /* Фото на мобильной панели */
 #balloon-image {
     max-width: 100px;
@@ -191,7 +215,7 @@ body {
     margin-bottom: 10px;
 }
 
-/* Адаптация для мобильных устройств */
+/* Адаптивность */
 @media (max-width: 600px) {
     #header {
         top: 10px;
@@ -210,39 +234,16 @@ body {
         top: 70px;
         width: 85%;
     }
-    #balloon-header {
-        padding: 10px;
-    }
-    #balloon-title {
-        font-size: 1rem;
-    }
-    #balloon-image {
-        max-width: 50px;
-    }
 }
 
-/* Адаптация для десктопных устройств */
 @media (min-width: 768px) {
     #mobile-bottom-sheet {
         display: none !important;
     }
+}
+
+@media (max-width: 767px) {
     #desktop-sidebar {
-        display: block !important;
-    }
-    #desktop-sidebar.visible {
-        left: 0;
-    }
-    #desktop-sidebar.hidden {
-        left: -400px;
-    }
-    #sidebar-content {
-        padding: 20px;
-    }
-    #sidebar-image {
-        width: 100%;
-        max-height: 200px;
-        object-fit: cover;
-        border-radius: 8px;
-        margin: 10px 0;
+        display: none !important;
     }
 }
