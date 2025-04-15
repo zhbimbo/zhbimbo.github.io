@@ -48,16 +48,7 @@ const createPlacemark = (place) => {
         if (isMobile()) {
             openMobilePanel(placeData);
         } else {
-            // Открываем боковую панель на ПК
-            document.getElementById('sidebar-title').textContent = placeData.name;
-            document.getElementById('sidebar-image').src = placeData.photo;
-            document.getElementById('sidebar-address').textContent = placeData.address;
-            document.getElementById('sidebar-phone').textContent = placeData.phone;
-            document.getElementById('sidebar-hours').textContent = placeData.hours;
-            document.getElementById('sidebar-rating').textContent = placeData.description;
-            document.getElementById('sidebar-review-link').href = placeData.reviewLink;
-            document.getElementById('desktop-sidebar').classList.remove('hidden');
-            document.getElementById('desktop-sidebar').classList.add('visible');
+            openDesktopSidebar(placeData);
         }
 
         // Подсветка маркера
@@ -126,23 +117,19 @@ const closeMobilePanel = () => {
 };
 
 // Закрытие десктопной панели
-if (document.getElementById('close-sidebar')) {
-    document.getElementById('close-sidebar').addEventListener('click', () => {
-        document.getElementById('desktop-sidebar').classList.remove('visible');
-        document.getElementById('desktop-sidebar').classList.add('hidden');
-        if (selectedPlacemark) {
-            selectedPlacemark.options.set('iconImageSize', [30, 30]);
-            selectedPlacemark = null;
-        }
-    });
-}
+document.getElementById('close-sidebar').addEventListener('click', () => {
+    document.getElementById('desktop-sidebar').classList.remove('visible');
+    document.getElementById('desktop-sidebar').classList.add('hidden');
+    if (selectedPlacemark) {
+        selectedPlacemark.options.set('iconImageSize', [30, 30]);
+        selectedPlacemark = null;
+    }
+});
 
 // Обработчик закрытия мобильной панели
-if (document.getElementById('close-balloon')) {
-    document.getElementById('close-balloon').addEventListener('click', closeMobilePanel);
-}
+document.getElementById('close-balloon').addEventListener('click', closeMobilePanel);
 
-// Фильтры (исправленный обработчик)
+// Фильтры
 document.getElementById('toggleFilters').addEventListener('click', (e) => {
     e.stopPropagation();
     const filtersPanel = document.getElementById('filters-panel');
