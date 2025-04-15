@@ -187,7 +187,7 @@ body {
     left: 0;
     width: 100%;
     height: 50px; /* Высота тактильной зоны */
-    background: rgba(0, 0, 0, 0.1);
+    background: linear-gradient(to bottom, rgba(255, 255, 255, 0.9) 50%, rgba(0, 0, 0, 0.1) 100%); /* Градиент для выделения */
     cursor: grab;
     z-index: 3000; /* Выше всех остальных элементов */
 }
