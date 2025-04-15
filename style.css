@@ -30,14 +30,14 @@ body {
 
 #header h1 {
     margin: 0;
-    font-size: 1rem; /* Вернул размер заголовка */
+    font-size: 1.2rem;
     white-space: nowrap;
 }
 
-#toggleFilters {
+#header button {
     background: none;
     border: none;
-    font-size: 1rem; /* Вернул размер кнопки */
+    font-size: 1.2rem;
     cursor: pointer;
     padding: 5px;
 }
@@ -66,7 +66,7 @@ body {
     padding: 15px;
     border-radius: 10px;
     box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
-    display: none;
+    display: flex;
     flex-direction: column;
     gap: 10px;
     width: 90%;
@@ -84,18 +84,6 @@ body {
     border: 1px solid #ddd;
     border-radius: 5px;
     font-size: 0.9rem;
-}
-
-/* Тактильная зона */
-#touch-zone {
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 50px; /* Высота тактильной зоны */
-    background: linear-gradient(to bottom, rgba(255, 255, 255, 0.9) 50%, rgba(0, 0, 0, 0.1) 100%); /* Градиент для выделения */
-    cursor: grab;
-    z-index: 3000; /* Выше всех остальных элементов */
 }
 
 /* Адаптивность */
@@ -131,11 +119,21 @@ body {
     left: 0;
 }
 
-#sidebar-content {
+#desktop-sidebar .close-sidebar {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    background: none;
+    border: none;
+    font-size: 1.5rem;
+    cursor: pointer;
+}
+
+#desktop-sidebar .sidebar-content {
     padding: 20px;
 }
 
-#sidebar-image {
+#desktop-sidebar img {
     width: 100%;
     max-height: 200px;
     object-fit: cover;
@@ -164,50 +162,25 @@ body {
     transform: translateY(-30%);
 }
 
-#mobile-bottom-sheet.fullscreen {
-    transform: translateY(-70%);
-    max-height: 100vh;
-}
-
-#balloon-header {
-    padding: 15px;
-    background: #f8f8f8;
-    position: sticky;
-    top: 0;
-    z-index: 10;
-    touch-action: none;
-}
-
-#balloon-title {
-    font-size: 1.2rem;
-}
-
-#close-balloon {
+#mobile-bottom-sheet .close-balloon {
     position: absolute;
-    right: 15px;
-    top: 15px;
+    top: 10px;
+    right: 10px;
     background: none;
     border: none;
     font-size: 1.5rem;
     cursor: pointer;
 }
 
-/* Тактильная зона */
-#touch-zone {
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 50px; /* Высота тактильной зоны */
-    background: linear-gradient(to bottom, rgba(255, 255, 255, 0.9) 50%, rgba(0, 0, 0, 0.1) 100%); /* Градиент для выделения */
-    cursor: grab;
-    z-index: 3000; /* Выше всех остальных элементов */
-    touch-action: none; /* Отключаем свайпы для всей панели */
+#mobile-bottom-sheet .balloon-body {
+    padding: 15px;
+    background: white;
+    border-radius: 10px;
 }
 
-/* Фото на мобильной панели */
-#balloon-image {
-    max-width: 100px;
+#mobile-bottom-sheet img {
+    max-width: 100%;
     height: auto;
+    border-radius: 8px;
     margin-bottom: 10px;
 }
