@@ -128,7 +128,7 @@ document.getElementById('close-sidebar').addEventListener('click', () => {
 // Обработчик закрытия мобильной панели
 document.getElementById('close-balloon').addEventListener('click', closeMobilePanel);
 
-// Фильтры
+// Фильтрация маркеров
 document.getElementById('toggleFilters').addEventListener('click', (e) => {
     e.stopPropagation();
     const filtersPanel = document.getElementById('filters-panel');
@@ -196,11 +196,10 @@ ymaps.ready(() => {
 
 // Настройка свайпа для мобильной панели
 const setupBottomSheet = () => {
-    const bottomSheet = document.getElementById('custom-balloon');
-    const touchZone = bottomSheet.querySelector('#touch-zone');
+    const bottomSheet = document.getElementById('mobile-bottom-sheet');
+    const header = bottomSheet.querySelector('#balloon-header');
 
-    touchZone.addEventListener('touchstart', (e) => {
-        e.stopPropagation(); // Блокируем распространение событий
+    header.addEventListener('touchstart', (e) => {
         startY = e.touches[0].clientY;
         currentY = parseInt(bottomSheet.style.transform.replace('translateY(', '').replace('px)', '')) || 0;
         isDragging = true;
@@ -209,14 +208,13 @@ const setupBottomSheet = () => {
 
     document.addEventListener('touchmove', (e) => {
         if (!isDragging) return;
-        e.stopPropagation(); // Блокируем распространение событий
         const y = e.touches[0].clientY;
         const diff = y - startY;
         let newY = currentY + diff;
 
         // Ограничиваем перемещение
-        if (newY > 0) newY = 0; // Ограничение сверху
-        if (newY < -window.innerHeight * 0.7) newY = -window.innerHeight * 0.7; // Ограничение снизу
+        if (newY > 0) newY = 0;
+        if (newY < -window.innerHeight * 0.7) newY = -window.innerHeight * 0.7;
 
         bottomSheet.style.transform = `translateY(${newY}px)`;
     }, { passive: false });
@@ -231,10 +229,14 @@ const setupBottomSheet = () => {
         const currentPos = parseInt(bottomSheet.style.transform.replace('translateY(', '').replace('px)', '')) || 0;
 
         // Определяем, нужно ли закрыть или открыть полностью
-        if (diff > 50 && currentPos < -window.innerHeight * 0.3) {
-            closeMobilePanel(); // Закрываем панель при свайпе вниз
-        } else if (diff < -50 && currentPos > -window.innerHeight * 0.7) {
-            bottomSheet.style.transform = `translateY(${-window.innerHeight * 0.7}px)`; // Открываем панель до 70% экрана
+        if (diff > 50) {
+            if (currentPos > -window.innerHeight * 0.3) {
+                closeMobilePanel();
+            } else {
+                bottomSheet.style.transform = 'translateY(0)';
+            }
+        } else if (diff < -50) {
+            bottomSheet.style.transform = `translateY(${-window.innerHeight * 0.7}px)`;
         }
     });
 };
