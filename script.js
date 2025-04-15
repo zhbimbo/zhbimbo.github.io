@@ -200,6 +200,7 @@ const setupBottomSheet = () => {
     const touchZone = bottomSheet.querySelector('#touch-zone');
 
     touchZone.addEventListener('touchstart', (e) => {
+        e.stopPropagation(); // Останавливаем распространение клика
         startY = e.touches[0].clientY;
         currentY = parseInt(bottomSheet.style.transform.replace('translateY(', '').replace('px)', '')) || 0;
         isDragging = true;
@@ -208,13 +209,14 @@ const setupBottomSheet = () => {
 
     document.addEventListener('touchmove', (e) => {
         if (!isDragging) return;
+        e.stopPropagation(); // Останавливаем распространение клика
         const y = e.touches[0].clientY;
         const diff = y - startY;
         let newY = currentY + diff;
 
         // Ограничиваем перемещение
-        if (newY > 0) newY = 0; // Ограничение сверху
-        if (newY < -window.innerHeight * 0.7) newY = -window.innerHeight * 0.7; // Ограничение снизу
+        if (newY > 0) newY = 0;
+        if (newY < -window.innerHeight * 0.7) newY = -window.innerHeight * 0.7;
 
         bottomSheet.style.transform = `translateY(${newY}px)`;
     }, { passive: false });
