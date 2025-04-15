@@ -3,7 +3,6 @@
 <head>
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Кальянный Патруль</title>
     <script src="https://api-maps.yandex.ru/2.1/?apikey=767b6b86-29dc-4346-b485-2ec344f0e567&lang=ru_RU" type="text/javascript"></script>
     <link rel="stylesheet" href="style.css">
@@ -46,12 +45,14 @@
         </select>
         <input type="text" id="searchInput" placeholder="🔍 Поиск по названию...">
     </div>
-    <!-- Мобильная панель -->
-    <div id="mobile-bottom-sheet" class="hidden">
+    <!-- Всплывающее окно -->
+    <div id="custom-balloon" class="hidden">
         <div id="balloon-content">
             <div id="balloon-header">
                 <h2 id="balloon-title"></h2>
-                <button id="close-balloon">✖</button>
+                <div id="touch-zone">
+                    <button id="close-balloon">✖</button>
+                </div>
             </div>
             <div id="balloon-body">
                 <img id="balloon-image" alt="Фото заведения">
@@ -76,7 +77,5 @@
             <a id="sidebar-review-link" target="_blank">Читать обзор</a>
         </div>
     </div>
-    <!-- Тактильная зона -->
-    <div id="touch-zone"></div>
 </body>
 </html>
