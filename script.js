@@ -48,7 +48,16 @@ const createPlacemark = (place) => {
         if (isMobile()) {
             openMobilePanel(placeData);
         } else {
-            openDesktopSidebar(placeData);
+            // Открываем боковую панель на ПК
+            document.getElementById('sidebar-title').textContent = placeData.name;
+            document.getElementById('sidebar-image').src = placeData.photo;
+            document.getElementById('sidebar-address').textContent = placeData.address;
+            document.getElementById('sidebar-phone').textContent = placeData.phone;
+            document.getElementById('sidebar-hours').textContent = placeData.hours;
+            document.getElementById('sidebar-rating').textContent = placeData.description;
+            document.getElementById('sidebar-review-link').href = placeData.reviewLink;
+            document.getElementById('desktop-sidebar').classList.remove('hidden');
+            document.getElementById('desktop-sidebar').classList.add('visible');
         }
 
         // Подсветка маркера
@@ -117,19 +126,23 @@ const closeMobilePanel = () => {
 };
 
 // Закрытие десктопной панели
-document.getElementById('close-sidebar').addEventListener('click', () => {
-    document.getElementById('desktop-sidebar').classList.remove('visible');
-    document.getElementById('desktop-sidebar').classList.add('hidden');
-    if (selectedPlacemark) {
-        selectedPlacemark.options.set('iconImageSize', [30, 30]);
-        selectedPlacemark = null;
-    }
-});
+if (document.getElementById('close-sidebar')) {
+    document.getElementById('close-sidebar').addEventListener('click', () => {
+        document.getElementById('desktop-sidebar').classList.remove('visible');
+        document.getElementById('desktop-sidebar').classList.add('hidden');
+        if (selectedPlacemark) {
+            selectedPlacemark.options.set('iconImageSize', [30, 30]);
+            selectedPlacemark = null;
+        }
+    });
+}
 
 // Обработчик закрытия мобильной панели
-document.getElementById('close-balloon').addEventListener('click', closeMobilePanel);
+if (document.getElementById('close-balloon')) {
+    document.getElementById('close-balloon').addEventListener('click', closeMobilePanel);
+}
 
-// Фильтры
+// Фильтры (исправленный обработчик)
 document.getElementById('toggleFilters').addEventListener('click', (e) => {
     e.stopPropagation();
     const filtersPanel = document.getElementById('filters-panel');
@@ -204,7 +217,7 @@ const setupBottomSheet = () => {
     touchZone.style.top = '0';
     touchZone.style.left = '0';
     touchZone.style.width = '100%';
-    touchZone.style.height = `${touchZoneHeight}px`;
+    touchZone.style.height = `${touchZoneHeight}px`; // Высота тактильной зоны
     touchZone.style.cursor = 'grab';
     touchZone.style.zIndex = '3000'; // Выше всех остальных элементов
     touchZone.innerHTML = '<div style="height: 100%; background: rgba(0, 0, 0, 0.1);"></div>'; // Графическое представление зоны
