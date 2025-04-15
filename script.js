@@ -5,6 +5,7 @@ let selectedPlacemark = null;
 let startY = 0;
 let currentY = 0;
 let isDragging = false;
+let touchZoneHeight = 50; // Высота тактильной зоны
 
 // Проверка мобильного устройства
 const isMobile = () => /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent);
@@ -197,28 +198,42 @@ ymaps.ready(() => {
 // Настройка свайпа для мобильной панели
 const setupBottomSheet = () => {
     const bottomSheet = document.getElementById('mobile-bottom-sheet');
-    const header = bottomSheet.querySelector('#balloon-header');
-    header.addEventListener('touchstart', (e) => {
+    const touchZone = document.createElement('div'); // Создаем тактильную зону
+    touchZone.id = 'touch-zone';
+    touchZone.style.position = 'absolute';
+    touchZone.style.top = '0';
+    touchZone.style.left = '0';
+    touchZone.style.width = '100%';
+    touchZone.style.height = `${touchZoneHeight}px`;
+    touchZone.style.cursor = 'grab';
+    touchZone.style.zIndex = '3000'; // Выше всех остальных элементов
+    touchZone.innerHTML = '<div style="height: 100%; background: rgba(0, 0, 0, 0.1);"></div>'; // Графическое представление зоны
+    document.body.appendChild(touchZone); // Добавляем тактильную зону в DOM
+
+    // Обработчик для тактильной зоны
+    touchZone.addEventListener('touchstart', (e) => {
         startY = e.touches[0].clientY;
         currentY = parseInt(bottomSheet.style.transform.replace('translateY(', '').replace('px)', '')) || 0;
         isDragging = true;
         bottomSheet.style.transition = 'none';
     }, { passive: true });
 
-    document.addEventListener('touchmove', (e) => {
+    // Обработчик для свайпа
+    touchZone.addEventListener('touchmove', (e) => {
         if (!isDragging) return;
         const y = e.touches[0].clientY;
         const diff = y - startY;
         let newY = currentY + diff;
 
         // Ограничиваем перемещение
-        if (newY > 0) newY = 0;
-        if (newY < -window.innerHeight * 0.7) newY = -window.innerHeight * 0.7;
+        if (newY > 0) newY = 0; // Ограничение сверху
+        if (newY < -window.innerHeight * 0.7) newY = -window.innerHeight * 0.7; // Ограничение снизу
 
         bottomSheet.style.transform = `translateY(${newY}px)`;
     }, { passive: false });
 
-    document.addEventListener('touchend', (e) => {
+    // Обработчик для завершения свайпа
+    touchZone.addEventListener('touchend', (e) => {
         if (!isDragging) return;
         isDragging = false;
         bottomSheet.style.transition = 'transform 0.3s ease';
@@ -228,14 +243,10 @@ const setupBottomSheet = () => {
         const currentPos = parseInt(bottomSheet.style.transform.replace('translateY(', '').replace('px)', '')) || 0;
 
         // Определяем, нужно ли закрыть или открыть полностью
-        if (diff > 50) { // Свайп вниз
-            if (currentPos > -window.innerHeight * 0.3) {
-                closeMobilePanel();
-            } else {
-                bottomSheet.style.transform = 'translateY(0)';
-            }
-        } else if (diff < -50) { // Свайп вверх
-            bottomSheet.style.transform = `translateY(${-window.innerHeight * 0.7}px)`;
+        if (diff > 50 && currentPos < -window.innerHeight * 0.3) {
+            closeMobilePanel(); // Закрываем панель при свайпе вниз
+        } else if (diff < -50 && currentPos > -window.innerHeight * 0.7) {
+            bottomSheet.style.transform = `translateY(${-window.innerHeight * 0.7}px)`; // Открываем панель до 70% экрана
         }
     });
 };
