@@ -207,7 +207,7 @@ const setupBottomSheet = () => {
     touchZone.style.height = `${touchZoneHeight}px`; // Высота тактильной зоны
     touchZone.style.cursor = 'grab';
     touchZone.style.zIndex = '3000'; // Выше всех остальных элементов
-    touchZone.innerHTML = '<div style="height: 100%; background: rgba(0, 0, 0, 0.1);"></div>'; // Графическое представление зоны
+    touchZone.innerHTML = '<div style="height: 100%; background: rgba(255, 255, 255, 0.9);"></div>'; // Графическое представление зоны
     document.body.appendChild(touchZone); // Добавляем тактильную зону в DOM
 
     // Обработчик для тактильной зоны
