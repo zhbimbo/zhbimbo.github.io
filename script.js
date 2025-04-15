@@ -5,7 +5,6 @@ let selectedPlacemark = null;
 let startY = 0;
 let currentY = 0;
 let isDragging = false;
-let touchZoneHeight = 50; // Высота тактильной зоны
 
 // Проверка мобильного устройства
 const isMobile = () => /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent);
@@ -81,7 +80,7 @@ const openDesktopSidebar = (placeData) => {
 
 // Открытие мобильной панели
 const openMobilePanel = (placeData) => {
-    const bottomSheet = document.getElementById('mobile-bottom-sheet');
+    const bottomSheet = document.getElementById('custom-balloon');
     // Заполняем данные
     document.getElementById('balloon-title').textContent = placeData.name;
     document.getElementById('balloon-image').src = placeData.photo;
@@ -104,7 +103,7 @@ const openMobilePanel = (placeData) => {
 
 // Закрытие мобильной панели
 const closeMobilePanel = () => {
-    const bottomSheet = document.getElementById('mobile-bottom-sheet');
+    const bottomSheet = document.getElementById('custom-balloon');
     bottomSheet.style.transform = 'translateY(100%)';
     setTimeout(() => {
         bottomSheet.classList.remove('visible');
@@ -197,20 +196,9 @@ ymaps.ready(() => {
 
 // Настройка свайпа для мобильной панели
 const setupBottomSheet = () => {
-    const bottomSheet = document.getElementById('mobile-bottom-sheet');
-    const touchZone = document.createElement('div'); // Создаем тактильную зону
-    touchZone.id = 'touch-zone';
-    touchZone.style.position = 'absolute';
-    touchZone.style.top = '0';
-    touchZone.style.left = '0';
-    touchZone.style.width = '100%';
-    touchZone.style.height = `${touchZoneHeight}px`; // Высота тактильной зоны
-    touchZone.style.cursor = 'grab';
-    touchZone.style.zIndex = '3000'; // Выше всех остальных элементов
-    touchZone.innerHTML = '<div style="height: 100%; background: rgba(255, 255, 255, 0.9);"></div>'; // Графическое представление зоны
-    document.body.appendChild(touchZone); // Добавляем тактильную зону в DOM
+    const bottomSheet = document.getElementById('custom-balloon');
+    const touchZone = bottomSheet.querySelector('#touch-zone');
 
-    // Обработчик для тактильной зоны
     touchZone.addEventListener('touchstart', (e) => {
         startY = e.touches[0].clientY;
         currentY = parseInt(bottomSheet.style.transform.replace('translateY(', '').replace('px)', '')) || 0;
@@ -218,22 +206,20 @@ const setupBottomSheet = () => {
         bottomSheet.style.transition = 'none';
     }, { passive: true });
 
-    // Обработчик для свайпа
-    touchZone.addEventListener('touchmove', (e) => {
+    document.addEventListener('touchmove', (e) => {
         if (!isDragging) return;
         const y = e.touches[0].clientY;
         const diff = y - startY;
         let newY = currentY + diff;
 
         // Ограничиваем перемещение
-        if (newY > 0) newY = 0; // Ограничение сверху
-        if (newY < -window.innerHeight * 0.7) newY = -window.innerHeight * 0.7; // Ограничение снизу
+        if (newY > 0) newY = 0;
+        if (newY < -window.innerHeight * 0.7) newY = -window.innerHeight * 0.7;
 
         bottomSheet.style.transform = `translateY(${newY}px)`;
     }, { passive: false });
 
-    // Обработчик для завершения свайпа
-    touchZone.addEventListener('touchend', (e) => {
+    document.addEventListener('touchend', (e) => {
         if (!isDragging) return;
         isDragging = false;
         bottomSheet.style.transition = 'transform 0.3s ease';
