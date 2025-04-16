@@ -1,12 +1,19 @@
-body {
+* {
+    box-sizing: border-box;
     margin: 0;
-    font-family: Arial, sans-serif;
+    padding: 0;
+}
+
+body {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
     overflow: hidden;
+    height: 100vh;
+    width: 100vw;
 }
 
 #map {
-    width: 100vw;
-    height: 100vh;
+    width: 100%;
+    height: 100%;
     position: relative;
 }
 
@@ -16,13 +23,30 @@ body {
     left: 50%;
     transform: translateX(-50%);
     z-index: 1000;
-    background: rgba(255, 255, 255, 0.9);
+    background: rgba(255, 255, 255, 0.95);
     padding: 10px 15px;
     border-radius: 10px;
     box-shadow: 0 2px 10px rgba(0, 0, 0, 0.2);
     display: flex;
     align-items: center;
     gap: 15px;
+    max-width: 90%;
+}
+
+#header h1 {
+    margin: 0;
+    font-size: 1.2rem;
+    white-space: nowrap;
+    color: #333;
+}
+
+#toggleFilters {
+    background: none;
+    border: none;
+    font-size: 1.2rem;
+    cursor: pointer;
+    padding: 5px;
+    color: #555;
 }
 
 #stats-overlay {
@@ -30,10 +54,12 @@ body {
     bottom: 20px;
     left: 20px;
     z-index: 1000;
-    background: rgba(255, 255, 255, 0.9);
+    background: rgba(255, 255, 255, 0.95);
     padding: 8px 12px;
     border-radius: 10px;
     font-size: 0.9rem;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+    color: #333;
 }
 
 #filters-panel {
@@ -42,15 +68,31 @@ body {
     left: 50%;
     transform: translateX(-50%);
     z-index: 1000;
-    background: white;
+    background: rgba(255, 255, 255, 0.98);
     padding: 15px;
     border-radius: 10px;
     box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    width: 90%;
+    max-width: 400px;
+    max-height: 70vh;
+    overflow-y: auto;
     display: none;
 }
 
 #filters-panel.visible {
-    display: block;
+    display: flex;
+}
+
+#filters-panel select, 
+#filters-panel input {
+    padding: 10px 12px;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    font-size: 0.9rem;
+    background: white;
 }
 
 #mobile-bottom-sheet {
@@ -59,6 +101,7 @@ body {
     left: 0;
     right: 0;
     height: 85vh;
+    max-height: 85vh;
     background: white;
     border-radius: 20px 20px 0 0;
     box-shadow: 0 -5px 20px rgba(0, 0, 0, 0.2);
@@ -67,6 +110,8 @@ body {
     z-index: 2000;
     overflow: hidden;
     touch-action: none;
+    display: flex;
+    flex-direction: column;
 }
 
 #mobile-bottom-sheet.visible {
@@ -84,49 +129,118 @@ body {
     border-radius: 3px;
     margin: 12px auto;
     cursor: grab;
+    flex-shrink: 0;
 }
 
 .bottom-sheet-content {
     padding: 15px;
-    height: calc(85vh - 40px);
     overflow-y: auto;
     -webkit-overflow-scrolling: touch;
+    flex-grow: 1;
 }
 
-.balloon-image, .sidebar-image {
-    max-width: 100%;
+.balloon-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 15px;
+    padding-bottom: 10px;
+    border-bottom: 1px solid #eee;
+}
+
+.balloon-title {
+    font-size: 1.3rem;
+    color: #333;
+    margin-right: 15px;
+}
+
+.close-balloon {
+    background: none;
+    border: none;
+    font-size: 1.2rem;
+    cursor: pointer;
+    color: #777;
+    padding: 5px;
+}
+
+.balloon-image {
+    width: 100%;
+    max-height: 150px;
+    object-fit: cover;
     border-radius: 8px;
+    margin-bottom: 15px;
+}
+
+.balloon-body p {
     margin-bottom: 10px;
+    color: #555;
+    line-height: 1.4;
 }
 
-#desktop-sidebar {
-    position: fixed;
-    left: -400px;
-    top: 0;
-    width: 350px;
-    height: 100vh;
-    background: white;
-    z-index: 2000;
-    box-shadow: 2px 0 10px rgba(0, 0, 0, 0.1);
-    transition: left 0.3s ease;
+.balloon-body b {
+    color: #333;
 }
 
-#desktop-sidebar.visible {
-    left: 0;
+.balloon-review-link {
+    display: inline-block;
+    margin-top: 10px;
+    color: #0066cc;
+    text-decoration: none;
 }
 
-.hidden {
-    display: none;
+@media (min-width: 768px) {
+    #mobile-bottom-sheet {
+        display: none;
+    }
+    
+    #desktop-sidebar {
+        display: block;
+        position: fixed;
+        left: -350px;
+        top: 0;
+        width: 350px;
+        height: 100vh;
+        background: white;
+        z-index: 2000;
+        box-shadow: 2px 0 10px rgba(0, 0, 0, 0.1);
+        transition: left 0.3s ease;
+        overflow-y: auto;
+    }
+    
+    #desktop-sidebar.visible {
+        left: 0;
+    }
+    
+    #sidebar-content {
+        padding: 20px;
+    }
+    
+    #sidebar-image {
+        width: 100%;
+        max-height: 200px;
+        object-fit: cover;
+        border-radius: 8px;
+        margin: 15px 0;
+    }
+    
+    #close-sidebar {
+        position: absolute;
+        top: 10px;
+        right: 10px;
+        background: none;
+        border: none;
+        font-size: 1.2rem;
+        cursor: pointer;
+        color: #777;
+    }
 }
 
-@media (max-width: 768px) {
+@media (max-width: 767px) {
     #desktop-sidebar {
         display: none;
     }
 }
 
-@media (min-width: 769px) {
-    #mobile-bottom-sheet {
-        display: none;
-    }
+.hidden {
+    display: none !important;
 }
