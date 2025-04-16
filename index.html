@@ -4,22 +4,21 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <meta charset="UTF-8">
     <title>Кальянный Патруль</title>
-    <script src="https://api-maps.yandex.ru/2.1/?apikey=767b6b86-29dc-4346-b485-2ec344f0e567&lang=ru_RU" type="text/javascript"></script>
+    <script src="https://api-maps.yandex.ru/2.1/?apikey=767b6b86-29dc-4346-b485-2ec344f0e567&type=template" type="text/javascript"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
     <link rel="stylesheet" href="style.css">
 </head>
 <body>
     <div id="map">
         <div id="header">
-            <h1>📍 Карта Кальянного Патруля</h1>
+            <h1>📍 Кальянный Патруль</h1>
             <button id="toggleFilters"><i class="fas fa-filter"></i></button>
         </div>
         <div id="stats-overlay">
             Найдено: <span id="count">0</span> заведений
         </div>
     </div>
-
-    <div id="filters-panel" class="hidden visible">
+    <div id="filters-panel" class="hidden">
         <select id="ratingFilter">
             <option value="all">⭐ Все рейтинги</option>
             <option value="5">⭐ 5+</option>
@@ -42,7 +41,6 @@
         </select>
         <input type="text" id="searchInput" placeholder="🔍 Поиск по названию...">
     </div>
-
     <div id="mobile-bottom-sheet" class="hidden">
         <div class="swipe-handle"></div>
         <div class="bottom-sheet-content">
@@ -60,7 +58,6 @@
             </div>
         </div>
     </div>
-
     <div id="desktop-sidebar" class="hidden">
         <div id="sidebar-content">
             <button id="close-sidebar"><i class="fas fa-times"></i></button>
@@ -73,7 +70,6 @@
             <a id="sidebar-review-link" target="_blank">Читать обзор</a>
         </div>
     </div>
-
     <script src="script.js"></script>
 </body>
 </html>
