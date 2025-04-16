@@ -304,7 +304,10 @@ document.addEventListener('DOMContentLoaded', function() {
         // Обработчики фильтров
         document.getElementById('toggleFilters').addEventListener('click', (e) => {
             e.stopPropagation();
-            document.getElementById('filters-panel').classList.toggle('visible');
+            const panel = document.getElementById('filters-panel');
+            console.log('Before toggle:', panel.classList);
+            panel.classList.toggle('visible');
+            console.log('After toggle:', panel.classList);
         });
         
         document.addEventListener('click', (e) => {
