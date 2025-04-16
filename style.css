@@ -131,6 +131,7 @@ body {
     margin-bottom: 15px;
     padding-bottom: 10px;
     border-bottom: 1px solid #eee;
+    cursor: grab;
 }
 .balloon-title {
     font-size: 1.3rem;
