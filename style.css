@@ -1,74 +1,62 @@
-* {
-    box-sizing: border-box;
-    margin: 0;
-    padding: 0;
-}
-
+/* Основные стили */
 body {
-    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    margin: 0;
+    font-family: Arial, sans-serif;
     overflow: hidden;
-    height: 100vh;
-    width: 100vw;
 }
-
+/* Контейнер карты */
 #map {
-    width: 100%;
-    height: 100%;
+    width: 100vw;
+    height: 100vh;
     position: relative;
 }
-
+/* Заголовок на карте */
 #header {
     position: absolute;
     top: 20px;
     left: 50%;
     transform: translateX(-50%);
     z-index: 1000;
-    background: rgba(255, 255, 255, 0.95);
+    background: rgba(255, 255, 255, 0.9);
     padding: 10px 15px;
     border-radius: 10px;
     box-shadow: 0 2px 10px rgba(0, 0, 0, 0.2);
     display: flex;
     align-items: center;
     gap: 15px;
-    max-width: 90%;
 }
-
 #header h1 {
     margin: 0;
     font-size: 1.2rem;
     white-space: nowrap;
-    color: #333;
 }
-
-#toggleFilters {
+#header button {
     background: none;
     border: none;
     font-size: 1.2rem;
     cursor: pointer;
     padding: 5px;
-    color: #555;
 }
-
+/* Блок статистики */
 #stats-overlay {
     position: absolute;
     bottom: 20px;
     left: 20px;
     z-index: 1000;
-    background: rgba(255, 255, 255, 0.95);
+    background: rgba(255, 255, 255, 0.9);
     padding: 8px 12px;
     border-radius: 10px;
     font-size: 0.9rem;
     box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
-    color: #333;
 }
-
+/* Панель фильтров */
 #filters-panel {
     position: absolute;
     top: 80px;
     left: 50%;
     transform: translateX(-50%);
     z-index: 1000;
-    background: rgba(255, 255, 255, 0.98);
+    background: rgba(255, 255, 255, 0.95);
     padding: 15px;
     border-radius: 10px;
     box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
@@ -79,168 +67,115 @@ body {
     max-width: 400px;
     max-height: 70vh;
     overflow-y: auto;
+}
+#filters-panel.hidden {
     display: none;
 }
-
-#filters-panel.visible {
-    display: flex;
-}
-
-#filters-panel select, 
-#filters-panel input {
-    padding: 10px 12px;
+#filters-panel select, #filters-panel input {
+    padding: 8px 12px;
     border: 1px solid #ddd;
-    border-radius: 8px;
+    border-radius: 5px;
     font-size: 0.9rem;
-    background: white;
 }
-
+/* Адаптивность */
+@media (hover: hover) {
+    /* Стили для устройств с мышью (ПК) */
+    #mobile-bottom-sheet {
+        display: none;
+    }
+}
+@media (hover: none) {
+    /* Стили для сенсорных устройств (мобилки) */
+    #desktop-sidebar {
+        display: none;
+    }
+}
+/* Десктопная боковая панель */
+#desktop-sidebar {
+    position: fixed;
+    left: -400px;
+    top: 0;
+    width: 350px;
+    height: 100vh;
+    background: white;
+    z-index: 2000;
+    box-shadow: 2px 0 10px rgba(0, 0, 0, 0.1);
+    transition: left 0.3s ease;
+    overflow-y: auto;
+}
+#desktop-sidebar.visible {
+    left: 0;
+}
+#desktop-sidebar .close-sidebar {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    background: none;
+    border: none;
+    font-size: 1.5rem;
+    cursor: pointer;
+}
+#desktop-sidebar .sidebar-content {
+    padding: 20px;
+}
+#desktop-sidebar img {
+    width: 100%;
+    max-height: 200px;
+    object-fit: cover;
+    border-radius: 8px;
+    margin: 10px 0;
+}
+/* Мобильная панель */
 #mobile-bottom-sheet {
     position: fixed;
     bottom: 0;
     left: 0;
-    right: 0;
-    height: 85vh;
-    max-height: 85vh;
+    width: 100%;
+    max-height: 70vh;
     background: white;
-    border-radius: 20px 20px 0 0;
-    box-shadow: 0 -5px 20px rgba(0, 0, 0, 0.2);
     transform: translateY(100%);
-    transition: transform 0.3s cubic-bezier(0.25, 0.8, 0.5, 1);
+    transition: transform 0.3s ease;
     z-index: 2000;
-    overflow: hidden;
-    touch-action: none;
-    display: flex;
-    flex-direction: column;
-}
-
-#mobile-bottom-sheet.visible {
-    transform: translateY(15%);
-}
-
-#mobile-bottom-sheet.expanded {
-    transform: translateY(0);
-}
-
-.swipe-handle {
-    width: 40px;
-    height: 5px;
-    background: #ddd;
-    border-radius: 3px;
-    margin: 12px auto;
-    cursor: grab;
-    flex-shrink: 0;
-}
-
-.bottom-sheet-content {
-    padding: 15px;
     overflow-y: auto;
-    -webkit-overflow-scrolling: touch;
-    flex-grow: 1;
+    border-radius: 15px 15px 0 0;
+    box-shadow: 0 -5px 15px rgba(0, 0, 0, 0.2);
+    touch-action: none;
 }
-
-.balloon-header {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    margin-bottom: 15px;
-    padding-bottom: 10px;
-    border-bottom: 1px solid #eee;
+#mobile-bottom-sheet.visible {
+    transform: translateY(-30%);
 }
-
-.balloon-title {
-    font-size: 1.3rem;
-    color: #333;
-    margin-right: 15px;
-}
-
-.close-balloon {
+#mobile-bottom-sheet .close-balloon {
+    position: absolute;
+    top: 10px;
+    right: 10px;
     background: none;
     border: none;
-    font-size: 1.2rem;
+    font-size: 1.5rem;
     cursor: pointer;
-    color: #777;
-    padding: 5px;
 }
-
-.balloon-image {
-    width: 100%;
-    max-height: 150px;
-    object-fit: cover;
+#mobile-bottom-sheet .balloon-body {
+    padding: 15px;
+    background: white;
+    border-radius: 10px;
+}
+#mobile-bottom-sheet img {
+    max-width: 100%;
+    height: auto;
     border-radius: 8px;
-    margin-bottom: 15px;
-}
-
-.balloon-body p {
     margin-bottom: 10px;
-    color: #555;
-    line-height: 1.4;
 }
-
-.balloon-body b {
-    color: #333;
+/* Принудительное отображение для теста */
+#desktop-sidebar, #mobile-bottom-sheet {
+    display: block !important;
+    background: red !important;
+    opacity: 0.9 !important;
 }
-
-.balloon-review-link {
-    display: inline-block;
-    margin-top: 10px;
-    color: #0066cc;
-    text-decoration: none;
+/* Подсветка маркеров */
+.ymaps-2-1-79-placemark-overlay {
+    animation: pulse 1s infinite;
 }
-
-@media (min-width: 768px) {
-    #mobile-bottom-sheet {
-        display: none;
-    }
-    
-    #desktop-sidebar {
-        display: block;
-        position: fixed;
-        left: -350px;
-        top: 0;
-        width: 350px;
-        height: 100vh;
-        background: white;
-        z-index: 2000;
-        box-shadow: 2px 0 10px rgba(0, 0, 0, 0.1);
-        transition: left 0.3s ease;
-        overflow-y: auto;
-    }
-    
-    #desktop-sidebar.visible {
-        left: 0;
-    }
-    
-    #sidebar-content {
-        padding: 20px;
-    }
-    
-    #sidebar-image {
-        width: 100%;
-        max-height: 200px;
-        object-fit: cover;
-        border-radius: 8px;
-        margin: 15px 0;
-    }
-    
-    #close-sidebar {
-        position: absolute;
-        top: 10px;
-        right: 10px;
-        background: none;
-        border: none;
-        font-size: 1.2rem;
-        cursor: pointer;
-        color: #777;
-    }
-}
-
-@media (max-width: 767px) {
-    #desktop-sidebar {
-        display: none;
-    }
-}
-
-.hidden {
-    display: none !important;
+@keyframes pulse {
+    0% { transform: scale(1); }
+    50% { transform: scale(1.2); }
+    100% { transform: scale(1); }
 }
