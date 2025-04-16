@@ -3,16 +3,16 @@
 <head>
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <meta charset="UTF-8">
-    <title>Карта заведений</title>
+    <title>Кальянный Патруль</title>
     <script src="https://api-maps.yandex.ru/2.1/?apikey=767b6b86-29dc-4346-b485-2ec344f0e567&lang=ru_RU" type="text/javascript"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
     <link rel="stylesheet" href="style.css">
-    <script src="script.js" defer></script>
 </head>
 <body>
     <div id="map">
         <div id="header">
-            <h1>📍 Карта заведений</h1>
-            <button id="toggleFilters">🔍 Фильтры</button>
+            <h1>📍 Карта Кальянного Патруля</h1>
+            <button id="toggleFilters"><i class="fas fa-filter"></i></button>
         </div>
         <div id="stats-overlay">
             Найдено: <span id="count">0</span> заведений
@@ -25,11 +25,20 @@
             <option value="5">⭐ 5+</option>
             <option value="4">⭐ 4+</option>
             <option value="3">⭐ 3+</option>
+            <option value="2">⭐ 2+</option>
+            <option value="1">⭐ 1+</option>
         </select>
         <select id="districtFilter">
             <option value="all">📍 Все районы</option>
-            <option value="ЦАО">📍 Центр</option>
-            <option value="САО">📍 Север</option>
+            <option value="САО">📍 САО</option>
+            <option value="ЦАО">📍 ЦАО</option>
+            <option value="ЮВАО">📍 ЮВАО</option>
+        </select>
+        <select id="hoursFilter">
+            <option value="all">🕒 Любой режим</option>
+            <option value="Круглосуточно">🕒 Круглосуточно</option>
+            <option value="Пн–Вс: 12:00–02:00">🕒 Пн–Вс: 12:00–02:00</option>
+            <option value="Пн–Вс: 12:00–03:00">🕒 Пн–Вс: 12:00–03:00</option>
         </select>
         <input type="text" id="searchInput" placeholder="🔍 Поиск по названию...">
     </div>
@@ -39,7 +48,7 @@
         <div class="bottom-sheet-content">
             <div class="balloon-header">
                 <h2 class="balloon-title"></h2>
-                <button class="close-balloon">✖</button>
+                <button class="close-balloon"><i class="fas fa-times"></i></button>
             </div>
             <div class="balloon-body">
                 <img class="balloon-image" alt="Фото заведения">
@@ -53,16 +62,18 @@
     </div>
 
     <div id="desktop-sidebar" class="hidden">
-        <div class="sidebar-content">
-            <button class="close-sidebar">✖</button>
-            <h2 class="sidebar-title"></h2>
-            <img class="sidebar-image" alt="Фото заведения">
-            <p><b>Адрес:</b> <span class="sidebar-address"></span></p>
-            <p><b>Телефон:</b> <span class="sidebar-phone"></span></p>
-            <p><b>Режим работы:</b> <span class="sidebar-hours"></span></p>
-            <p><b>Рейтинг:</b> <span class="sidebar-rating"></span></p>
-            <a class="sidebar-review-link" target="_blank">Читать обзор</a>
+        <div id="sidebar-content">
+            <button id="close-sidebar"><i class="fas fa-times"></i></button>
+            <h2 id="sidebar-title"></h2>
+            <img id="sidebar-image" alt="Фото заведения">
+            <p><b>Адрес:</b> <span id="sidebar-address"></span></p>
+            <p><b>Телефон:</b> <span id="sidebar-phone"></span></p>
+            <p><b>Режим работы:</b> <span id="sidebar-hours"></span></p>
+            <p><b>Рейтинг:</b> <span id="sidebar-rating"></span></p>
+            <a id="sidebar-review-link" target="_blank">Читать обзор</a>
         </div>
     </div>
+
+    <script src="script.js"></script>
 </body>
 </html>
