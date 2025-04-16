@@ -20,8 +20,8 @@ document.addEventListener('DOMContentLoaded', function() {
             this.velocity = 0;
             this.lastY = 0;
             this.lastTime = 0;
-            this.collapsedHeight = window.innerHeight * 0.15;
-            this.expandedHeight = window.innerHeight * 0.85;
+            this.collapsedHeight = window.innerHeight * 0.15; // Высота заголовка
+            this.expandedHeight = window.innerHeight * 0.85; // Полная высота
             this.minTranslateY = -this.expandedHeight + this.collapsedHeight;
             this.init();
         }
