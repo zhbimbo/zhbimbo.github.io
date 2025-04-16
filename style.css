@@ -83,7 +83,7 @@ body {
 }
 
 #filters-panel.visible {
-    display: flex;
+    display: flex !important;
 }
 
 #filters-panel select, 
