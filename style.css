@@ -72,18 +72,11 @@ body {
     padding: 15px;
     border-radius: 10px;
     box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
-    display: flex;
-    flex-direction: column;
-    gap: 10px;
-    width: 90%;
-    max-width: 400px;
-    max-height: 70vh;
-    overflow-y: auto;
-    visibility: hidden; /* Новое */
+    display: none;
 }
 
 #filters-panel.visible {
-    visibility: visible; /* Новое */
+    display: block;
 }
 
 #filters-panel select, 
@@ -115,7 +108,7 @@ body {
 }
 
 #mobile-bottom-sheet.visible {
-    transform: translateY(15%); /* Новое */
+    transform: translateY(15%);
 }
 
 #mobile-bottom-sheet.expanded {
