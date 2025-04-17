@@ -402,3 +402,31 @@ body {
         font-size: 0.9rem;
     }
 }
+/* ===== Добавьте эти правила в конец файла ===== */
+
+/* Полное отключение стандартных балунов */
+.ymaps-2-1-79-balloon,
+.ymaps-2-1-79-balloon__layout,
+.ymaps-2-1-79-balloon__content {
+    display: none !important;
+    opacity: 0 !important;
+    pointer-events: none !important;
+}
+
+/* Оптимизация анимаций панелей */
+#desktop-sidebar {
+    will-change: transform;
+    backface-visibility: hidden;
+    transform: translateZ(0);
+}
+
+#mobile-bottom-sheet {
+    will-change: transform;
+    backface-visibility: hidden;
+    transform: translateZ(0);
+}
+
+/* Фикс для предотвращения мерцания */
+.ymaps-2-1-79-placemark-overlay {
+    transform: translateZ(0);
+}
