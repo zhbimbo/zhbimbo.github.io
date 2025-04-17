@@ -1,4 +1,3 @@
-// script.js
 document.addEventListener('DOMContentLoaded', function() {
     let map;
     let placemarks = [];
@@ -163,11 +162,12 @@ document.addEventListener('DOMContentLoaded', function() {
             .catch(error => console.error('Ошибка:', error));
 
         // Обработчики
-        document.getElementById('toggleFilters').addEventListener('click', () => {
-            document.getElementById('filters-panel').classList.toggle('visible');
+        document.getElementById('toggleFilters').addEventListener('click', (e) => {
+            e.stopPropagation();
+            document.getElementById('filters-panel').classList.toggle('visible'); /* [[4]] */
         });
 
-        document.getElementById('toggleLocation').addEventListener('click', getLocation);
+        document.getElementById('toggleLocation').addEventListener('click', getLocation); /* [[2]] */
 
         document.addEventListener('click', (e) => {
             if (!e.target.closest('#filters-panel') && !e.target.closest('#toggleFilters')) {
@@ -221,22 +221,23 @@ document.addEventListener('DOMContentLoaded', function() {
 
     // Десктопная панель
     const openDesktopSidebar = (placeData) => {
-        document.querySelector('.sidebar-title').textContent = placeData.name;
-        document.querySelector('.sidebar-image').src = placeData.photo;
-        document.querySelector('.sidebar-address').textContent = placeData.address;
-        document.querySelector('.sidebar-phone').textContent = placeData.phone;
-        document.querySelector('.sidebar-hours').textContent = placeData.hours;
-        document.querySelector('.sidebar-rating').textContent = placeData.description;
-        document.querySelector('.sidebar-review-link').href = placeData.reviewLink;
+        document.getElementById('sidebar-title').textContent = placeData.name;
+        document.getElementById('sidebar-image').src = placeData.photo;
+        document.getElementById('sidebar-address').textContent = placeData.address;
+        document.getElementById('sidebar-phone').textContent = placeData.phone;
+        document.getElementById('sidebar-hours').textContent = placeData.hours;
+        document.getElementById('sidebar-rating').textContent = placeData.description;
+        document.getElementById('sidebar-review-link').href = placeData.reviewLink;
         document.getElementById('desktop-sidebar').classList.add('visible');
     };
 
-    // Закрытие десктопной панели
     const closeDesktopSidebar = () => {
         document.getElementById('desktop-sidebar').classList.remove('visible');
     };
     document.getElementById('close-sidebar').addEventListener('click', closeDesktopSidebar);
 
-    // Отключаем стандартный балун
+    // Убираем стандартный балун Яндекс.Карт
     ymaps.balloon.close();
+
+    /* очко ставлю */
 });
