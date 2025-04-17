@@ -269,6 +269,4 @@ const filterPlacemarks = () => {
         placemark.options.set('visible', matchesRating && matchesDistrict && matchesHours && matchesSearch);
     });
 };
-
-    // очко ставлю
 });
