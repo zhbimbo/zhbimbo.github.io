@@ -18,36 +18,35 @@ ymaps.ready(function() {
             controls: []
         });
 
-        // Отключаем клики на все элементы карты, кроме наших маркеров
+        // Блокируем клики на фоне карты и посторонних элементах
         map.events.add('click', function(e) {
             if (!e.get('target') || !e.get('target').properties.get('customData')) {
                 e.preventDefault();
-                e.stopPropagation();
                 return false;
             }
         });
 
-        // Включаем масштабирование для мобильных
+        // Настройки поведения для разных устройств
         if (isMobile) {
+            // Для мобильных: включаем только мультитач
             map.behaviors.enable('multiTouch');
+            map.behaviors.disable([
+                'drag', // Можно включить, если нужен драг
+                'rightMouseButtonMagnifier'
+            ]);
         } else {
-            map.behaviors.disable('multiTouch');
+            // Для десктопа: оставляем колесико и правую кнопку
+            map.behaviors.enable([
+                'scrollZoom',
+                'rightMouseButtonMagnifier'
+            ]);
         }
 
-        // Дополнительные настройки
-        map.options.set({
-            suppressMapOpenBlock: true,
-            yandexMapDisablePoiInteractivity: true
-        });
-
-        // Остальные настройки поведения
-        map.behaviors.disable([
-            'rightMouseButtonMagnifier',
-            'scrollZoom' // Оставляем только мультитач-зум
-        ]);
+        // Отключаем POI (точки интереса Яндекса)
+        map.options.set('yandexMapDisablePoiInteractivity', true);
 
     } catch (e) {
-        console.error('Map init error:', e);
+        console.error('Ошибка инициализации карты:', e);
     }
 });
 
