@@ -9,64 +9,64 @@ document.addEventListener('DOMContentLoaded', function() {
         return;
     }
 
-// Инициализация карты
-ymaps.ready(function() {
-    try {
-        // Базовая инициализация карты без кастомного стиля
-        map = new ymaps.Map('map', {
-            center: [55.7558, 37.6173],
-            zoom: 12,
-            controls: []
-        });
-
-        // Альтернативная стилизация через CSS (легальный способ)
-        const mapContainer = map.container.getElement();
-        mapContainer.style.filter = 'hue-rotate(10deg) saturate(1.1)';
-        mapContainer.style.borderRadius = '12px';
-
-        // Отключаем стандартные POI
-        map.options.set('yandexMapDisablePoiInteractivity', true);
-
-        // Настройки поведения
-        const enabledBehaviors = isMobile 
-            ? ['multiTouch', 'drag'] 
-            : ['scrollZoom', 'rightMouseButtonMagnifier'];
-        
-        const disabledBehaviors = isMobile
-            ? ['scrollZoom', 'rightMouseButtonMagnifier']
-            : [];
-        
-        map.behaviors.enable(enabledBehaviors);
-        map.behaviors.disable(disabledBehaviors);
-
-        // Блокировка кликов на фоне
-        map.events.add('click', function(e) {
-            const target = e.get('target');
-            if (!target?.properties) {
-                e.preventDefault();
-                return false;
-            }
-        });
-
-        // Загрузка данных
-        loadPlacesData();
-
-    } catch (e) {
-        console.error('Ошибка инициализации карты:', e);
-        
-        // Fallback-попытка с минимальными настройками
+    // Инициализация карты
+    ymaps.ready(function() {
         try {
+            // Базовая инициализация карты без кастомного стиля
             map = new ymaps.Map('map', {
                 center: [55.7558, 37.6173],
-                zoom: 12
+                zoom: 12,
+                controls: []
             });
+
+            // Альтернативная стилизация через CSS (легальный способ)
+            const mapContainer = map.container.getElement();
+            mapContainer.style.filter = 'hue-rotate(10deg) saturate(1.1)';
+            mapContainer.style.borderRadius = '12px';
+
+            // Отключаем стандартные POI
+            map.options.set('yandexMapDisablePoiInteractivity', true);
+
+            // Настройки поведения
+            const enabledBehaviors = isMobile 
+                ? ['multiTouch', 'drag'] 
+                : ['scrollZoom', 'rightMouseButtonMagnifier'];
+            
+            const disabledBehaviors = isMobile
+                ? ['scrollZoom', 'rightMouseButtonMagnifier']
+                : [];
+            
+            map.behaviors.enable(enabledBehaviors);
+            map.behaviors.disable(disabledBehaviors);
+
+            // Блокировка кликов на фоне
+            map.events.add('click', function(e) {
+                const target = e.get('target');
+                if (!target?.properties) {
+                    e.preventDefault();
+                    return false;
+                }
+            });
+
+            // Загрузка данных
             loadPlacesData();
-        } catch (fallbackError) {
-            console.error('Fallback инициализация не удалась:', fallbackError);
-            alert('Не удалось загрузить карту. Пожалуйста, проверьте интернет-соединение и обновите страницу.');
+
+        } catch (e) {
+            console.error('Ошибка инициализации карты:', e);
+            
+            // Fallback-попытка с минимальными настройками
+            try {
+                map = new ymaps.Map('map', {
+                    center: [55.7558, 37.6173],
+                    zoom: 12
+                });
+                loadPlacesData();
+            } catch (fallbackError) {
+                console.error('Fallback инициализация не удалась:', fallbackError);
+                alert('Не удалось загрузить карту. Пожалуйста, проверьте интернет-соединение и обновите страницу.');
+            }
         }
-    }
-});
+    });
 
     // Загрузка данных из JSON
     function loadPlacesData() {
@@ -216,14 +216,9 @@ ymaps.ready(function() {
     document.getElementById('toggleFilters').addEventListener('click', function(e) {
         e.stopPropagation();
         const filtersPanel = document.getElementById('filters-panel');
-    panel.style.transform = panel.classList.contains('visible') 
-        ? 'translateY(-20px)' 
-        : 'translateY(0)';
-    panel.style.opacity = panel.classList.contains('visible') ? '0' : '1';
         filtersPanel.classList.toggle('hidden');
         filtersPanel.classList.toggle('visible');
     });
-
 
     document.addEventListener('click', function(e) {
         if (!e.target.closest('#filters-panel') && !e.target.closest('#toggleFilters')) {
@@ -260,7 +255,7 @@ ymaps.ready(function() {
                 function(position) {
                     map.setCenter([position.coords.latitude, position.coords.longitude], 14);
                     
-                    new ymaps.Placemark(
+                    const placemark = new ymaps.Placemark(
                         [position.coords.latitude, position.coords.longitude],
                         {},
                         {
@@ -269,12 +264,11 @@ ymaps.ready(function() {
                             iconImageSize: [32, 32],
                             iconImageOffset: [-16, -16]
                         }
-                    ).then(placemark => {
-                        map.geoObjects.add(placemark);
-                        setTimeout(() => {
-                            map.geoObjects.remove(placemark);
-                        }, 5000);
-                    });
+                    );
+                    map.geoObjects.add(placemark);
+                    setTimeout(() => {
+                        map.geoObjects.remove(placemark);
+                    }, 5000);
                 },
                 function() {
                     alert("Не удалось определить ваше местоположение");
