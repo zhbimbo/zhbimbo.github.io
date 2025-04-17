@@ -2,8 +2,6 @@ document.addEventListener('DOMContentLoaded', function() {
     let map;
     let placemarks = [];
     let selectedPlacemark = null;
-
-    // Проверка мобильного устройства
     const isMobile = () => 
         /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent);
 
@@ -169,7 +167,22 @@ document.addEventListener('DOMContentLoaded', function() {
         return placemark;
     };
 
-    // Открытие мобильной панели
+    // Десктопная панель
+    const openDesktopSidebar = (placeData) => {
+        const sidebar = document.getElementById('desktop-sidebar');
+        if (!sidebar) return;
+        document.getElementById('sidebar-title').textContent = placeData.name;
+        document.getElementById('sidebar-image').src = placeData.photo;
+        document.getElementById('sidebar-address').textContent = placeData.address;
+        document.getElementById('sidebar-phone').textContent = placeData.phone;
+        document.getElementById('sidebar-hours').textContent = placeData.hours;
+        document.getElementById('sidebar-rating').textContent = placeData.description;
+        document.getElementById('sidebar-review-link').href = placeData.reviewLink;
+        sidebar.classList.remove('hidden');
+        sidebar.classList.add('visible');
+    };
+
+    // Мобильная панель
     const openMobilePanel = (placeData) => {
         document.querySelector('.balloon-title').textContent = placeData.name;
         document.querySelector('.balloon-image').src = placeData.photo;
@@ -179,19 +192,6 @@ document.addEventListener('DOMContentLoaded', function() {
         document.querySelector('.balloon-rating').textContent = placeData.description;
         document.querySelector('.balloon-review-link').href = placeData.reviewLink;
         bottomSheet.show();
-    };
-
-    // Открытие десктопной панели
-    const openDesktopSidebar = (placeData) => {
-        document.getElementById('sidebar-title').textContent = placeData.name;
-        document.getElementById('sidebar-image').src = placeData.photo;
-        document.getElementById('sidebar-address').textContent = placeData.address;
-        document.getElementById('sidebar-phone').textContent = placeData.phone;
-        document.getElementById('sidebar-hours').textContent = placeData.hours;
-        document.getElementById('sidebar-rating').textContent = placeData.description;
-        document.getElementById('sidebar-review-link').href = placeData.reviewLink;
-        document.getElementById('desktop-sidebar').classList.remove('hidden');
-        document.getElementById('desktop-sidebar').classList.add('visible');
     };
 
     // Фильтры
@@ -223,35 +223,29 @@ document.addEventListener('DOMContentLoaded', function() {
         }
     });
 
-    document.getElementById('toggleLocation').addEventListener('click', getLocation);
-
+    // Панель фильтров не должна скрываться при клике вне
     document.addEventListener('click', (e) => {
-        if (!e.target.closest('#filters-panel') && !e.target.closest('#toggleFilters')) {
-            const filtersPanel = document.getElementById('filters-panel');
-            if (filtersPanel) {
-                filtersPanel.classList.remove('visible');
-            }
+        if (e.target.closest('#filters-panel')) return;
+        const filtersPanel = document.getElementById('filters-panel');
+        if (filtersPanel) {
+            filtersPanel.classList.remove('visible');
         }
     });
 
+    // Слушатели фильтров
     document.getElementById('ratingFilter').addEventListener('change', filterPlacemarks);
     document.getElementById('districtFilter').addEventListener('change', filterPlacemarks);
     document.getElementById('hoursFilter').addEventListener('change', filterPlacemarks);
     document.getElementById('searchInput').addEventListener('input', filterPlacemarks);
 
-    // Закрытие панелей
+    // Закрытие десктопной панели
     document.getElementById('close-sidebar').addEventListener('click', () => {
         document.getElementById('desktop-sidebar').classList.remove('visible');
         document.getElementById('desktop-sidebar').classList.add('hidden');
     });
 
-    // Проверка инициализации карты
+    // Проверка карты
     if (!map) {
         console.error("Карта не загружена. Убедитесь, что API-ключ верный.");
     }
 });
-
-// Функция применения фильтров
-function applyFilters() {
-    filterPlacemarks(); // Обновление фильтров
-}
