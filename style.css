@@ -1,3 +1,4 @@
+/* style.css */
 * {
     box-sizing: border-box;
     margin: 0;
@@ -13,43 +14,6 @@ body {
     width: 100%;
     height: 100%;
     position: relative;
-}
-
-/* Шапка */
-#header {
-    position: absolute;
-    top: 20px;
-    left: 50%;
-    transform: translateX(-50%);
-    z-index: 1000;
-    background: rgba(255, 255, 255, 0.95);
-    padding: 10px 15px;
-    border-radius: 10px;
-    box-shadow: 0 2px 10px rgba(0,0,0,0.2);
-    display: flex;
-    align-items: center;
-    gap: 15px;
-    max-width: 90%;
-}
-
-/* Панель фильтров */
-#filters-panel {
-    position: absolute;
-    top: 80px;
-    left: 50%;
-    transform: translateX(-50%);
-    z-index: 1000;
-    background: rgba(255, 255, 255, 0.98);
-    padding: 15px;
-    border-radius: 10px;
-    box-shadow: 0 4px 15px rgba(0,0,0,0.2);
-    transform: translateY(-100%);
-    transition: transform 0.3s ease;
-    display: flex;
-}
-
-#filters-panel.visible {
-    transform: translateY(0);
 }
 
 /* Мобильная панель */
@@ -69,18 +33,17 @@ body {
 }
 
 #mobile-bottom-sheet.visible {
-    transform: translateY(15%); /* Показ заголовка [[6]] */
+    transform: translateY(15%);
 }
 
 #mobile-bottom-sheet.expanded {
-    transform: translateY(0); /* Полное открытие [[6]] */
+    transform: translateY(0);
 }
 
 .balloon-header {
-    backdrop-filter: blur(10px); /* Эффект размытия [[5]] */
+    backdrop-filter: blur(10px); /* Размытие [[5]] */
     background: rgba(255, 255, 255, 0.8);
     padding: 20px;
-    border-bottom: 1px solid #eee;
 }
 
 .balloon-body {
@@ -89,52 +52,48 @@ body {
     overflow-y: auto;
 }
 
-.balloon-image {
-    width: 100%;
-    max-height: 100px; /* Уменьшенное фото [[6]] */
+/* Десктопная панель */
+#desktop-sidebar {
+    position: fixed;
+    right: -350px; /* Скрываем справа [[5]] */
+    top: 0;
+    width: 350px;
+    height: 100%;
+    background: linear-gradient(135deg, #ff4500, #ff8000); /* Градиент [[5]] */
+    border-radius: 15px 0 0 15px;
+    box-shadow: -5px 0 20px rgba(0,0,0,0.2);
+    transition: right 0.3s ease;
+}
+
+#desktop-sidebar.visible {
+    right: 0;
+}
+
+/* Фото в панели */
+.balloon-image, .sidebar-image {
+    max-height: 100px;
     object-fit: cover;
     border-radius: 8px;
     margin-bottom: 10px;
 }
 
-/* Десктопная панель */
-#desktop-sidebar {
-    position: fixed;
-    left: -350px;
-    top: 0;
-    width: 350px;
-    height: 100vh;
-    background: linear-gradient(135deg, #ff4500, #ff8000); /* Градиент [[5]] */
-    border-radius: 15px;
-    box-shadow: 0 4px 20px rgba(0,0,0,0.2);
-    transition: left 0.3s ease;
-    padding: 20px;
+/* Панель фильтров */
+#filters-panel {
+    position: absolute;
+    top: 80px;
+    left: 50%;
+    transform: translateX(-50%);
+    z-index: 1000;
+    background: linear-gradient(45deg, #ff4500, #ff8000); /* Градиент [[5]] */
+    padding: 15px;
+    border-radius: 10px;
+    box-shadow: 0 4px 15px rgba(0,0,0,0.2);
+    transform: translateX(100%);
+    transition: transform 0.3s ease;
 }
 
-#desktop-sidebar.visible {
-    left: 0;
-}
-
-#sidebar-image {
-    max-height: 150px; /* Уменьшенное фото [[6]] */
-    object-fit: cover;
-    border-radius: 15px;
-    margin-bottom: 20px;
-}
-
-/* Анимации кнопок */
-.animated-button {
-    transition: transform 0.2s, box-shadow 0.2s;
-    padding: 10px;
-    background: none;
-    border: none;
-    font-size: 1.2rem;
-    cursor: pointer;
-}
-
-.animated-button:hover {
-    transform: scale(1.05);
-    box-shadow: 0 0 10px rgba(255, 255, 255, 0.5);
+#filters-panel.visible {
+    transform: translateX(0);
 }
 
 /* Скрываем скрытые элементы */
