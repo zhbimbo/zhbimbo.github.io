@@ -10,47 +10,42 @@ document.addEventListener('DOMContentLoaded', function() {
     }
 
     // 2. Инициализация карты с обработкой ошибок
-ymaps.ready(function() {
-    try {
-        map = new ymaps.Map('map', {
-            center: [55.7558, 37.6173],
-            zoom: 12,
-            controls: []
-        });
+    ymaps.ready(function() {
+        try {
+            map = new ymaps.Map('map', {
+                center: [55.7558, 37.6173],
+                zoom: 12,
+                controls: []
+            });
 
-        // Блокируем клики на фоне карты и посторонних элементах
-        map.events.add('click', function(e) {
-            if (!e.get('target') || !e.get('target').properties.get('customData')) {
-                e.preventDefault();
-                return false;
+            // Блокируем клики на фоне карты и посторонних элементах
+            map.events.add('click', function(e) {
+                if (!e.get('target') || !e.get('target').properties.get('customData')) {
+                    e.preventDefault();
+                    return false;
+                }
+            });
+
+            // Настройки поведения для разных устройств
+            if (isMobile) {
+                // Для мобильных: включаем только мультитач
+                map.behaviors.enable('multiTouch');
+                map.behaviors.disable([
+                    'drag', // Можно включить, если нужен драг
+                    'rightMouseButtonMagnifier'
+                ]);
+            } else {
+                // Для десктопа: оставляем колесико и правую кнопку
+                map.behaviors.enable([
+                    'scrollZoom',
+                    'rightMouseButtonMagnifier'
+                ]);
             }
-        });
 
-        // Настройки поведения для разных устройств
-        if (isMobile) {
-            // Для мобильных: включаем только мультитач
-            map.behaviors.enable('multiTouch');
-            map.behaviors.disable([
-                'drag', // Можно включить, если нужен драг
-                'rightMouseButtonMagnifier'
-            ]);
-        } else {
-            // Для десктопа: оставляем колесико и правую кнопку
-            map.behaviors.enable([
-                'scrollZoom',
-                'rightMouseButtonMagnifier'
-            ]);
-        }
+            // Отключаем POI (точки интереса Яндекса)
+            map.options.set('yandexMapDisablePoiInteractivity', true);
 
-        // Отключаем POI (точки интереса Яндекса)
-        map.options.set('yandexMapDisablePoiInteractivity', true);
-
-    } catch (e) {
-        console.error('Ошибка инициализации карты:', e);
-    }
-});
-
-            // 4. Загрузка данных
+            // 3. Загрузка данных
             loadPlacesData();
 
         } catch (e) {
@@ -58,6 +53,27 @@ ymaps.ready(function() {
             alert('Произошла ошибка при загрузке карты');
         }
     });
+
+    function loadPlacesData() {
+        fetch('data.json')
+            .then(response => {
+                if (!response.ok) throw new Error('Ошибка загрузки данных');
+                return response.json();
+            })
+            .then(data => {
+                data.forEach(place => {
+                    const placemark = createPlacemark(place);
+                    placemarks.push(placemark);
+                    map.geoObjects.add(placemark);
+                });
+                document.getElementById('count').textContent = data.length;
+            })
+            .catch(error => {
+                console.error('Ошибка загрузки данных:', error);
+                alert('Не удалось загрузить данные о местах');
+            });
+    }
+
 
     function loadPlacesData() {
         fetch('data.json')
