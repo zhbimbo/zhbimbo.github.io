@@ -9,31 +9,43 @@ document.addEventListener('DOMContentLoaded', function() {
         return;
     }
 
-    // Инициализация карты
+    // Инициализация карты с кастомными настройками
     ymaps.ready(function() {
         try {
+            // 1. Создаем кастомный стиль карты
+            ymaps.layer.storage.add('yandex#custom#orangeTheme', new ymaps.Layer(
+                'https://core-renderer-tiles.maps.yandex.net/tiles?l=map&theme=light&custom=%23ffd8b3',
+                {
+                    projection: ymaps.projection.sphericalMercator,
+                    tileSize: [256, 256]
+                }
+            ));
+
+            // 2. Инициализация карты с отключением стандартных POI
             map = new ymaps.Map('map', {
                 center: [55.7558, 37.6173],
                 zoom: 12,
-                controls: []
+                controls: [],
+                type: 'yandex#custom#orangeTheme',
+                suppressMapOpenBlock: true,
+                yandexMapDisablePoiInteractivity: true
             });
 
-            // Блокируем клики на фоне карты
+            // 3. Настройки поведения
+            if (isMobile) {
+                map.behaviors.enable(['multiTouch', 'drag']);
+                map.behaviors.disable(['scrollZoom', 'rightMouseButtonMagnifier']);
+            } else {
+                map.behaviors.enable(['scrollZoom', 'rightMouseButtonMagnifier']);
+            }
+
+            // 4. Блокировка кликов на фоне карты
             map.events.add('click', function(e) {
-                if (!e.get('target') || !e.get('target').properties.get('customData')) {
+                if (!e.get('target') || !e.get('target').properties) {
                     e.preventDefault();
                     return false;
                 }
             });
-
-            // Настройки поведения для разных устройств
-            if (isMobile) {
-                map.behaviors.enable(['multiTouch', 'drag']);
-                map.behaviors.disable('rightMouseButtonMagnifier');
-                map.options.set('suppressMapOpenBlock', true);
-            } else {
-                map.behaviors.enable(['scrollZoom', 'rightMouseButtonMagnifier']);
-            }
 
             // Загрузка данных
             loadPlacesData();
@@ -87,7 +99,7 @@ document.addEventListener('DOMContentLoaded', function() {
             }
         );
 
-        // Обработчик клика
+        // Обработчик клика с анимацией
         placemark.events.add('click', function(e) {
             e.preventDefault();
             const target = e.get('target');
