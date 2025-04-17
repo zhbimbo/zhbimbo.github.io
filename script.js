@@ -30,50 +30,66 @@ document.addEventListener('DOMContentLoaded', function() {
             .catch(error => console.error('Ошибка загрузки данных:', error));
     }
 
-    // Создание метки с отключенными балунами
-    function createPlacemark(place) {
-        const rating = parseFloat(place.description.split('/')[0]);
-        const placemark = new ymaps.Placemark(
-            place.coordinates,
-            {
-                customData: place,
-                // Убираем содержимое балуна, так как оно не используется
-                balloonContentHeader: '',
-                balloonContentBody: '',
-                balloonContentFooter: ''
-            },
-            {
-                iconLayout: 'default#imageWithContent',
-                iconImageHref: getIconByRating(rating),
-                iconImageSize: [40, 40],
-                iconImageOffset: [-20, -40],
-                // Отключаем балун
-                balloonCloseButton: false,
-                hideIconOnBalloonOpen: false,
-                // Отключаем открытие балуна при клике
-                balloonInteractivityModel: 'default#opaque'
-            }
-        );
+function createPlacemark(place) {
+    const rating = parseFloat(place.description.split('/')[0]);
+    const placemark = new ymaps.Placemark(
+        place.coordinates,
+        {
+            customData: place,
+            balloonContentHeader: '',
+            balloonContentBody: '',
+            balloonContentFooter: ''
+        },
+        {
+            iconLayout: 'default#imageWithContent',
+            iconImageHref: getIconByRating(rating),
+            iconImageSize: [48, 48], // Увеличил для лучшей анимации
+            iconImageOffset: [-24, -48],
+            balloonCloseButton: false,
+            hideIconOnBalloonOpen: false,
+            balloonInteractivityModel: 'default#opaque'
+        }
+    );
 
-        // Обработчик клика с предотвращением сбоев
-        placemark.events.add('click', function(e) {
-            e.preventDefault();
-            const target = e.get('target');
-            const placeData = target.properties.get('customData');
-            
-            // Закрываем все возможные открытые балуны
-            map.balloon.close();
-            
-            if (isMobile) {
-                openMobilePanel(placeData);
-            } else {
-                openDesktopSidebar(placeData);
-            }
-            return false;
+    // Анимация при клике
+    placemark.events.add('click', function(e) {
+        e.preventDefault();
+        const target = e.get('target');
+        const placeData = target.properties.get('customData');
+
+        // Сбрасываем анимацию у всех маркеров
+        placemarks.forEach(pm => {
+            pm.options.set('iconImageHref', getIconByRating(
+                parseFloat(pm.properties.get('customData').description.split('/')[0])
+            );
         });
 
-        return placemark;
-    }
+        // Анимируем текущий маркер
+        target.options.set('iconImageHref', 'icons/star-orange.png'); // Ваша иконка для активного состояния
+        
+        // Запускаем пульсацию через CSS-класс
+        target.options.set('preset', 'islands#circleIcon');
+        
+        // Открываем панель
+        if (isMobile) {
+            openMobilePanel(placeData);
+        } else {
+            openDesktopSidebar(placeData);
+        }
+
+        // Возвращаем стандартный вид через 1.5 секунды
+        setTimeout(() => {
+            target.options.set({
+                iconImageHref: getIconByRating(rating),
+                preset: ''
+            });
+        }, 1500);
+
+        return false;
+    });
+
+    return placemark;
+}
 
     // Используем ваши иконки
     function getIconByRating(rating) {
