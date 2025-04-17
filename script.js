@@ -37,53 +37,56 @@ document.addEventListener('DOMContentLoaded', function() {
         return 'icons/star-red.png';
     }
 
-  function createPlacemark(place) {
-  const rating = parseFloat(place.description.split('/')[0]);
-  const placemark = new ymaps.Placemark(
-    place.coordinates,
-    {
-      customData: place,
-      balloonContentHeader: '',
-      balloonContentBody: '',
-      balloonContentFooter: ''
-    },
-    {
-      iconLayout: 'default#imageWithContent',
-      iconImageHref: 'icons/star-' + (rating >= 4 ? 'green' : rating >= 3 ? 'yellow' : 'red') + '.png',
-      iconImageSize: [40, 40],
-      iconImageOffset: [-20, -40],
-      balloonCloseButton: false,
-      hideIconOnBalloonOpen: false,
-      balloonInteractivityModel: 'default#opaque'
-    }
-  );
+function createPlacemark(place) {
+    const rating = parseFloat(place.description.split('/')[0]);
+    const placemark = new ymaps.Placemark(
+        place.coordinates,
+        {
+            customData: place,
+            balloonContentHeader: '',
+            balloonContentBody: '',
+            balloonContentFooter: ''
+        },
+        {
+            iconLayout: 'default#imageWithContent',
+            iconImageHref: 'icons/star-' + (rating >= 4 ? 'green' : rating >= 3 ? 'yellow' : 'red') + '.png',
+            iconImageSize: [40, 40],
+            iconImageOffset: [-20, -40],
+            balloonCloseButton: false,
+            hideIconOnBalloonOpen: false,
+            balloonInteractivityModel: 'default#opaque'
+        }
+    );
 
-  // Обработчик клика с анимацией
-  placemark.events.add('click', function(e) {
-    e.preventDefault();
-    const target = e.get('target');
-    
-    // Получаем DOM-элемент маркера
-    const overlay = target.getOverlay().getElement().querySelector('.ymaps-2-1-79-placemark-overlay');
-    
-    // Добавляем класс для анимации
-    overlay.classList.add('clicked');
-    
-    // Убираем класс после завершения анимации
-    setTimeout(() => overlay.classList.remove('clicked'), 500);
-    
-    // Открываем панель
-    const placeData = target.properties.get('customData');
-    if (isMobile) {
-      openMobilePanel(placeData);
-    } else {
-      openDesktopSidebar(placeData);
-    }
-    
-    return false;
-  });
+    // НОВЫЙ РАБОЧИЙ обработчик клика
+    placemark.events.add('click', function(e) {
+        e.preventDefault();
+        
+        // 1. Получаем данные
+        const target = e.get('target');
+        const placeData = target.properties.get('customData');
+        
+        // 2. Анимация через прямое изменение стилей
+        const overlay = target.getOverlay().getElement();
+        overlay.style.transform = 'scale(1.2)';
+        overlay.style.transition = 'transform 0.3s ease';
+        
+        // 3. Возвращаем исходный размер через 300мс
+        setTimeout(() => {
+            overlay.style.transform = 'scale(1)';
+        }, 300);
+        
+        // 4. Открываем панель
+        if (isMobile) {
+            openMobilePanel(placeData);
+        } else {
+            openDesktopSidebar(placeData);
+        }
+        
+        return false;
+    });
 
-  return placemark;
+    return placemark;
 }
     // Используем ваши иконки
     function getIconByRating(rating) {
