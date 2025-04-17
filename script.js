@@ -38,43 +38,56 @@ document.addEventListener('DOMContentLoaded', function() {
     }
 
     // 3. Создание метки (упрощенная версия)
-    function createPlacemark(place) {
-        const rating = parseFloat(place.description.split('/')[0]);
-        const placemark = new ymaps.Placemark(
-            place.coordinates,
-            {
-                customData: place,
-                balloonContentHeader: '',
-                balloonContentBody: '',
-                balloonContentFooter: ''
-            },
-            {
-                iconLayout: 'default#imageWithContent',
-                iconImageHref: getIconByRating(rating),
-                iconImageSize: [40, 40],
-                iconImageOffset: [-20, -40],
-                balloonCloseButton: false,
-                hideIconOnBalloonOpen: false,
-                balloonInteractivityModel: 'default#opaque'
-            }
-        );
+function createPlacemark(place) {
+    const rating = parseFloat(place.description.split('/')[0]);
+    const placemark = new ymaps.Placemark(
+        place.coordinates,
+        {
+            customData: place,
+            // Отключаем стандартные балуны
+            balloonContentHeader: '',
+            balloonContentBody: '',
+            balloonContentFooter: ''
+        },
+        {
+            iconLayout: 'default#imageWithContent',
+            iconImageHref: getIconByRating(rating),
+            iconImageSize: [40, 40],
+            iconImageOffset: [-20, -40],
+            // Критически важные настройки:
+            hideIconOnBalloonOpen: false,
+            balloonInteractivityModel: 'default#opaque',
+            // Добавляем свой класс для анимации
+            preset: 'islands#circleIcon'
+        }
+    );
 
-        // 4. Обработчик клика (без смены иконки)
-        placemark.events.add('click', function(e) {
-            e.preventDefault();
-            const target = e.get('target');
-            const placeData = target.properties.get('customData');
-            
-            // Просто открываем панель без анимации маркера
-            if (isMobile) {
-                openMobilePanel(placeData);
-            } else {
-                openDesktopSidebar(placeData);
-            }
-            return false;
-        });
+    // Обработчик клика с анимацией через CSS
+    placemark.events.add('click', function(e) {
+        e.preventDefault();
+        const target = e.get('target');
+        
+        // 1. Добавляем класс для анимации
+        target.options.set('preset', 'islands#circleDotIcon');
+        
+        // 2. Открываем панель
+        const placeData = target.properties.get('customData');
+        if (isMobile) {
+            openMobilePanel(placeData);
+        } else {
+            openDesktopSidebar(placeData);
+        }
+        
+        // 3. Через 1 секунду убираем анимацию
+        setTimeout(() => {
+            target.options.set('preset', 'islands#circleIcon');
+        }, 1000);
+        
+        return false;
+    });
 
-        return placemark;
+    return placemark;
+}
     }
     // Используем ваши иконки
     function getIconByRating(rating) {
