@@ -27,7 +27,15 @@ body {
     border-radius: 5px;
     box-shadow: 0 1px 5px rgba(0,0,0,0.2);
 }
+@keyframes appear {
+    from { opacity: 0; }
+    to { opacity: 1; }
+}
 
+@keyframes slideIn {
+    from { transform: translateX(-100%); }
+    to { transform: translateX(0); }
+}
 #header h1 {
     font-size: 1rem;
     color: white;
@@ -40,12 +48,14 @@ body {
     left: 0;
     right: 0;
     height: 85vh;
-    background: white;
+    background: linear-gradient(135deg, #ff4500, #ff8000);
     border-radius: 20px 20px 0 0;
     box-shadow: 0 -5px 20px rgba(0,0,0,0.2);
-    transform: translateY(100%);
-    transition: transform 0.3s cubic-bezier(0.25, 0.8, 0.5, 1);
     z-index: 2000;
+    animation: appear 0.3s ease; /* Анимация появления [[6]] */
+}
+.balloon-image {
+    max-height: 100px !important; /* Уменьшаем фото [[7]] */
 }
 
 #mobile-bottom-sheet.visible {
@@ -63,9 +73,15 @@ body {
     top: 0;
     width: 350px;
     height: 100%;
-    background: white;
-    transition: left 0.3s ease;
+    background: linear-gradient(225deg, #ff4500, #ff8000);
     z-index: 2000;
+    border-radius: 15px;
+    box-shadow: 0 0 30px rgba(0,0,0,0.2);
+    animation: slideIn 0.5s ease;
+}
+
+#sidebar-image {
+    max-height: 150px !important; /* Уменьшаем фото [[7]] */
 }
 
 #desktop-sidebar.visible {
