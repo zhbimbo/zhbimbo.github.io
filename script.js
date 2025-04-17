@@ -8,17 +8,6 @@ document.addEventListener('DOMContentLoaded', function() {
         console.error('Yandex Maps API не загружен');
         return;
     }
-    // Добавьте этот блок в конец (после ymaps.ready)
-    if (isMobile) {
-        document.getElementById('map').addEventListener('touchmove', function(e) {
-            e.stopPropagation();
-        }, { passive: true });
-
-        document.addEventListener('gesturestart', function(e) {
-            e.preventDefault();
-        });
-    }
-});
     // 2. Инициализация карты с обработкой ошибок
     ymaps.ready(function() {
         try {
@@ -343,4 +332,15 @@ function createPlacemark(place) {
         const panel = document.getElementById('mobile-bottom-sheet');
         panel.style.transform = '';
     }, { passive: true });
+});
+    // Добавьте этот блок в конец (после ymaps.ready)
+    if (isMobile) {
+        document.getElementById('map').addEventListener('touchmove', function(e) {
+            e.stopPropagation();
+        }, { passive: true });
+
+        document.addEventListener('gesturestart', function(e) {
+            e.preventDefault();
+        });
+    }
 });
