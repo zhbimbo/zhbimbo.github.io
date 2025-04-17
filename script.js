@@ -216,9 +216,14 @@ ymaps.ready(function() {
     document.getElementById('toggleFilters').addEventListener('click', function(e) {
         e.stopPropagation();
         const filtersPanel = document.getElementById('filters-panel');
+    panel.style.transform = panel.classList.contains('visible') 
+        ? 'translateY(-20px)' 
+        : 'translateY(0)';
+    panel.style.opacity = panel.classList.contains('visible') ? '0' : '1';
         filtersPanel.classList.toggle('hidden');
         filtersPanel.classList.toggle('visible');
     });
+
 
     document.addEventListener('click', function(e) {
         if (!e.target.closest('#filters-panel') && !e.target.closest('#toggleFilters')) {
