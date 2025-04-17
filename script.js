@@ -252,9 +252,23 @@ document.addEventListener('DOMContentLoaded', function() {
     }
 
     // Функция фильтров
-    const filterPlacemarks = () => {
-        // ... код ...
-    };
+const filterPlacemarks = () => {
+    const ratingFilter = document.getElementById('ratingFilter').value;
+    const districtFilter = document.getElementById('districtFilter').value;
+    const hoursFilter = document.getElementById('hoursFilter').value;
+    const searchQuery = document.getElementById('searchInput').value.toLowerCase();
+
+    placemarks.forEach(placemark => {
+        const placeData = placemark.properties.get('customData');
+        const rating = parseFloat(placeData.description.split('/')[0]);
+        const matchesRating = ratingFilter === 'all' || rating >= parseFloat(ratingFilter);
+        const matchesDistrict = districtFilter === 'all' || placeData.district === districtFilter;
+        const matchesHours = hoursFilter === 'all' || placeData.hours === hoursFilter;
+        const matchesSearch = placeData.name.toLowerCase().includes(searchQuery);
+
+        placemark.options.set('visible', matchesRating && matchesDistrict && matchesHours && matchesSearch);
+    });
+};
 
     // очко ставлю
 });
