@@ -1,3 +1,4 @@
+// script.js
 document.addEventListener('DOMContentLoaded', function() {
     let map;
     let placemarks = [];
@@ -13,7 +14,7 @@ document.addEventListener('DOMContentLoaded', function() {
             this.element = element;
             this.handle = element.querySelector('.swipe-handle');
             this.state = 'hidden';
-            this.collapsedHeight = window.innerHeight * 0.15; // 15% высоты экрана [[6]]
+            this.collapsedHeight = window.innerHeight * 0.15; // 15% экрана [[6]]
             this.expandedHeight = window.innerHeight * 0.85;
             this.minTranslateY = -this.expandedHeight + this.collapsedHeight;
             this.init();
@@ -63,10 +64,9 @@ document.addEventListener('DOMContentLoaded', function() {
         }
 
         show() {
-            this.element.classList.remove('hidden');
+            this.element.style.transform = `translateY(${this.collapsedHeight}px)`;
             this.element.classList.add('visible');
             this.state = 'collapsed';
-            this.element.style.transform = `translateY(${this.collapsedHeight}px)`;
         }
 
         hide() {
@@ -163,12 +163,11 @@ document.addEventListener('DOMContentLoaded', function() {
             .catch(error => console.error('Ошибка:', error));
 
         // Обработчики
-        document.getElementById('toggleFilters').addEventListener('click', (e) => {
-            e.stopPropagation();
+        document.getElementById('toggleFilters').addEventListener('click', () => {
             document.getElementById('filters-panel').classList.toggle('visible');
         });
 
-        document.getElementById('toggleLocation').addEventListener('click', getLocation); // Кнопка геолокации [[1]]
+        document.getElementById('toggleLocation').addEventListener('click', getLocation);
 
         document.addEventListener('click', (e) => {
             if (!e.target.closest('#filters-panel') && !e.target.closest('#toggleFilters')) {
@@ -222,19 +221,22 @@ document.addEventListener('DOMContentLoaded', function() {
 
     // Десктопная панель
     const openDesktopSidebar = (placeData) => {
-        document.getElementById('sidebar-title').textContent = placeData.name;
-        document.getElementById('sidebar-image').src = placeData.photo;
-        document.getElementById('sidebar-address').textContent = placeData.address;
-        document.getElementById('sidebar-phone').textContent = placeData.phone;
-        document.getElementById('sidebar-hours').textContent = placeData.hours;
-        document.getElementById('sidebar-rating').textContent = placeData.description;
-        document.getElementById('sidebar-review-link').href = placeData.reviewLink;
+        document.querySelector('.sidebar-title').textContent = placeData.name;
+        document.querySelector('.sidebar-image').src = placeData.photo;
+        document.querySelector('.sidebar-address').textContent = placeData.address;
+        document.querySelector('.sidebar-phone').textContent = placeData.phone;
+        document.querySelector('.sidebar-hours').textContent = placeData.hours;
+        document.querySelector('.sidebar-rating').textContent = placeData.description;
+        document.querySelector('.sidebar-review-link').href = placeData.reviewLink;
         document.getElementById('desktop-sidebar').classList.add('visible');
     };
 
+    // Закрытие десктопной панели
     const closeDesktopSidebar = () => {
         document.getElementById('desktop-sidebar').classList.remove('visible');
     };
-
     document.getElementById('close-sidebar').addEventListener('click', closeDesktopSidebar);
+
+    // Отключаем стандартный балун
+    ymaps.balloon.close();
 });
