@@ -13,6 +13,15 @@ document.addEventListener('DOMContentLoaded', function() {
             controls: []
         });
 
+        // Убираем стандартные элементы управления
+        map.controls.remove('zoomControl');
+        map.controls.remove('geolocationControl');
+        map.controls.remove('searchControl');
+        map.controls.remove('trafficControl');
+        map.controls.remove('typeSelector');
+        map.controls.remove('fullscreenControl');
+        map.controls.remove('rulerControl');
+
         // Загрузка данных из JSON
         fetch('data.json')
             .then(response => response.json())
@@ -25,11 +34,6 @@ document.addEventListener('DOMContentLoaded', function() {
                 document.getElementById('count').textContent = data.length;
             })
             .catch(error => console.error('Ошибка загрузки данных:', error));
-
-        // Добавляем масштабирование и геолокацию
-        map.controls.add('zoomControl', {
-            position: { right: 15, top: 150 }
-        });
     }
 
     // Создание метки с улучшенным дизайном
@@ -63,6 +67,7 @@ document.addEventListener('DOMContentLoaded', function() {
         );
 
         placemark.events.add('click', function(e) {
+            console.log('Placemark clicked');
             const placeData = e.get('target').properties.get('customData');
             if (isMobile) {
                 openMobilePanel(placeData);
