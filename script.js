@@ -43,7 +43,7 @@ function createPlacemark(place) {
         {
             iconLayout: 'default#imageWithContent',
             iconImageHref: getIconByRating(rating),
-            iconImageSize: [48, 48], // Увеличил для лучшей анимации
+            iconImageSize: [48, 48],
             iconImageOffset: [-24, -48],
             balloonCloseButton: false,
             hideIconOnBalloonOpen: false,
@@ -53,39 +53,41 @@ function createPlacemark(place) {
 
     // Анимация при клике
     placemark.events.add('click', function(e) {
-        e.preventDefault();
-        const target = e.get('target');
-        const placeData = target.properties.get('customData');
+        try {
+            e.preventDefault();
+            const target = e.get('target');
+            const placeData = target.properties.get('customData');
 
-        // Сбрасываем анимацию у всех маркеров
-        placemarks.forEach(pm => {
-            pm.options.set('iconImageHref', getIconByRating(
-                parseFloat(pm.properties.get('customData').description.split('/')[0])
-            );
-        });
-
-        // Анимируем текущий маркер
-        target.options.set('iconImageHref', 'icons/star-orange.png'); // Ваша иконка для активного состояния
-        
-        // Запускаем пульсацию через CSS-класс
-        target.options.set('preset', 'islands#circleIcon');
-        
-        // Открываем панель
-        if (isMobile) {
-            openMobilePanel(placeData);
-        } else {
-            openDesktopSidebar(placeData);
-        }
-
-        // Возвращаем стандартный вид через 1.5 секунды
-        setTimeout(() => {
-            target.options.set({
-                iconImageHref: getIconByRating(rating),
-                preset: ''
+            // Сбрасываем анимацию у всех маркеров
+            placemarks.forEach(function(pm) {
+                pm.options.set('iconImageHref', getIconByRating(
+                    parseFloat(pm.properties.get('customData').description.split('/')[0])
+                );
             });
-        }, 1500);
 
-        return false;
+            // Анимируем текущий маркер
+            target.options.set('iconImageHref', 'icons/star-orange.png');
+            
+            // Открываем панель
+            if (isMobile) {
+                openMobilePanel(placeData);
+            } else {
+                openDesktopSidebar(placeData);
+            }
+
+            // Возвращаем стандартный вид через 1.5 секунды
+            setTimeout(function() {
+                target.options.set({
+                    iconImageHref: getIconByRating(rating),
+                    preset: ''
+                });
+            }, 1500);
+
+            return false;
+        } catch (error) {
+            console.error('Error in placemark click handler:', error);
+            return false;
+        }
     });
 
     return placemark;
