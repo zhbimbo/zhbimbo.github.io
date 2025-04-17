@@ -27,7 +27,12 @@ body {
     padding: 5px 12px;
     border-radius: 8px;
     box-shadow: 0 2px 8px rgba(0,0,0,0.2);
-    outline: none;
+    max-width: 80%; /* [[2]] */
+}
+
+#header h1 {
+    font-size: 0.9rem;
+    color: white;
 }
 
 /* Панель фильтров */
@@ -43,6 +48,10 @@ body {
     box-shadow: 0 4px 15px rgba(0,0,0,0.2);
     display: none;
     transition: transform 0.3s ease;
+    max-width: 400px;
+    max-height: 70vh;
+    overflow-y: auto;
+    width: 90%;
 }
 
 #filters-panel.visible {
@@ -75,6 +84,75 @@ body {
     z-index: 2000;
 }
 
+#mobile-bottom-sheet.visible {
+    transform: translateY(15%);
+}
+
+#mobile-bottom-sheet.expanded {
+    transform: translateY(0);
+}
+
+.swipe-handle {
+    width: 40px;
+    height: 5px;
+    background: #ddd;
+    border-radius: 3px;
+    margin: 12px auto;
+    cursor: grab;
+    flex-shrink: 0;
+}
+
+.bottom-sheet-content {
+    padding: 15px;
+    overflow-y: auto;
+    -webkit-overflow-scrolling: touch;
+    flex-grow: 1;
+}
+
+.balloon-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 15px;
+    padding-bottom: 10px;
+    border-bottom: 1px solid #eee;
+}
+
+.balloon-title {
+    font-size: 1.3rem;
+    color: #333;
+    margin-right: 15px;
+}
+
+.close-balloon {
+    background: none;
+    border: none;
+    font-size: 1.2rem;
+    cursor: pointer;
+    color: #777;
+}
+
+.balloon-image {
+    width: 100%;
+    max-height: 150px;
+    object-fit: cover;
+    border-radius: 8px;
+    margin-bottom: 15px;
+}
+
+.balloon-body p {
+    margin-bottom: 10px;
+    color: #555;
+    line-height: 1.4;
+}
+
+.balloon-review-link {
+    display: inline-block;
+    margin-top: 10px;
+    color: #0066cc;
+    text-decoration: none;
+}
+
 /* Десктопная панель */
 #desktop-sidebar {
     position: fixed;
@@ -86,10 +164,30 @@ body {
     transition: left 0.3s ease;
     z-index: 2000;
     box-shadow: 2px 0 15px rgba(0,0,0,0.15);
+    overflow-y: auto;
 }
 
-#desktop-sidebar.visible {
-    left: 0;
+#sidebar-content {
+    padding: 20px;
+}
+
+#sidebar-image {
+    width: 100%;
+    max-height: 200px;
+    object-fit: cover;
+    border-radius: 8px;
+    margin: 15px 0;
+}
+
+#close-sidebar {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    background: none;
+    border: none;
+    font-size: 1.2rem;
+    cursor: pointer;
+    color: #777;
 }
 
 /* Анимация кнопок */
@@ -107,6 +205,9 @@ body {
     #mobile-bottom-sheet {
         display: none;
     }
+    #desktop-sidebar {
+        display: block;
+    }
 }
 
 @media (max-width: 767px) {
@@ -115,7 +216,6 @@ body {
     }
 }
 
-/* Ошибки и скрытые элементы */
 .hidden {
     display: none !important;
 }
