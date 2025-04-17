@@ -1,4 +1,3 @@
-// script.js
 document.addEventListener('DOMContentLoaded', function() {
     let map;
     let placemarks = [];
@@ -100,8 +99,10 @@ document.addEventListener('DOMContentLoaded', function() {
     }
 
     // Инициализация BottomSheet
-    const mobileSheet = document.getElementById('mobile-bottom-sheet');
-    const bottomSheet = mobileSheet ? new BottomSheet(mobileSheet) : null;
+    const mobileSheetElement = document.getElementById('mobile-bottom-sheet');
+    if (mobileSheetElement) {
+        const bottomSheet = new BottomSheet(mobileSheetElement);
+    }
 
     // Функция геолокации
     function getLocation() {
@@ -110,7 +111,7 @@ document.addEventListener('DOMContentLoaded', function() {
                 (position) => {
                     map.setCenter([position.coords.latitude, position.coords.longitude], 14);
                 },
-                () => alert("Ошибка геолокации, долбоёб [[2]]")
+                () => alert("Ошибка геолокации, долбоеб [[1]]")
             );
         }
     }
@@ -124,8 +125,7 @@ document.addEventListener('DOMContentLoaded', function() {
         });
 
         // Отключаем балуны
-        map.balloon.close(); // [[6]]
-        map.events.add('click', () => map.balloon.close());
+        map.balloon.close(); // [[2]]
 
         // Загрузка данных
         fetch('data.json')
@@ -157,9 +157,9 @@ document.addEventListener('DOMContentLoaded', function() {
                 });
                 document.getElementById('count').textContent = data.length;
             })
-            .catch(error => console.error('Ошибка, уебок:', error));
+            .catch(error => console.error('Ошибка загрузки данных:', error));
 
-        // Обработчики фильтров
+        // Обработчики
         document.getElementById('toggleFilters').addEventListener('click', (e) => {
             e.stopPropagation();
             const filtersPanel = document.getElementById('filters-panel');
@@ -181,20 +181,20 @@ document.addEventListener('DOMContentLoaded', function() {
 
         // Фильтры
         const filterPlacemarks = () => {
-            const rating = document.getElementById('ratingFilter').value;
-            const district = document.getElementById('districtFilter').value;
-            const hours = document.getElementById('hoursFilter').value;
-            const search = document.getElementById('searchInput').value.toLowerCase();
+            const ratingFilter = document.getElementById('ratingFilter').value;
+            const districtFilter = document.getElementById('districtFilter').value;
+            const hoursFilter = document.getElementById('hoursFilter').value;
+            const searchQuery = document.getElementById('searchInput').value.toLowerCase();
             
             placemarks.forEach(placemark => {
                 const data = placemark.properties.get('customData');
-                const show = 
-                    (rating === 'all' || data.description.split('/')[0] >= rating) &&
-                    (district === 'all' || data.district === district) &&
-                    (hours === 'all' || data.hours === hours) &&
-                    data.name.toLowerCase().includes(search);
-                
-                placemark.options.set('visible', show);
+                const rating = parseFloat(data.description.split('/')[0]);
+                const matchesRating = ratingFilter === 'all' || rating >= parseFloat(ratingFilter);
+                const matchesDistrict = districtFilter === 'all' || data.district === districtFilter;
+                const matchesHours = hoursFilter === 'all' || data.hours === hoursFilter;
+                const matchesSearch = data.name.toLowerCase().includes(searchQuery);
+
+                placemark.options.set('visible', matchesRating && matchesDistrict && matchesHours && matchesSearch);
             });
         };
 
@@ -213,7 +213,8 @@ document.addEventListener('DOMContentLoaded', function() {
 
     // Мобильная панель
     const openMobilePanel = (placeData) => {
-        document.querySelector('.balloon-title').textContent = placeData.name;
+        const balloonTitle = document.querySelector('.balloon-title');
+        if (balloonTitle) balloonTitle.textContent = placeData.name;
         document.querySelector('.balloon-image').src = placeData.photo;
         document.querySelector('.balloon-address').textContent = placeData.address;
         document.querySelector('.balloon-phone').textContent = placeData.phone;
@@ -225,7 +226,9 @@ document.addEventListener('DOMContentLoaded', function() {
 
     // Десктопная панель
     const openDesktopSidebar = (placeData) => {
-        document.getElementById('sidebar-title').textContent = placeData.name;
+        const sidebarTitle = document.getElementById('sidebar-title');
+        if (!sidebarTitle) return;
+        sidebarTitle.textContent = placeData.name;
         document.getElementById('sidebar-image').src = placeData.photo;
         document.getElementById('sidebar-address').textContent = placeData.address;
         document.getElementById('sidebar-phone').textContent = placeData.phone;
@@ -235,38 +238,36 @@ document.addEventListener('DOMContentLoaded', function() {
         document.getElementById('desktop-sidebar').classList.add('visible');
     };
 
+    // Закрытие десктопной панели
     const closeDesktopSidebar = () => {
         document.getElementById('desktop-sidebar').classList.remove('visible');
     };
     document.getElementById('close-sidebar').addEventListener('click', closeDesktopSidebar);
 
-    // Исправление ошибок
-    if (!bottomSheet) {
-        console.error("Мобильная панель не инициализирована, долбоеб [[4]]");
+    // Инициализация карты
+    if (!map) {
+        console.error("Карта не инициализирована, долбоёб [[3]]");
     }
 
-    // Убедитесь, что элементы существуют [[3]]
-    const sidebar = document.getElementById('desktop-sidebar');
-    if (!sidebar) {
-        console.error("Десктопной панели нет, тупица [[5]]");
-    }
-
-    // Функция фильтров
-const filterPlacemarks = () => {
-    const ratingFilter = document.getElementById('ratingFilter').value;
-    const districtFilter = document.getElementById('districtFilter').value;
-    const hoursFilter = document.getElementById('hoursFilter').value;
-    const searchQuery = document.getElementById('searchInput').value.toLowerCase();
-
-    placemarks.forEach(placemark => {
-        const placeData = placemark.properties.get('customData');
-        const rating = parseFloat(placeData.description.split('/')[0]);
-        const matchesRating = ratingFilter === 'all' || rating >= parseFloat(ratingFilter);
-        const matchesDistrict = districtFilter === 'all' || placeData.district === districtFilter;
-        const matchesHours = hoursFilter === 'all' || placeData.hours === hoursFilter;
-        const matchesSearch = placeData.name.toLowerCase().includes(searchQuery);
-
-        placemark.options.set('visible', matchesRating && matchesDistrict && matchesHours && matchesSearch);
-    });
-};
+    // Проверка элементов
+    const checkElements = () => {
+        const required = [
+            'filters-panel',
+            'mobile-bottom-sheet',
+            'desktop-sidebar',
+            'sidebar-title',
+            'sidebar-image',
+            'sidebar-address',
+            'sidebar-phone',
+            'sidebar-hours',
+            'sidebar-rating',
+            'sidebar-review-link'
+        ];
+        required.forEach(id => {
+            if (!document.getElementById(id)) {
+                console.error(`Элемент ${id} не найден, идиот [[4]]`);
+            }
+        });
+    };
+    checkElements();
 });
