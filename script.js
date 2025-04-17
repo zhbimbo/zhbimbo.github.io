@@ -9,29 +9,29 @@ document.addEventListener('DOMContentLoaded', function() {
         return;
     }
 
-    // Инициализация карты с кастомными настройками
+    // Инициализация карты
     ymaps.ready(function() {
         try {
-            // 1. Создаем кастомный стиль карты
-            ymaps.layer.storage.add('yandex#custom#orangeTheme', new ymaps.Layer(
-                'https://core-renderer-tiles.maps.yandex.net/tiles?l=map&theme=light&custom=%23ffd8b3',
-                {
-                    projection: ymaps.projection.sphericalMercator,
-                    tileSize: [256, 256]
-                }
-            ));
-
-            // 2. Инициализация карты с отключением стандартных POI
+            // Создаем карту с легальными настройками
             map = new ymaps.Map('map', {
                 center: [55.7558, 37.6173],
                 zoom: 12,
                 controls: [],
-                type: 'yandex#custom#orangeTheme',
-                suppressMapOpenBlock: true,
-                yandexMapDisablePoiInteractivity: true
+                type: 'yandex#light',
+                custom: {
+                    // Легальная кастомизация элементов
+                    elements: {
+                        road: { fill: '#FFD700', stroke: '#FFA500' }, // Золотые дороги
+                        water: { fill: '#89CFF0' },                    // Голубая вода
+                        area: { fill: '#F5F5DC' }                      // Бежевые зоны
+                    }
+                }
             });
 
-            // 3. Настройки поведения
+            // Отключаем кликабельность у стандартных объектов Яндекса
+            map.options.set('yandexMapDisablePoiInteractivity', true);
+
+            // Настройки поведения для разных устройств
             if (isMobile) {
                 map.behaviors.enable(['multiTouch', 'drag']);
                 map.behaviors.disable(['scrollZoom', 'rightMouseButtonMagnifier']);
@@ -39,7 +39,7 @@ document.addEventListener('DOMContentLoaded', function() {
                 map.behaviors.enable(['scrollZoom', 'rightMouseButtonMagnifier']);
             }
 
-            // 4. Блокировка кликов на фоне карты
+            // Блокируем клики на фоне карты
             map.events.add('click', function(e) {
                 if (!e.get('target') || !e.get('target').properties) {
                     e.preventDefault();
@@ -47,16 +47,16 @@ document.addEventListener('DOMContentLoaded', function() {
                 }
             });
 
-            // Загрузка данных
+            // Загрузка данных о местах
             loadPlacesData();
 
         } catch (e) {
             console.error('Ошибка инициализации карты:', e);
-            alert('Произошла ошибка при загрузке карты');
+            alert('Произошла ошибка при загрузке карты. Пожалуйста, обновите страницу.');
         }
     });
 
-    // Функция загрузки данных
+    // Загрузка данных из JSON
     function loadPlacesData() {
         fetch('data.json')
             .then(response => {
@@ -77,7 +77,7 @@ document.addEventListener('DOMContentLoaded', function() {
             });
     }
 
-    // Функция создания метки
+    // Создание метки с вашими оригинальными иконками
     function createPlacemark(place) {
         const rating = parseFloat(place.description.split('/')[0]);
         const placemark = new ymaps.Placemark(
@@ -124,14 +124,14 @@ document.addEventListener('DOMContentLoaded', function() {
         return placemark;
     }
 
-    // Функция для получения иконки
+    // Функция для получения иконки по рейтингу (ваши оригинальные иконки)
     function getIconByRating(rating) {
         if (rating >= 4) return 'icons/star-green.png';
         if (rating >= 3) return 'icons/star-yellow.png';
         return 'icons/star-red.png';
     }
 
-    // Функции открытия панелей
+    // Функция открытия мобильной панели
     function openMobilePanel(placeData) {
         const rating = parseFloat(placeData.description.split('/')[0]);
         
@@ -151,6 +151,7 @@ document.addEventListener('DOMContentLoaded', function() {
         }, 10);
     }
 
+    // Функция открытия десктопного сайдбара
     function openDesktopSidebar(placeData) {
         const rating = parseFloat(placeData.description.split('/')[0]);
         
