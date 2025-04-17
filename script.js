@@ -1,148 +1,55 @@
 document.addEventListener('DOMContentLoaded', function() {
     let map;
     let placemarks = [];
-    let selectedPlacemark = null;
-    const isMobile = () => 
-        /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent);
-
-    // Инициализация BottomSheet
-    class BottomSheet {
-        constructor(element) {
-            this.element = element;
-            this.handle = element.querySelector('.swipe-handle');
-            this.state = 'hidden';
-            this.collapsedHeight = window.innerHeight * 0.15;
-            this.expandedHeight = window.innerHeight * 0.85;
-            this.minTranslateY = -this.expandedHeight + this.collapsedHeight;
-            this.init();
-        }
-
-        init() {
-            this.setupEventListeners();
-            window.addEventListener('resize', this.handleResize.bind(this));
-        }
-
-        setupEventListeners() {
-            this.handle.addEventListener('touchstart', this.startDrag.bind(this));
-            document.addEventListener('touchmove', this.moveDrag.bind(this));
-            document.addEventListener('touchend', this.endDrag.bind(this));
-            this.handle.addEventListener('mousedown', this.startDrag.bind(this));
-            document.addEventListener('mousemove', this.moveDrag.bind(this));
-            document.addEventListener('mouseup', this.endDrag.bind(this));
-            this.element.querySelector('.close-balloon').addEventListener('click', this.hide.bind(this));
-        }
-
-        startDrag(e) {
-            this.startY = e.clientY || e.touches[0].clientY;
-            this.startTranslateY = this.getCurrentTranslateY();
-            this.isDragging = true;
-            this.element.style.transition = 'none';
-            this.lastY = this.startY;
-            this.lastTime = Date.now();
-        }
-
-        moveDrag(e) {
-            if (!this.isDragging) return;
-            e.preventDefault();
-            const currentY = e.clientY || e.touches[0].clientY;
-            const diff = currentY - this.startY;
-            let newTranslateY = this.startTranslateY + diff;
-            newTranslateY = Math.min(Math.max(newTranslateY, this.minTranslateY), 0);
-            this.element.style.transform = `translateY(${newTranslateY}px)`;
-        }
-
-        endDrag() {
-            const currentY = this.getCurrentTranslateY();
-            if (currentY < -this.collapsedHeight * 0.5) {
-                this.expand();
-            } else {
-                this.collapse();
-            }
-        }
-
-        show() {
-            this.element.style.transform = `translateY(${this.collapsedHeight}px)`;
-            this.element.classList.add('visible');
-            this.state = 'collapsed';
-        }
-
-        hide() {
-            this.element.style.transform = 'translateY(100vh)';
-            setTimeout(() => {
-                this.element.classList.remove('visible');
-                this.state = 'hidden';
-            }, 300);
-        }
-
-        expand() {
-            this.element.style.transform = 'translateY(0)';
-            this.state = 'expanded';
-        }
-
-        collapse() {
-            this.element.style.transform = `translateY(${this.collapsedHeight}px)`;
-            this.state = 'collapsed';
-        }
-
-        getCurrentTranslateY() {
-            const transform = window.getComputedStyle(this.element).transform;
-            return transform ? parseFloat(transform.split(',')[5]) : 0;
-        }
-
-        handleResize() {
-            this.collapsedHeight = window.innerHeight * 0.15;
-            this.expandedHeight = window.innerHeight * 0.85;
-            this.minTranslateY = -this.expandedHeight + this.collapsedHeight;
-        }
-    }
-
-    const mobileSheetElement = document.getElementById('mobile-bottom-sheet');
-    const bottomSheet = mobileSheetElement ? new BottomSheet(mobileSheetElement) : null;
-
-    // Функция геолокации
-    function getLocation() {
-        if (navigator.geolocation) {
-            navigator.geolocation.getCurrentPosition(
-                (position) => {
-                    if (map) {
-                        map.setCenter([position.coords.latitude, position.coords.longitude], 14);
-                    }
-                },
-                () => alert("Ошибка геолокации")
-            );
-        }
-    }
+    const isMobile = window.innerWidth <= 767;
 
     // Инициализация карты
-    ymaps.ready(() => {
+    ymaps.ready(init);
+
+    function init() {
         map = new ymaps.Map('map', {
             center: [55.7558, 37.6173],
             zoom: 12,
             controls: []
         });
 
-        // Загрузка данных
-        fetch('data.json')
-            .then(response => response.json())
-            .then(data => {
-                data.forEach(place => {
-                    const placemark = createPlacemark(place);
-                    placemarks.push(placemark);
-                    map.geoObjects.add(placemark);
-                });
-                document.getElementById('count').textContent = data.length;
-            })
-            .catch(error => console.error('Ошибка:', error));
-    });
+        // Загрузка тестовых данных
+        const testData = [
+            {
+                name: "Тестовое заведение 1",
+                coordinates: [55.7558, 37.6173],
+                address: "ул. Тестовая, 1",
+                phone: "+7 (999) 123-45-67",
+                hours: "Круглосуточно",
+                description: "Рейтинг: 4.5",
+                district: "ЦАО",
+                photo: "https://via.placeholder.com/300",
+                reviewLink: "#"
+            },
+            {
+                name: "Тестовое заведение 2",
+                coordinates: [55.76, 37.62],
+                address: "ул. Тестовая, 2",
+                phone: "+7 (999) 765-43-21",
+                hours: "Пн–Вс: 12:00–02:00",
+                description: "Рейтинг: 3.2",
+                district: "САО",
+                photo: "https://via.placeholder.com/300",
+                reviewLink: "#"
+            }
+        ];
 
-    // Маркеры
-    const getIconByRating = (rating) => {
-        if (rating >= 4) return 'https://raw.githubusercontent.com/pointhi/leaflet-color-markers/master/img/marker-icon-green.png';
-        if (rating >= 3) return 'https://raw.githubusercontent.com/pointhi/leaflet-color-markers/master/img/marker-icon-gold.png';
-        return 'https://raw.githubusercontent.com/pointhi/leaflet-color-markers/master/img/marker-icon-red.png';
-    };
+        testData.forEach(place => {
+            const placemark = createPlacemark(place);
+            placemarks.push(placemark);
+            map.geoObjects.add(placemark);
+        });
 
-    const createPlacemark = (place) => {
+        document.getElementById('count').textContent = testData.length;
+    }
+
+    // Создание метки
+    function createPlacemark(place) {
         const rating = parseFloat(place.description.match(/\d\.\d|\d/)[0]);
         const placemark = new ymaps.Placemark(
             place.coordinates,
@@ -155,35 +62,28 @@ document.addEventListener('DOMContentLoaded', function() {
                 iconImageSize: [30, 30]
             }
         );
-        placemark.events.add('click', (e) => {
+
+        placemark.events.add('click', function(e) {
             const placeData = e.get('target').properties.get('customData');
-            if (isMobile()) {
+            if (isMobile) {
                 openMobilePanel(placeData);
             } else {
                 openDesktopSidebar(placeData);
             }
-            e.preventDefault();
         });
+
         return placemark;
-    };
+    }
 
-    // Десктопная панель
-    const openDesktopSidebar = (placeData) => {
-        const sidebar = document.getElementById('desktop-sidebar');
-        if (!sidebar) return;
-        document.getElementById('sidebar-title').textContent = placeData.name;
-        document.getElementById('sidebar-image').src = placeData.photo;
-        document.getElementById('sidebar-address').textContent = placeData.address;
-        document.getElementById('sidebar-phone').textContent = placeData.phone;
-        document.getElementById('sidebar-hours').textContent = placeData.hours;
-        document.getElementById('sidebar-rating').textContent = placeData.description;
-        document.getElementById('sidebar-review-link').href = placeData.reviewLink;
-        sidebar.classList.remove('hidden');
-        sidebar.classList.add('visible');
-    };
+    // Иконки для меток
+    function getIconByRating(rating) {
+        if (rating >= 4) return 'https://raw.githubusercontent.com/pointhi/leaflet-color-markers/master/img/marker-icon-green.png';
+        if (rating >= 3) return 'https://raw.githubusercontent.com/pointhi/leaflet-color-markers/master/img/marker-icon-gold.png';
+        return 'https://raw.githubusercontent.com/pointhi/leaflet-color-markers/master/img/marker-icon-red.png';
+    }
 
-    // Мобильная панель
-    const openMobilePanel = (placeData) => {
+    // Открытие мобильной панели
+    function openMobilePanel(placeData) {
         document.querySelector('.balloon-title').textContent = placeData.name;
         document.querySelector('.balloon-image').src = placeData.photo;
         document.querySelector('.balloon-address').textContent = placeData.address;
@@ -191,11 +91,29 @@ document.addEventListener('DOMContentLoaded', function() {
         document.querySelector('.balloon-hours').textContent = placeData.hours;
         document.querySelector('.balloon-rating').textContent = placeData.description;
         document.querySelector('.balloon-review-link').href = placeData.reviewLink;
-        bottomSheet.show();
-    };
+        
+        const mobileSheet = document.getElementById('mobile-bottom-sheet');
+        mobileSheet.classList.remove('hidden');
+        mobileSheet.classList.add('visible');
+    }
 
-    // Фильтры
-    const filterPlacemarks = () => {
+    // Открытие десктопной панели
+    function openDesktopSidebar(placeData) {
+        document.getElementById('sidebar-title').textContent = placeData.name;
+        document.getElementById('sidebar-image').src = placeData.photo;
+        document.getElementById('sidebar-address').textContent = placeData.address;
+        document.getElementById('sidebar-phone').textContent = placeData.phone;
+        document.getElementById('sidebar-hours').textContent = placeData.hours;
+        document.getElementById('sidebar-rating').textContent = placeData.description;
+        document.getElementById('sidebar-review-link').href = placeData.reviewLink;
+        
+        const sidebar = document.getElementById('desktop-sidebar');
+        sidebar.classList.remove('hidden');
+        sidebar.classList.add('visible');
+    }
+
+    // Фильтрация
+    function filterPlacemarks() {
         const ratingFilter = document.getElementById('ratingFilter').value;
         const districtFilter = document.getElementById('districtFilter').value;
         const hoursFilter = document.getElementById('hoursFilter').value;
@@ -204,48 +122,65 @@ document.addEventListener('DOMContentLoaded', function() {
         placemarks.forEach(placemark => {
             const data = placemark.properties.get('customData');
             const rating = parseFloat(data.description.match(/\d\.\d|\d/)[0]);
-            const show = 
-                (ratingFilter === 'all' || rating >= parseFloat(ratingFilter)) &&
-                (districtFilter === 'all' || data.district === districtFilter) &&
-                (hoursFilter === 'all' || data.hours === hoursFilter) &&
-                data.name.toLowerCase().includes(searchQuery);
+            
+            const matchesRating = ratingFilter === 'all' || rating >= parseFloat(ratingFilter);
+            const matchesDistrict = districtFilter === 'all' || data.district === districtFilter;
+            const matchesHours = hoursFilter === 'all' || data.hours === hoursFilter;
+            const matchesSearch = data.name.toLowerCase().includes(searchQuery);
 
-            placemark.options.set('visible', show);
+            if (matchesRating && matchesDistrict && matchesHours && matchesSearch) {
+                placemark.options.set('visible', true);
+            } else {
+                placemark.options.set('visible', false);
+            }
         });
-    };
+    }
 
-    // Обработчики
-    document.getElementById('toggleFilters').addEventListener('click', (e) => {
+    // Обработчики событий
+    document.getElementById('toggleFilters').addEventListener('click', function(e) {
         e.stopPropagation();
         const filtersPanel = document.getElementById('filters-panel');
-        if (filtersPanel) {
-            filtersPanel.classList.toggle('visible');
+        filtersPanel.classList.toggle('hidden');
+        filtersPanel.classList.toggle('visible');
+    });
+
+    document.addEventListener('click', function(e) {
+        if (!e.target.closest('#filters-panel') && !e.target.closest('#toggleFilters')) {
+            document.getElementById('filters-panel').classList.add('hidden');
+            document.getElementById('filters-panel').classList.remove('visible');
         }
     });
 
-    // Панель фильтров не должна скрываться при клике вне
-    document.addEventListener('click', (e) => {
-        if (e.target.closest('#filters-panel')) return;
-        const filtersPanel = document.getElementById('filters-panel');
-        if (filtersPanel) {
-            filtersPanel.classList.remove('visible');
-        }
+    // Закрытие панелей
+    document.querySelector('.close-balloon')?.addEventListener('click', function() {
+        document.getElementById('mobile-bottom-sheet').classList.add('hidden');
+        document.getElementById('mobile-bottom-sheet').classList.remove('visible');
     });
 
-    // Слушатели фильтров
+    document.getElementById('close-sidebar')?.addEventListener('click', function() {
+        document.getElementById('desktop-sidebar').classList.add('hidden');
+        document.getElementById('desktop-sidebar').classList.remove('visible');
+    });
+
+    // Фильтры
     document.getElementById('ratingFilter').addEventListener('change', filterPlacemarks);
     document.getElementById('districtFilter').addEventListener('change', filterPlacemarks);
     document.getElementById('hoursFilter').addEventListener('change', filterPlacemarks);
     document.getElementById('searchInput').addEventListener('input', filterPlacemarks);
 
-    // Закрытие десктопной панели
-    document.getElementById('close-sidebar').addEventListener('click', () => {
-        document.getElementById('desktop-sidebar').classList.remove('visible');
-        document.getElementById('desktop-sidebar').classList.add('hidden');
+    // Геолокация
+    document.getElementById('toggleLocation').addEventListener('click', function() {
+        if (navigator.geolocation) {
+            navigator.geolocation.getCurrentPosition(
+                function(position) {
+                    map.setCenter([position.coords.latitude, position.coords.longitude], 14);
+                },
+                function() {
+                    alert("Не удалось определить ваше местоположение");
+                }
+            );
+        } else {
+            alert("Геолокация не поддерживается вашим браузером");
+        }
     });
-
-    // Проверка карты
-    if (!map) {
-        console.error("Карта не загружена. Убедитесь, что API-ключ верный.");
-    }
 });
