@@ -13,15 +13,6 @@ document.addEventListener('DOMContentLoaded', function() {
             controls: []
         });
 
-        // Убираем стандартные элементы управления
-        map.controls.remove('zoomControl');
-        map.controls.remove('geolocationControl');
-        map.controls.remove('searchControl');
-        map.controls.remove('trafficControl');
-        map.controls.remove('typeSelector');
-        map.controls.remove('fullscreenControl');
-        map.controls.remove('rulerControl');
-
         // Загрузка данных из JSON
         fetch('data.json')
             .then(response => response.json())
@@ -36,7 +27,7 @@ document.addEventListener('DOMContentLoaded', function() {
             .catch(error => console.error('Ошибка загрузки данных:', error));
     }
 
-    // Создание метки с улучшенным дизайном
+    // Создание метки
     function createPlacemark(place) {
         const rating = parseFloat(place.description.split('/')[0]);
         const placemark = new ymaps.Placemark(
@@ -67,23 +58,23 @@ document.addEventListener('DOMContentLoaded', function() {
         );
 
         placemark.events.add('click', function(e) {
-            console.log('Placemark clicked');
             const placeData = e.get('target').properties.get('customData');
             if (isMobile) {
                 openMobilePanel(placeData);
             } else {
                 openDesktopSidebar(placeData);
             }
+            return false; // Предотвращаем всплытие события
         });
 
         return placemark;
     }
 
-    // Иконки для меток с градиентом
+    // Иконки для меток
     function getIconByRating(rating) {
-        if (rating >= 4) return 'https://raw.githubusercontent.com/pointhi/leaflet-color-markers/master/img/marker-icon-green.png';
-        if (rating >= 3) return 'https://raw.githubusercontent.com/pointhi/leaflet-color-markers/master/img/marker-icon-gold.png';
-        return 'https://raw.githubusercontent.com/pointhi/leaflet-color-markers/master/img/marker-icon-red.png';
+        if (rating >= 4) return 'data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32" fill="%234CAF50"><path d="M16 1l4 10h10l-8 7 3 10-9-6-9 6 3-10-8-7h10z"/></svg>';
+        if (rating >= 3) return 'data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32" fill="%23FFC107"><path d="M16 1l4 10h10l-8 7 3 10-9-6-9 6 3-10-8-7h10z"/></svg>';
+        return 'data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32" fill="%23F44336"><path d="M16 1l4 10h10l-8 7 3 10-9-6-9 6 3-10-8-7h10z"/></svg>';
     }
 
     // Открытие мобильной панели с анимацией
