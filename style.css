@@ -1,19 +1,66 @@
-/* style.css */
 * {
     box-sizing: border-box;
     margin: 0;
     padding: 0;
 }
+
 body {
     font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
     height: 100vh;
     width: 100vw;
+    overflow: hidden;
 }
 
 #map {
     width: 100%;
     height: 100%;
     position: relative;
+}
+
+/* Шапка */
+#header {
+    position: absolute;
+    top: 20px;
+    left: 50%;
+    transform: translateX(-50%);
+    z-index: 1000;
+    background: linear-gradient(45deg, #ff4500, #ff8000); /* Градиент [[5]] */
+    padding: 10px 15px;
+    border-radius: 10px;
+    box-shadow: 0 2px 10px rgba(0,0,0,0.2);
+}
+
+#header h1 {
+    font-size: 1.2rem;
+    color: white;
+}
+
+#toggleFilters {
+    background: none;
+    border: none;
+    font-size: 1.2rem;
+    cursor: pointer;
+    padding: 5px;
+    color: white;
+}
+
+/* Панель фильтров */
+#filters-panel {
+    position: absolute;
+    top: 80px;
+    left: 50%;
+    transform: translateX(-50%);
+    z-index: 1000;
+    background: linear-gradient(90deg, #ff4500, #ff8000); /* Градиент [[5]] */
+    padding: 20px;
+    border-radius: 15px;
+    box-shadow: 0 4px 20px rgba(0,0,0,0.3);
+    transform: translateY(-100%);
+    transition: transform 0.3s ease;
+}
+
+#filters-panel.visible {
+    transform: translateY(0); /* Показываем панель [[1]] */
 }
 
 /* Мобильная панель */
@@ -29,7 +76,6 @@ body {
     transform: translateY(100%);
     transition: transform 0.3s cubic-bezier(0.25, 0.8, 0.5, 1);
     z-index: 2000;
-    overflow: hidden;
 }
 
 #mobile-bottom-sheet.visible {
@@ -40,63 +86,60 @@ body {
     transform: translateY(0);
 }
 
-.balloon-header {
-    backdrop-filter: blur(10px); /* Размытие [[5]] */
-    background: rgba(255, 255, 255, 0.8);
-    padding: 20px;
-}
-
-.balloon-body {
-    padding: 20px;
-    max-height: 80vh;
-    overflow-y: auto;
-}
-
-/* Десктопная панель */
+/* Боковая панель для десктопа */
 #desktop-sidebar {
     position: fixed;
-    right: -350px; /* Скрываем справа [[5]] */
+    left: -350px;
     top: 0;
     width: 350px;
-    height: 100%;
-    background: linear-gradient(135deg, #ff4500, #ff8000); /* Градиент [[5]] */
-    border-radius: 15px 0 0 15px;
-    box-shadow: -5px 0 20px rgba(0,0,0,0.2);
-    transition: right 0.3s ease;
+    height: 100vh;
+    background: linear-gradient(225deg, #ff4500, #ff8000); /* Градиент [[5]] */
+    transition: left 0.3s ease;
+    z-index: 2000;
+    padding: 20px;
 }
 
 #desktop-sidebar.visible {
-    right: 0;
+    left: 0;
 }
 
-/* Фото в панели */
-.balloon-image, .sidebar-image {
+/* Фото в панелях */
+.balloon-image, #sidebar-image {
     max-height: 100px;
     object-fit: cover;
-    border-radius: 8px;
-    margin-bottom: 10px;
-}
-
-/* Панель фильтров */
-#filters-panel {
-    position: absolute;
-    top: 80px;
-    left: 50%;
-    transform: translateX(-50%);
-    z-index: 1000;
-    background: linear-gradient(45deg, #ff4500, #ff8000); /* Градиент [[5]] */
-    padding: 15px;
     border-radius: 10px;
-    box-shadow: 0 4px 15px rgba(0,0,0,0.2);
-    transform: translateX(100%);
-    transition: transform 0.3s ease;
 }
 
-#filters-panel.visible {
-    transform: translateX(0);
+/* Анимация кнопок */
+.animated-button {
+    transition: transform 0.2s, box-shadow 0.2s;
+}
+
+.animated-button:hover {
+    transform: scale(1.05);
+    box-shadow: 0 0 10px rgba(255,255,255,0.5);
+}
+
+/* Дизайн панелей */
+.balloon-header {
+    backdrop-filter: blur(10px); /* Размытие [[5]] */
+    background: rgba(255,255,255,0.8);
+    padding: 15px;
+}
+
+#sidebar-content {
+    height: 100%;
+    overflow-y: auto;
 }
 
 /* Скрываем скрытые элементы */
 .hidden {
     display: none !important;
+}
+
+/* Медиа-запросы */
+@media (min-width: 768px) {
+    #desktop-sidebar {
+        display: block;
+    }
 }
