@@ -1,4 +1,3 @@
-<!-- index.html -->
 <!DOCTYPE html>
 <html lang="ru">
 <head>
@@ -13,10 +12,10 @@
     <div id="map">
         <div id="header">
             <h1>📍 Карта Кальянного Патруля</h1>
-            <button id="toggleFilters" class="animated-button"> <!-- Добавлен класс для анимации [[7]] -->
+            <button id="toggleFilters" class="animated-button">
                 <i class="fas fa-filter"></i>
             </button>
-            <button id="toggleLocation" class="animated-button"> <!-- Добавлена кнопка геолокации [[5]] -->
+            <button id="toggleLocation" class="animated-button">
                 <i class="fas fa-compass"></i>
             </button>
         </div>
@@ -48,7 +47,7 @@
             <option value="Пн–Вс: 12:00–03:00">🕒 Пн–Вс: 12:00–03:00</option>
         </select>
         <input type="text" id="searchInput" placeholder="🔍 Поиск по названию..." class="search-input">
-        <button onclick="applyFilters()" class="filter-apply animated-button">Применить</button> <!-- Добавлена кнопка применения [[4]] -->
+        <button onclick="applyFilters()" class="filter-apply animated-button">Применить</button>
     </div>
 
     <!-- Мобильная панель -->
@@ -57,12 +56,12 @@
         <div class="bottom-sheet-content">
             <div class="balloon-header">
                 <h2 class="balloon-title"></h2>
-                <button class="close-balloon animated-button"> <!-- Анимация кнопки [[7]] -->
+                <button class="close-balloon animated-button">
                     <i class="fas fa-times"></i>
                 </button>
             </div>
             <div class="balloon-body">
-                <img class="balloon-image" alt="Фото заведения" style="max-height: 150px; object-fit: cover;"> <!-- Ограничение высоты [[3]] -->
+                <img class="balloon-image" alt="Фото заведения">
                 <p><b>Адрес:</b> <span class="balloon-address"></span></p>
                 <p><b>Телефон:</b> <span class="balloon-phone"></span></p>
                 <p><b>Режим работы:</b> <span class="balloon-hours"></span></p>
@@ -74,15 +73,15 @@
 
     <!-- Десктопная панель -->
     <div id="desktop-sidebar" class="hidden">
-        <div id="sidebar-content">
-            <button id="close-sidebar" class="animated-button"> <!-- Анимация кнопки [[7]] -->
+        <div class="sidebar-content">
+            <button id="close-sidebar" class="animated-button">
                 <i class="fas fa-times"></i>
             </button>
             <h2 id="sidebar-title"></h2>
-            <img id="sidebar-image" alt="Фото заведения" style="max-height: 200px; object-fit: cover;"> <!-- Ограничение высоты [[3]] -->
+            <img id="sidebar-image" alt="Фото заведения">
             <p><b>Адрес:</b> <span id="sidebar-address"></span></p>
             <p><b>Телефон:</b> <span id="sidebar-phone"></span></p>
-            <p><b>Режим работы:</b> <span id="sidebar-hours"></span></p>
+            <p><b>Режим работы:</b> <span class="sidebar-hours"></span></p>
             <p><b>Рейтинг:</b> <span id="sidebar-rating"></span></p>
             <a id="sidebar-review-link" target="_blank">Читать обзор</a>
         </div>
