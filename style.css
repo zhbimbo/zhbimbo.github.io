@@ -2,7 +2,9 @@
     box-sizing: border-box;
     margin: 0;
     padding: 0;
+    transition: all 0.3s ease;
 }
+
 body {
     font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
     overflow: hidden;
@@ -24,19 +26,37 @@ body {
     transform: translateX(-50%);
     z-index: 1000;
     background: linear-gradient(45deg, #ff4500, #ff8000);
-    padding: 8px 12px;
-    border-radius: 12px;
-    box-shadow: 0 3px 10px rgba(0,0,0,0.2);
-    max-width: 85%;
+    padding: 12px 20px;
+    border-radius: 20px;
+    box-shadow: 0 5px 15px rgba(0,0,0,0.3);
+    max-width: 90%;
     display: flex;
     align-items: center;
-    gap: 10px;
+    gap: 15px;
+    backdrop-filter: blur(5px);
 }
 
 #header h1 {
-    font-size: 1.1rem;
+    font-size: 1.2rem;
     color: white;
     margin: 0;
+    font-weight: 600;
+    text-shadow: 0 2px 4px rgba(0,0,0,0.2);
+}
+
+/* Статистика */
+#stats-overlay {
+    position: absolute;
+    bottom: 20px;
+    left: 50%;
+    transform: translateX(-50%);
+    z-index: 1000;
+    background: rgba(255,255,255,0.9);
+    padding: 10px 20px;
+    border-radius: 20px;
+    box-shadow: 0 3px 10px rgba(0,0,0,0.2);
+    font-size: 0.9rem;
+    font-weight: 500;
 }
 
 /* Панель фильтров */
@@ -48,26 +68,37 @@ body {
     z-index: 1000;
     background: white;
     padding: 20px;
-    border-radius: 15px;
-    box-shadow: 0 4px 20px rgba(0,0,0,0.2);
+    border-radius: 20px;
+    box-shadow: 0 10px 25px rgba(0,0,0,0.2);
     width: 90%;
     max-width: 400px;
     display: none;
+    backdrop-filter: blur(10px);
+    background: rgba(255,255,255,0.95);
 }
 
 #filters-panel.visible {
     display: block;
+    animation: fadeInUp 0.4s;
 }
 
 #filters-panel select,
 #filters-panel input {
     width: 100%;
-    padding: 12px;
+    padding: 12px 15px;
     border: 1px solid #ddd;
-    border-radius: 10px;
-    font-size: 0.9rem;
+    border-radius: 12px;
+    font-size: 1rem;
     background: #f8f9fa;
     margin-bottom: 15px;
+    font-family: inherit;
+    outline: none;
+}
+
+#filters-panel select:focus,
+#filters-panel input:focus {
+    border-color: #ff8000;
+    box-shadow: 0 0 0 2px rgba(255, 128, 0, 0.2);
 }
 
 /* Мобильная панель */
@@ -76,32 +107,37 @@ body {
     bottom: 0;
     left: 0;
     right: 0;
-    height: 85vh;
+    height: 70vh;
+    max-height: 600px;
     background: white;
     border-radius: 25px 25px 0 0;
-    box-shadow: 0 -8px 30px rgba(0,0,0,0.3);
+    box-shadow: 0 -10px 40px rgba(0,0,0,0.3);
     transform: translateY(100%);
-    transition: transform 0.3s ease;
+    transition: transform 0.4s cubic-bezier(0.25, 0.8, 0.25, 1);
     z-index: 2000;
     overflow: hidden;
+    will-change: transform;
 }
 
 #mobile-bottom-sheet.visible {
     transform: translateY(0);
+    animation: slideUp 0.4s cubic-bezier(0.25, 0.8, 0.25, 1);
 }
 
 .swipe-handle {
-    width: 50px;
+    width: 60px;
     height: 6px;
     background: #ddd;
     border-radius: 5px;
-    margin: 20px auto;
+    margin: 15px auto;
     cursor: grab;
 }
 
 .bottom-sheet-content {
     padding: 20px;
     color: #333;
+    height: calc(100% - 50px);
+    overflow-y: auto;
 }
 
 .balloon-header {
@@ -111,50 +147,155 @@ body {
     margin-bottom: 15px;
 }
 
+.balloon-title {
+    font-size: 1.5rem;
+    font-weight: 600;
+    color: #333;
+    margin-right: 15px;
+}
+
 .balloon-image {
     width: 100%;
-    max-height: 150px;
+    height: 180px;
     object-fit: cover;
-    border-radius: 12px;
-    margin-bottom: 15px;
+    border-radius: 15px;
+    margin-bottom: 20px;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.1);
 }
 
 .balloon-body p {
-    margin-bottom: 10px;
-    line-height: 1.4;
+    margin-bottom: 12px;
+    line-height: 1.6;
+    font-size: 1rem;
+}
+
+.balloon-body b {
+    color: #ff8000;
 }
 
 .balloon-review-link {
     display: inline-block;
-    margin-top: 15px;
-    color: #0066cc;
+    margin-top: 20px;
+    padding: 10px 20px;
+    background: linear-gradient(45deg, #ff4500, #ff8000);
+    color: white;
     text-decoration: none;
+    border-radius: 12px;
+    font-weight: 500;
+    box-shadow: 0 4px 8px rgba(255, 128, 0, 0.3);
+}
+
+.balloon-rating-badge {
+    position: absolute;
+    top: 20px;
+    right: 20px;
+    background: linear-gradient(45deg, #ff4500, #ff8000);
+    color: white;
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: bold;
+    font-size: 1rem;
+    box-shadow: 0 4px 8px rgba(0,0,0,0.2);
 }
 
 /* Десктопная панель */
 #desktop-sidebar {
     position: fixed;
-    left: -350px;
+    left: -400px;
     top: 0;
-    width: 350px;
+    width: 400px;
     height: 100%;
     background: white;
-    box-shadow: 0 0 30px rgba(0,0,0,0.2);
-    transition: left 0.4s ease;
+    box-shadow: 0 0 40px rgba(0,0,0,0.3);
+    transition: left 0.5s cubic-bezier(0.25, 0.8, 0.25, 1);
     z-index: 2000;
-    padding: 25px;
+    padding: 30px;
+    overflow-y: auto;
+    will-change: transform;
 }
 
 #desktop-sidebar.visible {
     left: 0;
+    animation: slideInLeft 0.5s cubic-bezier(0.25, 0.8, 0.25, 1);
+}
+
+.sidebar-content {
+    position: relative;
+    height: 100%;
+}
+
+#sidebar-title {
+    font-size: 1.8rem;
+    margin-bottom: 25px;
+    color: #333;
+    font-weight: 600;
 }
 
 #sidebar-image {
     width: 100%;
-    max-height: 150px;
+    height: 200px;
     object-fit: cover;
-    border-radius: 12px;
+    border-radius: 15px;
     margin: 20px 0;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+}
+
+.sidebar-info {
+    margin: 25px 0;
+}
+
+.sidebar-info p {
+    margin-bottom: 15px;
+    font-size: 1rem;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.sidebar-info i {
+    color: #ff8000;
+    width: 20px;
+    text-align: center;
+}
+
+.rating-badge {
+    position: absolute;
+    top: 30px;
+    right: 30px;
+    background: linear-gradient(45deg, #ff4500, #ff8000);
+    color: white;
+    width: 50px;
+    height: 50px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: bold;
+    font-size: 1.2rem;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.2);
+}
+
+.review-button {
+    display: block;
+    padding: 12px 25px;
+    background: linear-gradient(45deg, #ff4500, #ff8000);
+    color: white;
+    text-decoration: none;
+    border-radius: 12px;
+    font-weight: 500;
+    text-align: center;
+    margin-top: 30px;
+    box-shadow: 0 4px 12px rgba(255, 128, 0, 0.3);
+    transition: transform 0.3s, box-shadow 0.3s;
+}
+
+.review-button:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 16px rgba(255, 128, 0, 0.4);
 }
 
 /* Кнопки */
@@ -164,15 +305,46 @@ body {
     color: white;
     font-size: 1.2rem;
     cursor: pointer;
-    transition: transform 0.2s;
+    transition: all 0.3s;
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: rgba(255,255,255,0.2);
 }
 
 .animated-button:hover {
     transform: scale(1.1);
+    background: rgba(255,255,255,0.3);
 }
 
 .close-balloon {
     color: #333 !important;
+    background: rgba(0,0,0,0.05) !important;
+}
+
+/* Анимации */
+@keyframes slideUp {
+    from { transform: translateY(100%); }
+    to { transform: translateY(0); }
+}
+
+@keyframes slideInLeft {
+    from { transform: translateX(-100%); }
+    to { transform: translateX(0); }
+}
+
+@keyframes fadeInUp {
+    from { 
+        opacity: 0;
+        transform: translate(-50%, 20px);
+    }
+    to { 
+        opacity: 1;
+        transform: translate(-50%, 0);
+    }
 }
 
 /* Медиа-запросы */
@@ -180,11 +352,24 @@ body {
     #mobile-bottom-sheet {
         display: none;
     }
+    
+    #header {
+        top: 30px;
+        padding: 15px 25px;
+    }
+    
+    #header h1 {
+        font-size: 1.3rem;
+    }
 }
 
 @media (max-width: 767px) {
     #desktop-sidebar {
         display: none;
+    }
+    
+    .balloon-title {
+        font-size: 1.3rem;
     }
 }
 
