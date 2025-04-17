@@ -17,6 +17,11 @@ document.addEventListener('DOMContentLoaded', function() {
                 center: [55.7558, 37.6173],
                 zoom: 12,
                 controls: []
+                // Опции для плавности
+                smoothZoom: true,  // Плавный зум
+                smoothDrag: true,  // Плавное перемещение
+                inertia: true,     // Инерция при перемещении
+                inertiaDuration: 300 // Длительность инерции (мс)
             });
 
             // Альтернативная стилизация через CSS (легальный способ)
