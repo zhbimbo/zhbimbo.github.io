@@ -437,28 +437,21 @@ body {
     transform-origin: bottom center;
 }
 
+/* Анимации маркеров через CSS */
+.ymaps-2-1-79-placemark {
+    transition: transform 0.3s ease, filter 0.2s ease;
+    transform-origin: bottom center;
+}
+
 /* Эффект при наведении (только для десктопа) */
 @media (hover: hover) {
     .ymaps-2-1-79-placemark:hover {
-        transform: scale(1.25) translateY(-8px);
-        filter: drop-shadow(0 5px 15px rgba(255, 102, 0, 0.6));
+        transform: scale(1.2);
+        filter: drop-shadow(0 0 8px rgba(255, 165, 0, 0.7));
     }
 }
 
-/* Эффект при клике/тапе */
+/* Эффект при клике */
 .ymaps-2-1-79-placemark:active {
     transform: scale(0.9);
-    transition: transform 0.1s ease;
-}
-
-/* Пульсация для активного маркера */
-@keyframes markerPulse {
-    0% { transform: scale(1); }
-    50% { transform: scale(1.2); }
-    100% { transform: scale(1); }
-}
-
-.active-marker {
-    animation: markerPulse 1s infinite ease-in-out;
-    z-index: 500 !important;
 }
