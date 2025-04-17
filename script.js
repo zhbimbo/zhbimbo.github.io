@@ -3,7 +3,7 @@ document.addEventListener('DOMContentLoaded', function() {
     let placemarks = [];
     const isMobile = window.innerWidth <= 767;
 
-    // Инициализация карты
+    // 1. Инициализация карты
     ymaps.ready(init);
 
     function init() {
@@ -13,10 +13,10 @@ document.addEventListener('DOMContentLoaded', function() {
             controls: []
         });
 
-        // Отключаем всплывающие балуны на всех устройствах
+        // Отключаем стандартные балуны
         map.options.set('suppressMapOpenBlock', true);
 
-        // Загрузка данных из JSON
+        // Загрузка данных
         fetch('data.json')
             .then(response => response.json())
             .then(data => {
@@ -27,71 +27,55 @@ document.addEventListener('DOMContentLoaded', function() {
                 });
                 document.getElementById('count').textContent = data.length;
             })
-            .catch(error => console.error('Ошибка загрузки данных:', error));
+            .catch(error => console.error('Ошибка загрузки:', error));
     }
 
-function createPlacemark(place) {
-    const rating = parseFloat(place.description.split('/')[0]);
-    const placemark = new ymaps.Placemark(
-        place.coordinates,
-        {
-            customData: place,
-            balloonContentHeader: '',
-            balloonContentBody: '',
-            balloonContentFooter: ''
-        },
-        {
-            iconLayout: 'default#imageWithContent',
-            iconImageHref: getIconByRating(rating),
-            iconImageSize: [48, 48],
-            iconImageOffset: [-24, -48],
-            balloonCloseButton: false,
-            hideIconOnBalloonOpen: false,
-            balloonInteractivityModel: 'default#opaque'
-        }
-    );
+    // 2. Функция для получения иконки
+    function getIconByRating(rating) {
+        if (rating >= 4) return 'icons/star-green.png';
+        if (rating >= 3) return 'icons/star-yellow.png';
+        return 'icons/star-red.png';
+    }
 
-    // Анимация при клике
-placemark.events.add('click', function(e) {
-    try {
-        e.preventDefault();
-        const target = e.get('target');
-        const placeData = target.properties.get('customData');
+    // 3. Создание метки (упрощенная версия)
+    function createPlacemark(place) {
+        const rating = parseFloat(place.description.split('/')[0]);
+        const placemark = new ymaps.Placemark(
+            place.coordinates,
+            {
+                customData: place,
+                balloonContentHeader: '',
+                balloonContentBody: '',
+                balloonContentFooter: ''
+            },
+            {
+                iconLayout: 'default#imageWithContent',
+                iconImageHref: getIconByRating(rating),
+                iconImageSize: [40, 40],
+                iconImageOffset: [-20, -40],
+                balloonCloseButton: false,
+                hideIconOnBalloonOpen: false,
+                balloonInteractivityModel: 'default#opaque'
+            }
+        );
 
-        // Сбрасываем анимацию у всех маркеров
-        placemarks.forEach(pm => {
-            pm.options.set('iconImageHref', getIconByRating(
-                parseFloat(pm.properties.get('customData').description.split('/')[0])
-            );
+        // 4. Обработчик клика (без смены иконки)
+        placemark.events.add('click', function(e) {
+            e.preventDefault();
+            const target = e.get('target');
+            const placeData = target.properties.get('customData');
+            
+            // Просто открываем панель без анимации маркера
+            if (isMobile) {
+                openMobilePanel(placeData);
+            } else {
+                openDesktopSidebar(placeData);
+            }
+            return false;
         });
 
-        // Анимируем текущий маркер
-        target.options.set('iconImageHref', 'icons/star-orange.png');
-        
-        // Открываем соответствующую панель
-        if (isMobile) {
-            openMobilePanel(placeData);
-        } else {
-            openDesktopSidebar(placeData);
-        }
-
-        // Возвращаем стандартную иконку через 1.5 секунды
-        setTimeout(() => {
-            target.options.set('iconImageHref', getIconByRating(
-                parseFloat(placeData.description.split('/')[0])
-            ));
-        }, 1500);
-
-        return false;
-    } catch (error) {
-        console.error('Ошибка в обработчике маркера:', error);
-        return false;
+        return placemark;
     }
-});
-
-    return placemark;
-}
-
     // Используем ваши иконки
     function getIconByRating(rating) {
         if (rating >= 4) return 'icons/star-green.png';
