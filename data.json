@@ -31,5 +31,16 @@
         "phone": "+7 (903) 770-77-11",
         "hours": "Пн–Вс: 12:00–03:00",
         "district": "ЮВАО"
+    },
+    {
+        "name": "HookahPlace Haven",
+        "description": "4.9/5",
+        "coordinates": [55.714044, 37.670142],
+        "reviewLink": "https://t.me/KudaHookah/17",
+        "photo": "https://avatars.mds.yandex.net/get-tycoon/14443915/2a000001963f3df05f7c06a148c915aafb10/priority-headline-background",
+        "address": "1-я ул. Машиностроения, 10",
+        "phone": "+7 (925) 750-01-74",
+        "hours": "Круглосуточно",
+        "district": "ЮВАО"
     }
 ]
