@@ -16,8 +16,8 @@ body {
     width: 100%;
     height: 100%;
     position: relative;
+    touch-action: none; /* Важно для кастомного управления */
 }
-
 /* Шапка с идеальным центрированием */
 #header {
     position: absolute;
@@ -405,6 +405,17 @@ body {
 @media (max-width: 767px) {
     #desktop-sidebar {
         display: none;
+    }
+}
+/* Для мобильных устройств */
+@media (max-width: 767px) {
+    .ymaps-2-1-79-map {
+        touch-action: pinch-zoom; /* Разрешаем масштабирование */
+    }
+    
+    /* Улучшаем отзывчивость */
+    .ymaps-2-1-79-inner-panes {
+        touch-action: manipulation;
     }
 }
 
