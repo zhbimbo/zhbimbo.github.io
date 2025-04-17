@@ -37,56 +37,53 @@ document.addEventListener('DOMContentLoaded', function() {
         return 'icons/star-red.png';
     }
 
-    // 3. Создание метки (упрощенная версия)
-function createPlacemark(place) {
-    const rating = parseFloat(place.description.split('/')[0]);
-    const placemark = new ymaps.Placemark(
-        place.coordinates,
-        {
-            customData: place,
-            // Отключаем стандартные балуны
-            balloonContentHeader: '',
-            balloonContentBody: '',
-            balloonContentFooter: ''
-        },
-        {
-            iconLayout: 'default#imageWithContent',
-            iconImageHref: getIconByRating(rating),
-            iconImageSize: [40, 40],
-            iconImageOffset: [-20, -40],
-            // Критически важные настройки:
-            hideIconOnBalloonOpen: false,
-            balloonInteractivityModel: 'default#opaque',
-            // Добавляем свой класс для анимации
-            preset: 'islands#circleIcon'
-        }
-    );
+  function createPlacemark(place) {
+  const rating = parseFloat(place.description.split('/')[0]);
+  const placemark = new ymaps.Placemark(
+    place.coordinates,
+    {
+      customData: place,
+      balloonContentHeader: '',
+      balloonContentBody: '',
+      balloonContentFooter: ''
+    },
+    {
+      iconLayout: 'default#imageWithContent',
+      iconImageHref: 'icons/star-' + (rating >= 4 ? 'green' : rating >= 3 ? 'yellow' : 'red') + '.png',
+      iconImageSize: [40, 40],
+      iconImageOffset: [-20, -40],
+      balloonCloseButton: false,
+      hideIconOnBalloonOpen: false,
+      balloonInteractivityModel: 'default#opaque'
+    }
+  );
 
-    // Обработчик клика с анимацией через CSS
-    placemark.events.add('click', function(e) {
-        e.preventDefault();
-        const target = e.get('target');
-        
-        // 1. Добавляем класс для анимации
-        target.options.set('preset', 'islands#circleDotIcon');
-        
-        // 2. Открываем панель
-        const placeData = target.properties.get('customData');
-        if (isMobile) {
-            openMobilePanel(placeData);
-        } else {
-            openDesktopSidebar(placeData);
-        }
-        
-        // 3. Через 1 секунду убираем анимацию
-        setTimeout(() => {
-            target.options.set('preset', 'islands#circleIcon');
-        }, 1000);
-        
-        return false;
-    });
+  // Обработчик клика с анимацией
+  placemark.events.add('click', function(e) {
+    e.preventDefault();
+    const target = e.get('target');
+    
+    // Получаем DOM-элемент маркера
+    const overlay = target.getOverlay().getElement().querySelector('.ymaps-2-1-79-placemark-overlay');
+    
+    // Добавляем класс для анимации
+    overlay.classList.add('clicked');
+    
+    // Убираем класс после завершения анимации
+    setTimeout(() => overlay.classList.remove('clicked'), 500);
+    
+    // Открываем панель
+    const placeData = target.properties.get('customData');
+    if (isMobile) {
+      openMobilePanel(placeData);
+    } else {
+      openDesktopSidebar(placeData);
+    }
+    
+    return false;
+  });
 
-    return placemark;
+  return placemark;
 }
     // Используем ваши иконки
     function getIconByRating(rating) {
