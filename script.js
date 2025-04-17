@@ -12,19 +12,19 @@ document.addEventListener('DOMContentLoaded', function() {
     // Инициализация карты
     ymaps.ready(function() {
         try {
-            // Базовая инициализация карты без кастомного стиля
+            // Базовая инициализация карты
             map = new ymaps.Map('map', {
                 center: [55.7558, 37.6173],
                 zoom: 12,
-                controls: []
+                controls: [],  // <- Запятая добавлена здесь
                 // Опции для плавности
-                smoothZoom: true,  // Плавный зум
-                smoothDrag: true,  // Плавное перемещение
-                inertia: true,     // Инерция при перемещении
-                inertiaDuration: 300 // Длительность инерции (мс)
+                smoothZoom: true,
+                smoothDrag: true,
+                inertia: true,
+                inertiaDuration: 300
             });
 
-            // Альтернативная стилизация через CSS (легальный способ)
+            // Альтернативная стилизация через CSS
             const mapContainer = map.container.getElement();
             mapContainer.style.filter = 'hue-rotate(10deg) saturate(1.1)';
             mapContainer.style.borderRadius = '12px';
@@ -59,11 +59,14 @@ document.addEventListener('DOMContentLoaded', function() {
         } catch (e) {
             console.error('Ошибка инициализации карты:', e);
             
-            // Fallback-попытка с минимальными настройками
+            // Fallback-попытка
             try {
                 map = new ymaps.Map('map', {
                     center: [55.7558, 37.6173],
-                    zoom: 12
+                    zoom: 12,
+                    smoothZoom: true,
+                    smoothDrag: true,
+                    inertia: true
                 });
                 loadPlacesData();
             } catch (fallbackError) {
