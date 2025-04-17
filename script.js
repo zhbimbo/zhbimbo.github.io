@@ -9,52 +9,64 @@ document.addEventListener('DOMContentLoaded', function() {
         return;
     }
 
-    // Инициализация карты
-    ymaps.ready(function() {
+// Инициализация карты
+ymaps.ready(function() {
+    try {
+        // Базовая инициализация карты без кастомного стиля
+        map = new ymaps.Map('map', {
+            center: [55.7558, 37.6173],
+            zoom: 12,
+            controls: []
+        });
+
+        // Альтернативная стилизация через CSS (легальный способ)
+        const mapContainer = map.container.getElement();
+        mapContainer.style.filter = 'hue-rotate(10deg) saturate(1.1)';
+        mapContainer.style.borderRadius = '12px';
+
+        // Отключаем стандартные POI
+        map.options.set('yandexMapDisablePoiInteractivity', true);
+
+        // Настройки поведения
+        const enabledBehaviors = isMobile 
+            ? ['multiTouch', 'drag'] 
+            : ['scrollZoom', 'rightMouseButtonMagnifier'];
+        
+        const disabledBehaviors = isMobile
+            ? ['scrollZoom', 'rightMouseButtonMagnifier']
+            : [];
+        
+        map.behaviors.enable(enabledBehaviors);
+        map.behaviors.disable(disabledBehaviors);
+
+        // Блокировка кликов на фоне
+        map.events.add('click', function(e) {
+            const target = e.get('target');
+            if (!target?.properties) {
+                e.preventDefault();
+                return false;
+            }
+        });
+
+        // Загрузка данных
+        loadPlacesData();
+
+    } catch (e) {
+        console.error('Ошибка инициализации карты:', e);
+        
+        // Fallback-попытка с минимальными настройками
         try {
-            // Создаем карту с легальными настройками
             map = new ymaps.Map('map', {
                 center: [55.7558, 37.6173],
-                zoom: 12,
-                controls: [],
-                type: 'yandex#light',
-                custom: {
-                    // Легальная кастомизация элементов
-                    elements: {
-                        road: { fill: '#FFD700', stroke: '#FFA500' }, // Золотые дороги
-                        water: { fill: '#89CFF0' },                    // Голубая вода
-                        area: { fill: '#F5F5DC' }                      // Бежевые зоны
-                    }
-                }
+                zoom: 12
             });
-
-            // Отключаем кликабельность у стандартных объектов Яндекса
-            map.options.set('yandexMapDisablePoiInteractivity', true);
-
-            // Настройки поведения для разных устройств
-            if (isMobile) {
-                map.behaviors.enable(['multiTouch', 'drag']);
-                map.behaviors.disable(['scrollZoom', 'rightMouseButtonMagnifier']);
-            } else {
-                map.behaviors.enable(['scrollZoom', 'rightMouseButtonMagnifier']);
-            }
-
-            // Блокируем клики на фоне карты
-            map.events.add('click', function(e) {
-                if (!e.get('target') || !e.get('target').properties) {
-                    e.preventDefault();
-                    return false;
-                }
-            });
-
-            // Загрузка данных о местах
             loadPlacesData();
-
-        } catch (e) {
-            console.error('Ошибка инициализации карты:', e);
-            alert('Произошла ошибка при загрузке карты. Пожалуйста, обновите страницу.');
+        } catch (fallbackError) {
+            console.error('Fallback инициализация не удалась:', fallbackError);
+            alert('Не удалось загрузить карту. Пожалуйста, проверьте интернет-соединение и обновите страницу.');
         }
-    });
+    }
+});
 
     // Загрузка данных из JSON
     function loadPlacesData() {
