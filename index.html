@@ -15,9 +15,6 @@
             <button id="toggleFilters" class="animated-button">
                 <i class="fas fa-filter"></i>
             </button>
-            <button id="toggleLocation" class="animated-button">
-                <i class="fas fa-compass"></i>
-            </button>
         </div>
         <div id="stats-overlay">
             Найдено: <span id="count">0</span> заведений
@@ -72,17 +69,17 @@
 
     <!-- Десктопная панель -->
     <div id="desktop-sidebar" class="hidden">
-        <div class="sidebar-content">
+        <div id="sidebar-content">
             <button id="close-sidebar" class="animated-button">
                 <i class="fas fa-times"></i>
             </button>
-            <h2 class="sidebar-title"></h2>
-            <img class="sidebar-image" alt="Фото заведения">
-            <p><b>Адрес:</b> <span class="sidebar-address"></span></p>
-            <p><b>Телефон:</b> <span class="sidebar-phone"></span></p>
+            <h2 id="sidebar-title"></h2>
+            <img id="sidebar-image" alt="Фото заведения">
+            <p><b>Адрес:</b> <span id="sidebar-address"></span></p>
+            <p><b>Телефон:</b> <span id="sidebar-phone"></span></p>
             <p><b>Режим работы:</b> <span class="sidebar-hours"></span></p>
             <p><b>Рейтинг:</b> <span class="sidebar-rating"></span></p>
-            <a class="sidebar-review-link" target="_blank">Читать обзор</a>
+            <a id="sidebar-review-link" target="_blank">Читать обзор</a>
         </div>
     </div>
 
