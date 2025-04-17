@@ -1,32 +1,48 @@
 <!DOCTYPE html>
 <html lang="ru">
 <head>
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta charset="UTF-8">
     <title>Кальянный Патруль</title>
     <script src="https://api-maps.yandex.ru/2.1/?apikey=767b6b86-29dc-4346-b485-2ec344f0e567&lang=ru_RU" type="text/javascript"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
     <link rel="stylesheet" href="style.css">
-    <script src="script.js"></script>
+    <link rel="stylesheet" href="dark-mode.css">
 </head>
-<body>
+<body class="light-mode">
+    <!-- Геолокация -->
+    <div class="fixed-right-bottom">
+        <button onclick="getLocation()" class="animated-button">
+            <i class="fas fa-compass"></i>
+        </button>
+    </div>
+    
+    <!-- Темная тема -->
+    <div class="fixed-right-bottom" style="bottom: 120px;">
+        <button onclick="toggleTheme()" class="animated-button">
+            <i class="fas fa-moon"></i>
+        </button>
+    </div>
+
     <div id="map">
         <div id="header">
             <h1>📍 Кальянный Патруль</h1>
-            <button id="toggleFilters"><i class="fas fa-filter"></i></button>
+            <button id="toggleFilters" class="animated-button">
+                <i class="fas fa-filter"></i>
+            </button>
         </div>
         <div id="stats-overlay">
             Найдено: <span id="count">0</span> заведений
         </div>
     </div>
+
+    <!-- Фильтры -->
     <div id="filters-panel" class="hidden">
-        <select id="ratingFilter">
-            <option value="all">⭐ Все рейтинги</option>
-            <option value="5">⭐ 5+</option>
-            <option value="4">⭐ 4+</option>
-            <option value="3">⭐ 3+</option>
-            <option value="2">⭐ 2+</option>
-            <option value="1">⭐ 1+</option>
-        </select>
+        <div class="filter-slider">
+            <span>Рейтинг:</span>
+            <div id="ratingSlider"></div>
+            <div id="ratingDisplay">0+</div>
+        </div>
         <select id="districtFilter">
             <option value="all">📍 Все районы</option>
             <option value="САО">📍 САО</option>
@@ -39,14 +55,18 @@
             <option value="Пн–Вс: 12:00–02:00">🕒 Пн–Вс: 12:00–02:00</option>
             <option value="Пн–Вс: 12:00–03:00">🕒 Пн–Вс: 12:00–03:00</option>
         </select>
-        <input type="text" id="searchInput" placeholder="🔍 Поиск по названию...">
+        <input type="text" id="searchInput" placeholder="🔍 Поиск по названию..." class="search-input">
     </div>
+
+    <!-- Мобильная панель -->
     <div id="mobile-bottom-sheet" class="hidden">
         <div class="swipe-handle"></div>
         <div class="bottom-sheet-content">
             <div class="balloon-header">
                 <h2 class="balloon-title"></h2>
-                <button class="close-balloon"><i class="fas fa-times"></i></button>
+                <button class="close-balloon animated-button">
+                    <i class="fas fa-times"></i>
+                </button>
             </div>
             <div class="balloon-body">
                 <img class="balloon-image" alt="Фото заведения">
@@ -58,9 +78,13 @@
             </div>
         </div>
     </div>
+
+    <!-- Десктопная панель -->
     <div id="desktop-sidebar" class="hidden">
         <div id="sidebar-content">
-            <button id="close-sidebar"><i class="fas fa-times"></i></button>
+            <button id="close-sidebar" class="animated-button">
+                <i class="fas fa-times"></i>
+            </button>
             <h2 id="sidebar-title"></h2>
             <img id="sidebar-image" alt="Фото заведения">
             <p><b>Адрес:</b> <span id="sidebar-address"></span></p>
@@ -70,5 +94,8 @@
             <a id="sidebar-review-link" target="_blank">Читать обзор</a>
         </div>
     </div>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/noUiSlider/15.7.0/nouislider.min.js"></script>
+    <script src="script.js"></script>
 </body>
 </html>
