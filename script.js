@@ -3,19 +3,27 @@ document.addEventListener('DOMContentLoaded', function() {
     let placemarks = [];
     const isMobile = window.innerWidth <= 767;
 
-    // 1. Инициализация карты
-    ymaps.ready(init);
+function init() {
+    map = new ymaps.Map('map', {
+        center: [55.7558, 37.6173],
+        zoom: 12,
+        controls: []
+    });
 
-    function init() {
-        map = new ymaps.Map('map', {
-            center: [55.7558, 37.6173],
-            zoom: 12,
-            controls: []
-        });
+    // Критически важные настройки для отключения взаимодействия
+    map.options.set({
+        suppressMapOpenBlock: true,
+        suppressObsoleteBrowserNotifier: true,
+        yandexMapDisablePoiInteractivity: true // Отключает клики на POI (точки интереса)
+    });
 
-        // Отключаем стандартные балуны
-        map.options.set('suppressMapOpenBlock', true);
-
+    // Дополнительно отключаем все возможные всплывающие элементы
+    map.behaviors.disable([
+        'scrollZoom',
+        'dblClickZoom',
+        'rightMouseButtonMagnifier',
+        'multiTouch'
+    ]);
         // Загрузка данных
         fetch('data.json')
             .then(response => response.json())
