@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="ru">
 <head>
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <meta charset="UTF-8">
     <title>Кальянный Патруль</title>
     <script src="https://api-maps.yandex.ru/2.1/?apikey=767b6b86-29dc-4346-b485-2ec344f0e567&lang=ru_RU" type="text/javascript"></script>
@@ -9,28 +9,20 @@
     <link rel="stylesheet" href="style.css">
 </head>
 <body>
-    <!-- Cookie-уведомление [[2]] -->
-    <div id="cookie-consent" class="hidden">
-        Мы используем cookies для работы с геолокацией. <button onclick="acceptCookies()">Принять</button>
-    </div>
-
-    <!-- Геолокация [[7]] -->
-    <button onclick="getLocation()" class="fixed-right-bottom animated-button">
-        <i class="fas fa-compass"></i>
-    </button>
-
     <div id="map">
         <div id="header">
             <h1>📍 Карта Кальянного Патруля</h1>
             <button id="toggleFilters" class="animated-button">
                 <i class="fas fa-filter"></i>
             </button>
+            <button id="toggleLocation" class="animated-button">
+                <i class="fas fa-compass"></i>
+            </button>
         </div>
         <div id="stats-overlay">
             Найдено: <span id="count">0</span> заведений
         </div>
     </div>
-
     <!-- Панель фильтров -->
     <div id="filters-panel" class="hidden">
         <select id="ratingFilter">
