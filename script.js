@@ -13,7 +13,7 @@ document.addEventListener('DOMContentLoaded', function() {
             center: [55.7558, 37.6173],
             zoom: 12,
             controls: [],
-            balloonAutoOpen: false, // Отключаем балуны [[1]]
+            balloonAutoOpen: false, // Отключаем балуны [[7]]
             hintAutoOpen: false
         });
 
@@ -87,10 +87,9 @@ document.addEventListener('DOMContentLoaded', function() {
         }
 
         show() {
-            this.element.classList.remove('hidden');
+            this.element.style.transform = `translateY(${this.collapsedHeight}px)`;
             this.element.classList.add('visible');
             this.state = 'collapsed';
-            this.element.style.transform = `translateY(${this.collapsedHeight}px)`;
         }
 
         hide() {
@@ -132,9 +131,11 @@ document.addEventListener('DOMContentLoaded', function() {
         if (navigator.geolocation) {
             navigator.geolocation.getCurrentPosition(
                 (position) => {
-                    map.setCenter([position.coords.latitude, position.coords.longitude], 14);
+                    if (map) {
+                        map.setCenter([position.coords.latitude, position.coords.longitude], 14);
+                    }
                 },
-                () => alert("Ошибка геолокации [[5]]")
+                () => alert("Ошибка геолокации [[3]]")
             );
         }
     }
@@ -166,6 +167,7 @@ document.addEventListener('DOMContentLoaded', function() {
             } else {
                 openDesktopSidebar(placeData);
             }
+            e.preventDefault();
         });
         return placemark;
     };
@@ -180,11 +182,10 @@ document.addEventListener('DOMContentLoaded', function() {
             hours: document.getElementById('sidebar-hours'),
             rating: document.getElementById('sidebar-rating'),
             link: document.getElementById('sidebar-review-link'),
-            sidebar: document.getElementById('desktop-sidebar')
+            container: document.getElementById('desktop-sidebar')
         };
 
-        // Проверка существования элементов [[4]]
-        if (!elements.sidebar) return;
+        if (!elements.container) return;
 
         elements.title.textContent = placeData.name;
         elements.image.src = placeData.photo;
@@ -193,8 +194,8 @@ document.addEventListener('DOMContentLoaded', function() {
         elements.hours.textContent = placeData.hours;
         elements.rating.textContent = placeData.description;
         elements.link.href = placeData.reviewLink;
-        elements.sidebar.classList.remove('hidden');
-        elements.sidebar.classList.add('visible');
+        elements.container.classList.remove('hidden');
+        elements.container.classList.add('visible');
     };
 
     // Мобильная панель
@@ -238,7 +239,7 @@ document.addEventListener('DOMContentLoaded', function() {
         }
     });
 
-    document.getElementById('toggleLocation').addEventListener('click', getLocation); // [[5]]
+    document.getElementById('toggleLocation').addEventListener('click', getLocation); // [[2]]
 
     document.addEventListener('click', (e) => {
         if (!e.target.closest('#filters-panel') && !e.target.closest('#toggleFilters')) {
@@ -255,7 +256,7 @@ document.addEventListener('DOMContentLoaded', function() {
     document.getElementById('hoursFilter').addEventListener('change', filterPlacemarks);
     document.getElementById('searchInput').addEventListener('input', filterPlacemarks);
 
-    // Закрытие десктопной панели
+    // Закрытие панелей
     document.getElementById('close-sidebar').addEventListener('click', () => {
         const sidebar = document.getElementById('desktop-sidebar');
         if (sidebar) {
@@ -264,8 +265,8 @@ document.addEventListener('DOMContentLoaded', function() {
         }
     });
 
-    // Проверка инициализации карты [[9]]
+    // Проверка карты
     if (!map) {
-        console.error("Карта не инициализирована, долбоёб [[3]]");
+        console.error("Карта не инициализирована [[9]]");
     }
 });
