@@ -10,24 +10,46 @@ document.addEventListener('DOMContentLoaded', function() {
     }
 
     // 2. Инициализация карты с обработкой ошибок
-    ymaps.ready(function() {
-        try {
-            map = new ymaps.Map('map', {
-                center: [55.7558, 37.6173],
-                zoom: 12,
-                controls: [],
-                // Критически важные параметры:
-                suppressMapOpenBlock: true,
-                yandexMapDisablePoiInteractivity: true
-            });
+ymaps.ready(function() {
+    try {
+        map = new ymaps.Map('map', {
+            center: [55.7558, 37.6173],
+            zoom: 12,
+            controls: []
+        });
 
-            // 3. Настройки поведения карты
-            map.behaviors.disable([
-                'scrollZoom',
-                'dblClickZoom',
-                'rightMouseButtonMagnifier',
-                'multiTouch'
-            ]);
+        // Отключаем клики на все элементы карты, кроме наших маркеров
+        map.events.add('click', function(e) {
+            if (!e.get('target') || !e.get('target').properties.get('customData')) {
+                e.preventDefault();
+                e.stopPropagation();
+                return false;
+            }
+        });
+
+        // Включаем масштабирование для мобильных
+        if (isMobile) {
+            map.behaviors.enable('multiTouch');
+        } else {
+            map.behaviors.disable('multiTouch');
+        }
+
+        // Дополнительные настройки
+        map.options.set({
+            suppressMapOpenBlock: true,
+            yandexMapDisablePoiInteractivity: true
+        });
+
+        // Остальные настройки поведения
+        map.behaviors.disable([
+            'rightMouseButtonMagnifier',
+            'scrollZoom' // Оставляем только мультитач-зум
+        ]);
+
+    } catch (e) {
+        console.error('Map init error:', e);
+    }
+});
 
             // 4. Загрузка данных
             loadPlacesData();
