@@ -3,12 +3,13 @@ document.addEventListener('DOMContentLoaded', function() {
     let placemarks = [];
     const isMobile = window.innerWidth <= 767;
 
-    // 1. Проверка загрузки API Яндекс.Карт
+    // Проверка загрузки API Яндекс.Карт
     if (!window.ymaps) {
         console.error('Yandex Maps API не загружен');
         return;
     }
-    // 2. Инициализация карты с обработкой ошибок
+
+    // Инициализация карты
     ymaps.ready(function() {
         try {
             map = new ymaps.Map('map', {
@@ -17,7 +18,7 @@ document.addEventListener('DOMContentLoaded', function() {
                 controls: []
             });
 
-            // Блокируем клики на фоне карты и посторонних элементах
+            // Блокируем клики на фоне карты
             map.events.add('click', function(e) {
                 if (!e.get('target') || !e.get('target').properties.get('customData')) {
                     e.preventDefault();
@@ -27,20 +28,6 @@ document.addEventListener('DOMContentLoaded', function() {
 
             // Настройки поведения для разных устройств
             if (isMobile) {
-                // Для мобильных: включаем только мультитач
-                map.behaviors.enable('multiTouch');
-                map.behaviors.disable([
-                    'drag', // Можно включить, если нужен драг
-                    'rightMouseButtonMagnifier'
-                ]);
-            } else {
-                // Для десктопа: оставляем колесико и правую кнопку
-                map.behaviors.enable([
-                    'scrollZoom',
-                    'rightMouseButtonMagnifier'
-                ]);
-            }
-            if (isMobile) {
                 map.behaviors.enable(['multiTouch', 'drag']);
                 map.behaviors.disable('rightMouseButtonMagnifier');
                 map.options.set('suppressMapOpenBlock', true);
@@ -48,10 +35,7 @@ document.addEventListener('DOMContentLoaded', function() {
                 map.behaviors.enable(['scrollZoom', 'rightMouseButtonMagnifier']);
             }
 
-            // Отключаем POI (точки интереса Яндекса)
-            map.options.set('yandexMapDisablePoiInteractivity', true);
-
-            // 3. Загрузка данных
+            // Загрузка данных
             loadPlacesData();
 
         } catch (e) {
@@ -60,6 +44,7 @@ document.addEventListener('DOMContentLoaded', function() {
         }
     });
 
+    // Функция загрузки данных
     function loadPlacesData() {
         fetch('data.json')
             .then(response => {
@@ -80,89 +65,63 @@ document.addEventListener('DOMContentLoaded', function() {
             });
     }
 
+    // Функция создания метки
+    function createPlacemark(place) {
+        const rating = parseFloat(place.description.split('/')[0]);
+        const placemark = new ymaps.Placemark(
+            place.coordinates,
+            {
+                customData: place,
+                balloonContentHeader: '',
+                balloonContentBody: '',
+                balloonContentFooter: ''
+            },
+            {
+                iconLayout: 'default#imageWithContent',
+                iconImageHref: getIconByRating(rating),
+                iconImageSize: [40, 40],
+                iconImageOffset: [-20, -40],
+                interactivityModel: 'default#layer',
+                hideIconOnBalloonOpen: false,
+                balloonInteractivityModel: 'default#opaque'
+            }
+        );
 
-    function loadPlacesData() {
-        fetch('data.json')
-            .then(response => {
-                if (!response.ok) throw new Error('Ошибка загрузки данных');
-                return response.json();
-            })
-            .then(data => {
-                data.forEach(place => {
-                    const placemark = createPlacemark(place);
-                    placemarks.push(placemark);
-                    map.geoObjects.add(placemark);
-                });
-                document.getElementById('count').textContent = data.length;
-            })
-            .catch(error => {
-                console.error('Ошибка:', error);
-                alert('Не удалось загрузить данные о местах');
-            });
+        // Обработчик клика
+        placemark.events.add('click', function(e) {
+            e.preventDefault();
+            const target = e.get('target');
+            
+            // Анимация клика
+            target.options.set('iconImageSize', [36, 36]);
+            setTimeout(() => {
+                target.options.set('iconImageSize', [40, 40]);
+            }, 200);
+            
+            // Открываем панель
+            const placeData = target.properties.get('customData');
+            if (isMobile) {
+                openMobilePanel(placeData);
+            } else {
+                openDesktopSidebar(placeData);
+            }
+            
+            return false;
+        });
+
+        return placemark;
     }
-    // 2. Функция для получения иконки
+
+    // Функция для получения иконки
     function getIconByRating(rating) {
         if (rating >= 4) return 'icons/star-green.png';
         if (rating >= 3) return 'icons/star-yellow.png';
         return 'icons/star-red.png';
     }
 
-    // 3. Создание метки (упрощенная версия)
-function createPlacemark(place) {
-    const rating = parseFloat(place.description.split('/')[0]);
-    const placemark = new ymaps.Placemark(
-        place.coordinates,
-        {
-            customData: place,
-            balloonContentHeader: '',
-            balloonContentBody: '',
-            balloonContentFooter: ''
-        },
-        {
-            iconLayout: 'default#imageWithContent',
-            iconImageHref: getIconByRating(rating),
-            iconImageSize: [40, 40],
-            iconImageOffset: [-20, -40],
-            interactivityModel: 'default#layer',
-            hideIconOnBalloonOpen: false,
-            balloonInteractivityModel: 'default#opaque'
-        }
-    );
-
-    // Новый обработчик клика (без getOverlay().getElement())
-    placemark.events.add('click', function(e) {
-        e.preventDefault();
-        const target = e.get('target');
-        
-        // Анимация через изменение размера иконки
-        target.options.set('iconImageSize', [36, 36]);
-        setTimeout(() => {
-            target.options.set('iconImageSize', [40, 40]);
-        }, 200);
-        
-        const placeData = target.properties.get('customData');
-        if (isMobile) {
-            openMobilePanel(placeData);
-        } else {
-            openDesktopSidebar(placeData);
-        }
-        return false;
-    });
-    return placemark;
-}
-    // Используем ваши иконки
-    function getIconByRating(rating) {
-        if (rating >= 4) return 'icons/star-green.png';
-        if (rating >= 3) return 'icons/star-yellow.png';
-        return 'icons/star-red.png';
-    }
-
+    // Функции открытия панелей
     function openMobilePanel(placeData) {
         const rating = parseFloat(placeData.description.split('/')[0]);
-        
-        // Добавляем проверку на существование элементов
-        const mobileSheet = document.getElementById('mobile-bottom-sheet');
-        if (!mobileSheet) return;
         
         document.querySelector('.balloon-title').textContent = placeData.name;
         document.querySelector('.balloon-image').src = placeData.photo;
@@ -173,6 +132,7 @@ function createPlacemark(place) {
         document.querySelector('.balloon-review-link').href = placeData.reviewLink;
         document.querySelector('.balloon-rating-badge').textContent = rating.toFixed(1);
         
+        const mobileSheet = document.getElementById('mobile-bottom-sheet');
         mobileSheet.classList.remove('hidden');
         setTimeout(() => {
             mobileSheet.classList.add('visible');
@@ -181,10 +141,6 @@ function createPlacemark(place) {
 
     function openDesktopSidebar(placeData) {
         const rating = parseFloat(placeData.description.split('/')[0]);
-        
-        // Добавляем проверку на существование элементов
-        const sidebar = document.getElementById('desktop-sidebar');
-        if (!sidebar) return;
         
         document.getElementById('sidebar-title').textContent = placeData.name;
         document.getElementById('sidebar-image').src = placeData.photo;
@@ -195,6 +151,7 @@ function createPlacemark(place) {
         document.getElementById('sidebar-review-link').href = placeData.reviewLink;
         document.getElementById('sidebar-rating-badge').textContent = rating.toFixed(1);
         
+        const sidebar = document.getElementById('desktop-sidebar');
         sidebar.classList.remove('hidden');
         setTimeout(() => {
             sidebar.classList.add('visible');
@@ -245,7 +202,6 @@ function createPlacemark(place) {
         }
     });
 
-    // Закрытие панелей
     document.querySelector('.close-balloon')?.addEventListener('click', function() {
         const mobileSheet = document.getElementById('mobile-bottom-sheet');
         mobileSheet.classList.remove('visible');
@@ -262,7 +218,6 @@ function createPlacemark(place) {
         }, 500);
     });
 
-    // Фильтры
     document.getElementById('ratingFilter').addEventListener('change', filterPlacemarks);
     document.getElementById('districtFilter').addEventListener('change', filterPlacemarks);
     document.getElementById('hoursFilter').addEventListener('change', filterPlacemarks);
@@ -275,7 +230,6 @@ function createPlacemark(place) {
                 function(position) {
                     map.setCenter([position.coords.latitude, position.coords.longitude], 14);
                     
-                    // Добавляем анимированную метку текущего местоположения
                     new ymaps.Placemark(
                         [position.coords.latitude, position.coords.longitude],
                         {},
@@ -313,7 +267,7 @@ function createPlacemark(place) {
         const currentY = e.touches[0].clientY;
         const diff = startY - currentY;
         
-        if (diff < 0) { // Свайп вниз
+        if (diff < 0) {
             const panel = document.getElementById('mobile-bottom-sheet');
             const newPosition = Math.max(-diff, 0);
             panel.style.transform = `translateY(${newPosition}px)`;
@@ -332,8 +286,8 @@ function createPlacemark(place) {
         const panel = document.getElementById('mobile-bottom-sheet');
         panel.style.transform = '';
     }, { passive: true });
-});
-    // Добавьте этот блок в конец (после ymaps.ready)
+
+    // Touch-оптимизации для мобильных устройств
     if (isMobile) {
         document.getElementById('map').addEventListener('touchmove', function(e) {
             e.stopPropagation();
