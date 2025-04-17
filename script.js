@@ -3,30 +3,47 @@ document.addEventListener('DOMContentLoaded', function() {
     let placemarks = [];
     const isMobile = window.innerWidth <= 767;
 
-function init() {
-    map = new ymaps.Map('map', {
-        center: [55.7558, 37.6173],
-        zoom: 12,
-        controls: []
+    // 1. Проверка загрузки API Яндекс.Карт
+    if (!window.ymaps) {
+        console.error('Yandex Maps API не загружен');
+        return;
+    }
+
+    // 2. Инициализация карты с обработкой ошибок
+    ymaps.ready(function() {
+        try {
+            map = new ymaps.Map('map', {
+                center: [55.7558, 37.6173],
+                zoom: 12,
+                controls: [],
+                // Критически важные параметры:
+                suppressMapOpenBlock: true,
+                yandexMapDisablePoiInteractivity: true
+            });
+
+            // 3. Настройки поведения карты
+            map.behaviors.disable([
+                'scrollZoom',
+                'dblClickZoom',
+                'rightMouseButtonMagnifier',
+                'multiTouch'
+            ]);
+
+            // 4. Загрузка данных
+            loadPlacesData();
+
+        } catch (e) {
+            console.error('Ошибка инициализации карты:', e);
+            alert('Произошла ошибка при загрузке карты');
+        }
     });
 
-    // Критически важные настройки для отключения взаимодействия
-    map.options.set({
-        suppressMapOpenBlock: true,
-        suppressObsoleteBrowserNotifier: true,
-        yandexMapDisablePoiInteractivity: true // Отключает клики на POI (точки интереса)
-    });
-
-    // Дополнительно отключаем все возможные всплывающие элементы
-    map.behaviors.disable([
-        'scrollZoom',
-        'dblClickZoom',
-        'rightMouseButtonMagnifier',
-        'multiTouch'
-    ]);
-        // Загрузка данных
+    function loadPlacesData() {
         fetch('data.json')
-            .then(response => response.json())
+            .then(response => {
+                if (!response.ok) throw new Error('Ошибка загрузки данных');
+                return response.json();
+            })
             .then(data => {
                 data.forEach(place => {
                     const placemark = createPlacemark(place);
@@ -35,9 +52,11 @@ function init() {
                 });
                 document.getElementById('count').textContent = data.length;
             })
-            .catch(error => console.error('Ошибка загрузки:', error));
+            .catch(error => {
+                console.error('Ошибка:', error);
+                alert('Не удалось загрузить данные о местах');
+            });
     }
-
     // 2. Функция для получения иконки
     function getIconByRating(rating) {
         if (rating >= 4) return 'icons/star-green.png';
