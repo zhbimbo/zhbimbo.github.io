@@ -37,51 +37,51 @@ document.addEventListener('DOMContentLoaded', function() {
         return 'icons/star-red.png';
     }
 
+    // 3. Создание метки (упрощенная версия)
 function createPlacemark(place) {
     const rating = parseFloat(place.description.split('/')[0]);
     const placemark = new ymaps.Placemark(
         place.coordinates,
         {
             customData: place,
+            // Отключаем стандартные балуны
             balloonContentHeader: '',
             balloonContentBody: '',
             balloonContentFooter: ''
         },
         {
             iconLayout: 'default#imageWithContent',
-            iconImageHref: 'icons/star-' + (rating >= 4 ? 'green' : rating >= 3 ? 'yellow' : 'red') + '.png',
+            iconImageHref: getIconByRating(rating),
             iconImageSize: [40, 40],
             iconImageOffset: [-20, -40],
-            balloonCloseButton: false,
+            // Критически важные настройки:
             hideIconOnBalloonOpen: false,
-            balloonInteractivityModel: 'default#opaque'
+            balloonInteractivityModel: 'default#opaque',
+            // Добавляем свой класс для анимации
+            preset: 'islands#circleIcon'
         }
     );
 
-    // НОВЫЙ РАБОЧИЙ обработчик клика
+    // Обработчик клика с анимацией через CSS
     placemark.events.add('click', function(e) {
         e.preventDefault();
-        
-        // 1. Получаем данные
         const target = e.get('target');
+        
+        // 1. Добавляем класс для анимации
+        target.options.set('preset', 'islands#circleDotIcon');
+        
+        // 2. Открываем панель
         const placeData = target.properties.get('customData');
-        
-        // 2. Анимация через прямое изменение стилей
-        const overlay = target.getOverlay().getElement();
-        overlay.style.transform = 'scale(1.2)';
-        overlay.style.transition = 'transform 0.3s ease';
-        
-        // 3. Возвращаем исходный размер через 300мс
-        setTimeout(() => {
-            overlay.style.transform = 'scale(1)';
-        }, 300);
-        
-        // 4. Открываем панель
         if (isMobile) {
             openMobilePanel(placeData);
         } else {
             openDesktopSidebar(placeData);
         }
+        
+        // 3. Через 1 секунду убираем анимацию
+        setTimeout(() => {
+            target.options.set('preset', 'islands#circleIcon');
+        }, 1000);
         
         return false;
     });
