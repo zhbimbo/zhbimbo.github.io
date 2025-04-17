@@ -112,7 +112,42 @@ body {
     animation: fadeInUp 0.4s;
 }
 
-#filters-panel select,
+/* Стили для select элементов */
+#filters-panel select {
+    width: 100%;
+    padding: 12px 15px;
+    background: linear-gradient(135deg, rgba(255, 105, 0, 0.95), rgba(255, 179, 0, 0.95)) !important;
+    border: 1px solid rgba(255, 255, 255, 0.3) !important;
+    border-radius: 12px;
+    font-size: 1rem;
+    margin-bottom: 15px;
+    font-family: inherit;
+    outline: none;
+    color: white !important;
+    backdrop-filter: blur(5px);
+    appearance: none;
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    cursor: pointer;
+}
+
+/* Стили для option элементов */
+#filters-panel select option {
+    background: linear-gradient(135deg, rgba(255, 105, 0, 0.95), rgba(255, 179, 0, 0.95));
+    color: white;
+    padding: 10px;
+}
+
+/* Стили для стрелки в select */
+#filters-panel select {
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' fill='white' viewBox='0 0 16 16'%3E%3Cpath d='M7.247 11.14 2.451 5.658C1.885 5.013 2.345 4 3.204 4h9.592a1 1 0 0 1 .753 1.659l-4.796 5.48a1 1 0 0 1-1.506 0z'/%3E%3C/svg%3E");
+    background-repeat: no-repeat;
+    background-position: right 15px center;
+    background-size: 16px;
+    padding-right: 40px;
+}
+
+/* Стили для input */
 #filters-panel input {
     width: 100%;
     padding: 12px 15px;
@@ -127,10 +162,17 @@ body {
     backdrop-filter: blur(5px);
 }
 
+/* Стили для фокуса */
 #filters-panel select:focus,
 #filters-panel input:focus {
     border-color: rgba(255, 255, 255, 0.5) !important;
     box-shadow: 0 0 0 3px rgba(255, 255, 255, 0.2) !important;
+}
+
+/* Плейсхолдер для input */
+#searchInput::placeholder {
+    color: rgba(255, 255, 255, 0.7) !important;
+    opacity: 1 !important;
 }
 
 .search-input {
