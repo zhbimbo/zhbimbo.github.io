@@ -1,0 +1,22 @@
+body.dark-mode {
+    --primary-color: #1f1f1f;
+    --secondary-color: #ffffff;
+    --accent-color: #ff4500;
+}
+
+#map.dark-mode {
+    filter: invert(80%);
+}
+
+#header.dark-mode {
+    background: rgba(36, 36, 36, 0.9);
+}
+
+#mobile-bottom-sheet.dark-mode {
+    background: #222;
+    color: white;
+}
+
+.balloon-header.dark-mode {
+    background: rgba(50, 50, 50, 0.9);
+}
