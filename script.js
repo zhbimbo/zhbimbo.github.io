@@ -12,9 +12,8 @@ document.addEventListener('DOMContentLoaded', function() {
         constructor(element) {
             this.element = element;
             this.handle = element.querySelector('.swipe-handle');
-            this.content = element.querySelector('.bottom-sheet-content');
             this.state = 'hidden';
-            this.collapsedHeight = window.innerHeight * 0.15;
+            this.collapsedHeight = window.innerHeight * 0.15; // 15% высоты экрана [[6]]
             this.expandedHeight = window.innerHeight * 0.85;
             this.minTranslateY = -this.expandedHeight + this.collapsedHeight;
             this.init();
@@ -64,9 +63,10 @@ document.addEventListener('DOMContentLoaded', function() {
         }
 
         show() {
-            this.element.style.transform = `translateY(${this.collapsedHeight}px)`;
+            this.element.classList.remove('hidden');
             this.element.classList.add('visible');
             this.state = 'collapsed';
+            this.element.style.transform = `translateY(${this.collapsedHeight}px)`;
         }
 
         hide() {
@@ -162,12 +162,13 @@ document.addEventListener('DOMContentLoaded', function() {
             })
             .catch(error => console.error('Ошибка:', error));
 
-        // Обработчики фильтров
-        document.getElementById('toggleFilters').addEventListener('click', () => {
+        // Обработчики
+        document.getElementById('toggleFilters').addEventListener('click', (e) => {
+            e.stopPropagation();
             document.getElementById('filters-panel').classList.toggle('visible');
         });
 
-        document.getElementById('toggleLocation').addEventListener('click', getLocation); // Добавлен обработчик [[1]]
+        document.getElementById('toggleLocation').addEventListener('click', getLocation); // Кнопка геолокации [[1]]
 
         document.addEventListener('click', (e) => {
             if (!e.target.closest('#filters-panel') && !e.target.closest('#toggleFilters')) {
@@ -175,7 +176,7 @@ document.addEventListener('DOMContentLoaded', function() {
             }
         });
 
-        // Фильтрация
+        // Фильтры
         const filterPlacemarks = () => {
             const rating = document.getElementById('ratingFilter').value;
             const district = document.getElementById('districtFilter').value;
@@ -207,7 +208,7 @@ document.addEventListener('DOMContentLoaded', function() {
         return 'https://raw.githubusercontent.com/pointhi/leaflet-color-markers/master/img/marker-icon-red.png';
     };
 
-    // Панели
+    // Мобильная панель
     const openMobilePanel = (placeData) => {
         document.querySelector('.balloon-title').textContent = placeData.name;
         document.querySelector('.balloon-image').src = placeData.photo;
@@ -219,6 +220,7 @@ document.addEventListener('DOMContentLoaded', function() {
         bottomSheet.show();
     };
 
+    // Десктопная панель
     const openDesktopSidebar = (placeData) => {
         document.getElementById('sidebar-title').textContent = placeData.name;
         document.getElementById('sidebar-image').src = placeData.photo;
