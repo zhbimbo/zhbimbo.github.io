@@ -96,19 +96,12 @@ document.addEventListener('DOMContentLoaded', function() {
             this.isDragging = false;
             this.element.style.transition = 'transform 0.3s cubic-bezier(0.25, 0.8, 0.5, 1)';
             const currentTranslateY = this.getCurrentTranslateY();
-            const threshold = this.expandedHeight * 0.3;
-            if (Math.abs(this.velocity) > 0.2) {
-                if (this.velocity > 0) {
-                    this.collapse();
-                } else {
-                    this.expand();
-                }
+
+            // Проверяем, где остановилась панель
+            if (currentTranslateY > -this.collapsedHeight * 0.5) {
+                this.collapse(); // Если панель выше середины, скрываем
             } else {
-                if (currentTranslateY > -threshold) {
-                    this.collapse();
-                } else {
-                    this.expand();
-                }
+                this.expand(); // Если ниже, раскрываем
             }
         }
 
@@ -122,6 +115,7 @@ document.addEventListener('DOMContentLoaded', function() {
         show() {
             this.element.classList.remove('hidden');
             this.element.classList.add('visible');
+            this.element.classList.add('collapsed'); // Новое
             this.state = 'collapsed';
             this.element.style.transform = `translateY(${-this.collapsedHeight}px)`;
         }
@@ -141,6 +135,7 @@ document.addEventListener('DOMContentLoaded', function() {
 
         expand() {
             this.element.style.transform = 'translateY(0)';
+            this.element.classList.remove('collapsed');
             this.element.classList.add('expanded');
             this.state = 'expanded';
         }
@@ -148,6 +143,7 @@ document.addEventListener('DOMContentLoaded', function() {
         collapse() {
             this.element.style.transform = `translateY(${-this.collapsedHeight}px)`;
             this.element.classList.remove('expanded');
+            this.element.classList.add('collapsed');
             this.state = 'collapsed';
         }
 
@@ -155,6 +151,7 @@ document.addEventListener('DOMContentLoaded', function() {
             this.collapsedHeight = window.innerHeight * 0.15;
             this.expandedHeight = window.innerHeight * 0.85;
             this.minTranslateY = -this.expandedHeight + this.collapsedHeight;
+
             if (this.state === 'collapsed') {
                 this.element.style.transform = `translateY(${-this.collapsedHeight}px)`;
             } else if (this.state === 'expanded') {
@@ -199,7 +196,14 @@ document.addEventListener('DOMContentLoaded', function() {
         placemark.events.add('click', (e) => {
             const placeData = e.get('target').properties.get('customData');
             if (isMobile()) {
-                openMobilePanel(placeData);
+                bottomSheet.show(); // Отображаем только заголовок
+                document.querySelector('.balloon-title').textContent = placeData.name;
+                document.querySelector('.balloon-image').src = placeData.photo;
+                document.querySelector('.balloon-address').textContent = placeData.address;
+                document.querySelector('.balloon-phone').textContent = placeData.phone;
+                document.querySelector('.balloon-hours').textContent = placeData.hours;
+                document.querySelector('.balloon-rating').textContent = placeData.description;
+                document.querySelector('.balloon-review-link').href = placeData.reviewLink;
             } else {
                 openDesktopSidebar(placeData);
             }
@@ -224,17 +228,6 @@ document.addEventListener('DOMContentLoaded', function() {
         document.getElementById('sidebar-review-link').href = placeData.reviewLink;
         document.getElementById('desktop-sidebar').classList.remove('hidden');
         document.getElementById('desktop-sidebar').classList.add('visible');
-    };
-
-    const openMobilePanel = (placeData) => {
-        document.querySelector('.balloon-title').textContent = placeData.name;
-        document.querySelector('.balloon-image').src = placeData.photo;
-        document.querySelector('.balloon-address').textContent = placeData.address;
-        document.querySelector('.balloon-phone').textContent = placeData.phone;
-        document.querySelector('.balloon-hours').textContent = placeData.hours;
-        document.querySelector('.balloon-rating').textContent = placeData.description;
-        document.querySelector('.balloon-review-link').href = placeData.reviewLink;
-        bottomSheet.show();
     };
 
     const closeDesktopSidebar = () => {
