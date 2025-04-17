@@ -103,6 +103,7 @@ function createPlacemark(place) {
             iconImageSize: [40, 40],
             iconImageOffset: [-20, -40],
             // Критически важные настройки:
+            interactivityModel: 'default#layer',
             hideIconOnBalloonOpen: false,
             balloonInteractivityModel: 'default#opaque',
             // Добавляем свой класс для анимации
