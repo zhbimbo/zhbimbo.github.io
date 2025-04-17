@@ -555,3 +555,24 @@ body {
         pointer-events: auto !important;
     }
 }
+/* Стилизация поиска */
+.search-input {
+    background: rgba(255, 255, 255, 0.9) !important;
+    border: 2px solid #ff8000 !important;
+    color: #333 !important;
+    padding: 12px 15px !important;
+    border-radius: 12px !important;
+    font-size: 1rem !important;
+    transition: all 0.3s ease !important;
+}
+
+.search-input:focus {
+    outline: none !important;
+    box-shadow: 0 0 0 3px rgba(255, 128, 0, 0.3) !important;
+    border-color: #ff4500 !important;
+}
+
+#searchInput::placeholder {
+    color: #999 !important;
+    opacity: 1 !important;
+}
