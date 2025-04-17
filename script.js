@@ -8,7 +8,17 @@ document.addEventListener('DOMContentLoaded', function() {
         console.error('Yandex Maps API не загружен');
         return;
     }
+    // Добавьте этот блок в конец (после ymaps.ready)
+    if (isMobile) {
+        document.getElementById('map').addEventListener('touchmove', function(e) {
+            e.stopPropagation();
+        }, { passive: true });
 
+        document.addEventListener('gesturestart', function(e) {
+            e.preventDefault();
+        });
+    }
+});
     // 2. Инициализация карты с обработкой ошибок
     ymaps.ready(function() {
         try {
@@ -40,6 +50,13 @@ document.addEventListener('DOMContentLoaded', function() {
                     'scrollZoom',
                     'rightMouseButtonMagnifier'
                 ]);
+            }
+            if (isMobile) {
+                map.behaviors.enable(['multiTouch', 'drag']);
+                map.behaviors.disable('rightMouseButtonMagnifier');
+                map.options.set('suppressMapOpenBlock', true);
+            } else {
+                map.behaviors.enable(['scrollZoom', 'rightMouseButtonMagnifier']);
             }
 
             // Отключаем POI (точки интереса Яндекса)
@@ -117,38 +134,31 @@ function createPlacemark(place) {
             iconImageHref: getIconByRating(rating),
             iconImageSize: [40, 40],
             iconImageOffset: [-20, -40],
-            // Важные настройки для анимации:
             interactivityModel: 'default#layer',
             hideIconOnBalloonOpen: false,
             balloonInteractivityModel: 'default#opaque'
         }
     );
 
-    // Обработчик клика с анимацией
+    // Новый обработчик клика (без getOverlay().getElement())
     placemark.events.add('click', function(e) {
         e.preventDefault();
         const target = e.get('target');
-        const element = target.getOverlay().getElement();
         
-        // Добавляем класс с анимацией
-        element.classList.add('click-effect');
-        
-        // Убираем класс после завершения анимации
+        // Анимация через изменение размера иконки
+        target.options.set('iconImageSize', [36, 36]);
         setTimeout(() => {
-            element.classList.remove('click-effect');
-        }, 400);
+            target.options.set('iconImageSize', [40, 40]);
+        }, 200);
         
-        // Открываем панель
         const placeData = target.properties.get('customData');
         if (isMobile) {
             openMobilePanel(placeData);
         } else {
             openDesktopSidebar(placeData);
         }
-        
         return false;
     });
-
     return placemark;
 }
     // Используем ваши иконки
