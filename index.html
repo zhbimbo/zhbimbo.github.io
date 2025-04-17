@@ -1,4 +1,3 @@
-<!-- index.html -->
 <!DOCTYPE html>
 <html lang="ru">
 <head>
@@ -13,10 +12,10 @@
     <div id="map">
         <div id="header">
             <h1>📍 Карта Кальянного Патруля</h1>
-            <button id="toggleFilters" class="filter-btn">
+            <button id="toggleFilters" class="animated-button">
                 <i class="fas fa-filter"></i>
             </button>
-            <button id="toggleLocation" class="location-btn">
+            <button id="toggleLocation" class="animated-button">
                 <i class="fas fa-compass"></i>
             </button>
         </div>
@@ -37,18 +36,17 @@
         </select>
         <select id="districtFilter">
             <option value="all">📍 Все районы</option>
-            <option value="САО">📍 САО</option>
-            <option value="ЦАО">📍 ЦАО</option>
-            <option value="ЮВАО">📍 ЮВАО</option>
+            <option value="САО">САО</option>
+            <option value="ЦАО">ЦАО</option>
+            <option value="ЮВАО">ЮВАО</option>
         </select>
         <select id="hoursFilter">
             <option value="all">🕒 Любой режим</option>
-            <option value="Круглосуточно">🕒 Круглосуточно</option>
-            <option value="Пн–Вс: 12:00–02:00">🕒 Пн–Вс: 12:00–02:00</option>
-            <option value="Пн–Вс: 12:00–03:00">🕒 Пн–Вс: 12:00–03:00</option>
+            <option value="Круглосуточно">Круглосуточно</option>
+            <option value="Пн–Вс: 12:00–02:00">Пн–Вс: 12:00–02:00</option>
+            <option value="Пн–Вс: 12:00–03:00">Пн–Вс: 12:00–03:00</option>
         </select>
-        <input type="text" id="searchInput" placeholder="🔍 Поиск по названию...">
-        <button onclick="applyFilters()" class="apply-btn animated-button">Применить</button> <!-- Добавлено -->
+        <input type="text" id="searchInput" placeholder="🔍 Поиск по названию..." class="search-input animated-button">
     </div>
 
     <!-- Мобильная панель -->
@@ -74,7 +72,7 @@
 
     <!-- Десктопная панель -->
     <div id="desktop-sidebar" class="hidden">
-        <div id="sidebar-content">
+        <div class="sidebar-content">
             <button id="close-sidebar" class="animated-button">
                 <i class="fas fa-times"></i>
             </button>
