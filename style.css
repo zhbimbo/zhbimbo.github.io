@@ -538,3 +538,20 @@ body {
     animation-timing-function: cubic-bezier(0.25, 0.8, 0.25, 1);
     animation-fill-mode: both;
 }
+/* Предыдущие стили... */
+
+/* ===== Оптимизация для touch-устройств ===== */
+@media (max-width: 767px) {
+    .ymaps-2-1-79-map {
+        touch-action: pan-x pan-y !important;
+    }
+    
+    .ymaps-2-1-79-inner-panes {
+        touch-action: pan-x pan-y !important;
+    }
+    
+    .ymaps-2-1-79-placemark-overlay {
+        touch-action: none;
+        pointer-events: auto !important;
+    }
+}
