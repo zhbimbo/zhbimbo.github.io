@@ -13,6 +13,9 @@ document.addEventListener('DOMContentLoaded', function() {
             controls: []
         });
 
+        // Отключаем всплывающие балуны на всех устройствах
+        map.options.set('suppressMapOpenBlock', true);
+
         // Загрузка данных из JSON
         fetch('data.json')
             .then(response => response.json())
@@ -27,38 +30,40 @@ document.addEventListener('DOMContentLoaded', function() {
             .catch(error => console.error('Ошибка загрузки данных:', error));
     }
 
-    // Создание метки с вашими иконками
+    // Создание метки с отключенными балунами
     function createPlacemark(place) {
         const rating = parseFloat(place.description.split('/')[0]);
         const placemark = new ymaps.Placemark(
             place.coordinates,
             {
                 customData: place,
-                balloonContentHeader: `<div class="balloon-header">
-                    <h3>${place.name}</h3>
-                    <div class="rating-badge">${rating.toFixed(1)}</div>
-                </div>`,
-                balloonContentBody: `<div class="balloon-preview">
-                    <p><b>Район:</b> ${place.district}</p>
-                    <p><b>Режим работы:</b> ${place.hours}</p>
-                </div>`,
-                balloonContentFooter: `<a href="${place.reviewLink}" target="_blank" class="balloon-link">Читать обзор</a>`
+                // Убираем содержимое балуна, так как оно не используется
+                balloonContentHeader: '',
+                balloonContentBody: '',
+                balloonContentFooter: ''
             },
             {
                 iconLayout: 'default#imageWithContent',
                 iconImageHref: getIconByRating(rating),
                 iconImageSize: [40, 40],
                 iconImageOffset: [-20, -40],
-                iconContentOffset: [0, 10],
+                // Отключаем балун
                 balloonCloseButton: false,
-                balloonPanelMaxMapArea: 0,
                 hideIconOnBalloonOpen: false,
-                balloonOffset: [0, -40]
+                // Отключаем открытие балуна при клике
+                balloonInteractivityModel: 'default#opaque'
             }
         );
 
+        // Обработчик клика с предотвращением сбоев
         placemark.events.add('click', function(e) {
-            const placeData = e.get('target').properties.get('customData');
+            e.preventDefault();
+            const target = e.get('target');
+            const placeData = target.properties.get('customData');
+            
+            // Закрываем все возможные открытые балуны
+            map.balloon.close();
+            
             if (isMobile) {
                 openMobilePanel(placeData);
             } else {
@@ -77,9 +82,12 @@ document.addEventListener('DOMContentLoaded', function() {
         return 'icons/star-red.png';
     }
 
-    // Открытие мобильной панели с анимацией
     function openMobilePanel(placeData) {
         const rating = parseFloat(placeData.description.split('/')[0]);
+        
+        // Добавляем проверку на существование элементов
+        const mobileSheet = document.getElementById('mobile-bottom-sheet');
+        if (!mobileSheet) return;
         
         document.querySelector('.balloon-title').textContent = placeData.name;
         document.querySelector('.balloon-image').src = placeData.photo;
@@ -90,16 +98,18 @@ document.addEventListener('DOMContentLoaded', function() {
         document.querySelector('.balloon-review-link').href = placeData.reviewLink;
         document.querySelector('.balloon-rating-badge').textContent = rating.toFixed(1);
         
-        const mobileSheet = document.getElementById('mobile-bottom-sheet');
         mobileSheet.classList.remove('hidden');
         setTimeout(() => {
             mobileSheet.classList.add('visible');
         }, 10);
     }
 
-    // Открытие десктопной панели с анимацией
     function openDesktopSidebar(placeData) {
         const rating = parseFloat(placeData.description.split('/')[0]);
+        
+        // Добавляем проверку на существование элементов
+        const sidebar = document.getElementById('desktop-sidebar');
+        if (!sidebar) return;
         
         document.getElementById('sidebar-title').textContent = placeData.name;
         document.getElementById('sidebar-image').src = placeData.photo;
@@ -110,7 +120,6 @@ document.addEventListener('DOMContentLoaded', function() {
         document.getElementById('sidebar-review-link').href = placeData.reviewLink;
         document.getElementById('sidebar-rating-badge').textContent = rating.toFixed(1);
         
-        const sidebar = document.getElementById('desktop-sidebar');
         sidebar.classList.remove('hidden');
         setTimeout(() => {
             sidebar.classList.add('visible');
