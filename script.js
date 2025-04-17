@@ -88,7 +88,6 @@ function createPlacemark(place) {
 
     return placemark;
 }
-    }
     // Используем ваши иконки
     function getIconByRating(rating) {
         if (rating >= 4) return 'icons/star-green.png';
