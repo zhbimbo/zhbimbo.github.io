@@ -1,3 +1,4 @@
+// script.js
 document.addEventListener('DOMContentLoaded', function() {
     let map;
     let placemarks = [];
@@ -13,7 +14,7 @@ document.addEventListener('DOMContentLoaded', function() {
             this.element = element;
             this.handle = element.querySelector('.swipe-handle');
             this.state = 'hidden';
-            this.collapsedHeight = window.innerHeight * 0.15; // 15% экрана [[6]]
+            this.collapsedHeight = window.innerHeight * 0.15;
             this.expandedHeight = window.innerHeight * 0.85;
             this.minTranslateY = -this.expandedHeight + this.collapsedHeight;
             this.init();
@@ -99,7 +100,8 @@ document.addEventListener('DOMContentLoaded', function() {
     }
 
     // Инициализация BottomSheet
-    const bottomSheet = new BottomSheet(document.getElementById('mobile-bottom-sheet'));
+    const mobileSheet = document.getElementById('mobile-bottom-sheet');
+    const bottomSheet = mobileSheet ? new BottomSheet(mobileSheet) : null;
 
     // Функция геолокации
     function getLocation() {
@@ -108,7 +110,7 @@ document.addEventListener('DOMContentLoaded', function() {
                 (position) => {
                     map.setCenter([position.coords.latitude, position.coords.longitude], 14);
                 },
-                () => alert("Ошибка геолокации")
+                () => alert("Ошибка геолокации, долбоёб [[2]]")
             );
         }
     }
@@ -121,6 +123,10 @@ document.addEventListener('DOMContentLoaded', function() {
             controls: []
         });
 
+        // Отключаем балуны
+        map.balloon.close(); // [[6]]
+        map.events.add('click', () => map.balloon.close());
+
         // Загрузка данных
         fetch('data.json')
             .then(response => response.json())
@@ -130,14 +136,6 @@ document.addEventListener('DOMContentLoaded', function() {
                     const placemark = new ymaps.Placemark(
                         place.coordinates,
                         {
-                            balloonContentBody: `
-                                <img src="${place.photo}" style="max-width:100%; margin-bottom:10px;">
-                                <p><b>Адрес:</b> ${place.address}</p>
-                                <p><b>Телефон:</b> ${place.phone}</p>
-                                <p><b>Режим работы:</b> ${place.hours}</p>
-                                <p><b>Рейтинг:</b> ${place.description}</p>
-                                <a href="${place.reviewLink}" target="_blank">Читать обзор</a>
-                            `,
                             customData: place
                         },
                         {
@@ -159,19 +157,25 @@ document.addEventListener('DOMContentLoaded', function() {
                 });
                 document.getElementById('count').textContent = data.length;
             })
-            .catch(error => console.error('Ошибка:', error));
+            .catch(error => console.error('Ошибка, уебок:', error));
 
-        // Обработчики
+        // Обработчики фильтров
         document.getElementById('toggleFilters').addEventListener('click', (e) => {
             e.stopPropagation();
-            document.getElementById('filters-panel').classList.toggle('visible'); /* [[4]] */
+            const filtersPanel = document.getElementById('filters-panel');
+            if (filtersPanel) {
+                filtersPanel.classList.toggle('visible');
+            }
         });
 
-        document.getElementById('toggleLocation').addEventListener('click', getLocation); /* [[2]] */
+        document.getElementById('toggleLocation').addEventListener('click', getLocation);
 
         document.addEventListener('click', (e) => {
             if (!e.target.closest('#filters-panel') && !e.target.closest('#toggleFilters')) {
-                document.getElementById('filters-panel').classList.remove('visible');
+                const filtersPanel = document.getElementById('filters-panel');
+                if (filtersPanel) {
+                    filtersPanel.classList.remove('visible');
+                }
             }
         });
 
@@ -236,8 +240,21 @@ document.addEventListener('DOMContentLoaded', function() {
     };
     document.getElementById('close-sidebar').addEventListener('click', closeDesktopSidebar);
 
-    // Убираем стандартный балун Яндекс.Карт
-    ymaps.balloon.close();
+    // Исправление ошибок
+    if (!bottomSheet) {
+        console.error("Мобильная панель не инициализирована, долбоеб [[4]]");
+    }
 
-    /* очко ставлю */
+    // Убедитесь, что элементы существуют [[3]]
+    const sidebar = document.getElementById('desktop-sidebar');
+    if (!sidebar) {
+        console.error("Десктопной панели нет, тупица [[5]]");
+    }
+
+    // Функция фильтров
+    const filterPlacemarks = () => {
+        // ... код ...
+    };
+
+    // очко ставлю
 });
