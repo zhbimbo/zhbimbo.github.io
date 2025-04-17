@@ -5,6 +5,7 @@
 }
 body {
     font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    overflow: hidden;
     height: 100vh;
     width: 100vw;
 }
@@ -15,30 +16,42 @@ body {
     position: relative;
 }
 
-/* Шапка с оранжевым градиентом [[5]] */
+/* Шапка */
 #header {
     position: absolute;
-    top: 10px; /* Уменьшена высота [[6]] */
+    top: 15px; /* Уменьшена высота [[3]] */
     left: 50%;
     transform: translateX(-50%);
     z-index: 1000;
     background: linear-gradient(45deg, #ff4500, #ff8000); /* Оранжевый градиент [[5]] */
-    padding: 5px 10px; /* Сделана меньше [[6]] */
-    border-radius: 5px;
-    box-shadow: 0 1px 5px rgba(0,0,0,0.2);
-}
-@keyframes appear {
-    from { opacity: 0; }
-    to { opacity: 1; }
+    padding: 5px 12px;
+    border-radius: 8px;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.2);
 }
 
-@keyframes slideIn {
-    from { transform: translateX(-100%); }
-    to { transform: translateX(0); }
-}
 #header h1 {
     font-size: 1rem;
     color: white;
+}
+
+/* Панель фильтров */
+#filters-panel {
+    position: absolute;
+    top: 80px;
+    left: 50%;
+    transform: translateX(-50%);
+    z-index: 1000;
+    background: rgba(255,255,255,0.95);
+    padding: 15px;
+    border-radius: 10px;
+    box-shadow: 0 4px 15px rgba(0,0,0,0.2);
+    display: none;
+    transition: transform 0.3s ease;
+}
+
+#filters-panel.visible {
+    display: flex;
+    transform: translateY(0);
 }
 
 /* Мобильная панель */
@@ -48,14 +61,12 @@ body {
     left: 0;
     right: 0;
     height: 85vh;
-    background: linear-gradient(135deg, #ff4500, #ff8000);
+    background: white;
     border-radius: 20px 20px 0 0;
     box-shadow: 0 -5px 20px rgba(0,0,0,0.2);
+    transform: translateY(100%);
+    transition: transform 0.3s cubic-bezier(0.25, 0.8, 0.5, 1);
     z-index: 2000;
-    animation: appear 0.3s ease; /* Анимация появления [[6]] */
-}
-.balloon-image {
-    max-height: 100px !important; /* Уменьшаем фото [[7]] */
 }
 
 #mobile-bottom-sheet.visible {
@@ -73,51 +84,43 @@ body {
     top: 0;
     width: 350px;
     height: 100%;
-    background: linear-gradient(225deg, #ff4500, #ff8000);
+    background: white;
+    transition: left 0.3s ease;
     z-index: 2000;
-    border-radius: 15px;
-    box-shadow: 0 0 30px rgba(0,0,0,0.2);
-    animation: slideIn 0.5s ease;
-}
-
-#sidebar-image {
-    max-height: 150px !important; /* Уменьшаем фото [[7]] */
+    box-shadow: 2px 0 15px rgba(0,0,0,0.15);
 }
 
 #desktop-sidebar.visible {
     left: 0;
 }
 
-/* Фильтры */
-#filters-panel {
-    position: absolute;
-    top: 80px;
-    left: 50%;
-    transform: translateX(-50%);
-    z-index: 1000;
-    background: white;
-    padding: 20px;
-    border-radius: 15px;
-    box-shadow: 0 4px 20px rgba(0,0,0,0.2);
-    transform: translateY(-100%);
-    transition: transform 0.3s ease;
-}
-
-#filters-panel.visible {
-    transform: translateY(0);
-}
-
 /* Анимация кнопок */
 .animated-button {
-    transition: transform 0.2s, box-shadow 0.2s;
+    transition: transform 0.2s, color 0.2s;
 }
 
 .animated-button:hover {
-    transform: scale(1.05);
-    box-shadow: 0 0 10px rgba(255,255,255,0.5);
+    transform: scale(1.1);
+    color: #ff4500;
 }
 
-/* Скрываем скрытые элементы */
+/* Фото */
+.balloon-image, #sidebar-image {
+    width: 100%;
+    border-radius: 8px;
+    margin-bottom: 10px;
+}
+
+/* Ошибки и скрытые элементы */
 .hidden {
     display: none !important;
+}
+
+/* Стили для доступности [[8]] */
+#header {
+    outline: none;
+}
+
+#filters-panel {
+    accessibilityRole: "dialog"; /* Для экранов чтения [[8]] */
 }
