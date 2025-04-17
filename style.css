@@ -1,3 +1,4 @@
+/* ===== ОСНОВНЫЕ СТИЛИ ===== */
 * {
     box-sizing: border-box;
     margin: 0;
@@ -18,7 +19,7 @@ body {
     position: relative;
 }
 
-/* Шапка с идеальным центрированием */
+/* Шапка */
 #header {
     position: absolute;
     top: 20px;
@@ -26,7 +27,7 @@ body {
     right: 0;
     margin: 0 auto;
     z-index: 1000;
-    background: linear-gradient(45deg, #ff4500, #ff8000);
+    background: rgba(255, 69, 0, 0.85);
     padding: 12px 20px;
     border-radius: 20px;
     box-shadow: 0 5px 15px rgba(0,0,0,0.3);
@@ -35,21 +36,9 @@ body {
     justify-content: center;
     gap: 15px;
     backdrop-filter: blur(10px);
-    background: rgba(255, 69, 0, 0.85);
     max-width: 90%;
     width: auto;
     white-space: nowrap;
-}
-
-#header h1 {
-    font-size: 1.2rem;
-    color: white;
-    margin: 0;
-    font-weight: 600;
-    text-shadow: 0 2px 4px rgba(0,0,0,0.2);
-    max-width: 60%;
-    overflow: hidden;
-    text-overflow: ellipsis;
 }
 /* Статистика */
 #stats-overlay {
@@ -209,7 +198,7 @@ body {
     box-shadow: 0 4px 8px rgba(0,0,0,0.2);
 }
 
-/* Десктопная панель */
+/* Десктопная панель с исправленным крестиком */
 #desktop-sidebar {
     position: fixed;
     left: -400px;
@@ -222,295 +211,83 @@ body {
     z-index: 2000;
     padding: 30px;
     overflow-y: auto;
-    will-change: transform;
 }
 
-#desktop-sidebar.visible {
-    left: 0;
-    animation: slideInLeft 0.5s cubic-bezier(0.25, 0.8, 0.25, 1);
-}
-
-.sidebar-content {
-    position: relative;
-    height: 100%;
-}
-
-#sidebar-title {
-    font-size: 1.8rem;
-    margin-bottom: 25px;
-    color: #333;
-    font-weight: 600;
-}
-
-#sidebar-image {
-    width: 100%;
-    height: 200px;
-    object-fit: cover;
-    border-radius: 15px;
-    margin: 20px 0;
-    box-shadow: 0 4px 12px rgba(0,0,0,0.1);
-}
-
-.sidebar-info {
-    margin: 25px 0;
-}
-
-.sidebar-info p {
-    margin-bottom: 15px;
-    font-size: 1rem;
-    display: flex;
-    align-items: center;
-    gap: 10px;
-}
-
-.sidebar-info i {
-    color: #ff8000;
-    width: 20px;
-    text-align: center;
+#close-sidebar {
+    position: absolute;
+    top: 20px;
+    left: 20px;
+    z-index: 1001;
+    background: rgba(255,255,255,0.9) !important;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+    width: 32px;
+    height: 32px;
 }
 
 .rating-badge {
-    position: absolute;
-    top: 30px;
-    right: 30px;
-    background: linear-gradient(45deg, #ff4500, #ff8000);
-    color: white;
-    width: 50px;
-    height: 50px;
-    border-radius: 50%;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    font-weight: bold;
-    font-size: 1.2rem;
-    box-shadow: 0 4px 12px rgba(0,0,0,0.2);
+    z-index: 1000;
+    right: 20px;
+    top: 20px;
 }
 
-.review-button {
-    display: block;
-    padding: 12px 25px;
-    background: linear-gradient(45deg, #ff4500, #ff8000);
-    color: white;
-    text-decoration: none;
-    border-radius: 12px;
-    font-weight: 500;
-    text-align: center;
-    margin-top: 30px;
-    box-shadow: 0 4px 12px rgba(255, 128, 0, 0.3);
-    transition: transform 0.3s, box-shadow 0.3s;
+/* ===== АНИМАЦИИ МАРКЕРОВ ===== */
+.ymaps-2-1-79-placemark-overlay {
+    transform-origin: bottom center;
+    transition: transform 0.3s ease;
+    will-change: transform;
 }
 
-.review-button:hover {
-    transform: translateY(-2px);
-    box-shadow: 0 6px 16px rgba(255, 128, 0, 0.4);
-}
-
-/* Кнопки */
-.animated-button {
-    background: none;
-    border: none;
-    color: white;
-    font-size: 1rem;
-    cursor: pointer;
-    transition: all 0.3s;
-    width: 32px;
-    height: 32px;
-    border-radius: 50%;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    background: rgba(255,255,255,0.2);
-}
-
-.animated-button:hover {
-    transform: scale(1.1);
-    background: rgba(255,255,255,0.3);
-}
-
-.close-balloon {
-    color: #333 !important;
-    background: rgba(0,0,0,0.05) !important;
-}
-
-/* Анимации */
-@keyframes slideUp {
-    from { transform: translateY(100%); }
-    to { transform: translateY(0); }
-}
-
-@keyframes slideInLeft {
-    from { transform: translateX(-100%); }
-    to { transform: translateX(0); }
-}
-
-@keyframes fadeInUp {
-    from { 
-        opacity: 0;
-        transform: translate(-50%, 20px);
-    }
-    to { 
-        opacity: 1;
-        transform: translate(-50%, 0);
+/* Анимация при наведении (только десктоп) */
+@media (hover: hover) {
+    .ymaps-2-1-79-placemark-overlay:hover {
+        transform: scale(1.15);
+        filter: drop-shadow(0 0 10px rgba(255, 165, 0, 0.6));
     }
 }
 
-/* Медиа-запросы */
-@media (min-width: 768px) {
-    #mobile-bottom-sheet {
+/* Анимация при клике */
+@keyframes markerPulse {
+    0% { transform: scale(1); }
+    50% { transform: scale(1.2); }
+    100% { transform: scale(1); }
+}
+
+.ymaps-2-1-79-placemark-overlay.active {
+    animation: markerPulse 0.5s ease;
+}
+
+/* ===== ОТКЛЮЧЕНИЕ СТАНДАРТНЫХ БАЛУНОВ ===== */
+.ymaps-2-1-79-balloon,
+.ymaps-2-1-79-balloon__layout,
+.ymaps-2-1-79-balloon__content {
+    display: none !important;
+}
+
+/* ===== МЕДИА-ЗАПРОСЫ ===== */
+@media (max-width: 767px) {
+    #header {
+        top: 10px;
+        padding: 8px 15px;
+    }
+    #header h1 {
+        font-size: 0.9rem;
+    }
+    .animated-button {
+        width: 30px;
+        height: 30px;
+        font-size: 0.9rem;
+    }
+    #desktop-sidebar {
         display: none;
     }
-    
-    #header {
-        top: 30px;
-        padding: 15px 25px;
-    }
-    
-    #header h1 {
-        font-size: 1.3rem;
-    }
 }
 
-    .animated-button {
-        width: 40px;
-        height: 40px;
-        font-size: 1.2rem;
-    }
-}
-
-@media (max-width: 767px) {
-    #desktop-sidebar {
+@media (min-width: 768px) {
+    #mobile-bottom-sheet {
         display: none;
     }
 }
 
 .hidden {
     display: none !important;
-}
-    #header {
-        top: 10px;
-        padding: 8px 15px;
-        max-width: 95%;
-    }
-    
-    #header h1 {
-        font-size: 0.9rem;
-    }
-    
-    .animated-button {
-        width: 30px;
-        height: 30px;
-        font-size: 0.9rem;
-    }
-}
-/* ===== Добавьте эти правила в конец файла ===== */
-
-/* Полное отключение стандартных балунов */
-.ymaps-2-1-79-balloon,
-.ymaps-2-1-79-balloon__layout,
-.ymaps-2-1-79-balloon__content {
-    display: none !important;
-    opacity: 0 !important;
-    pointer-events: none !important;
-}
-
-/* Оптимизация анимаций панелей */
-#desktop-sidebar {
-    will-change: transform;
-    backface-visibility: hidden;
-    transform: translateZ(0);
-}
-
-#mobile-bottom-sheet {
-    will-change: transform;
-    backface-visibility: hidden;
-    transform: translateZ(0);
-}
-
-/* Фикс для предотвращения мерцания */
-.ymaps-2-1-79-placemark-overlay {
-    transform: translateZ(0);
-}
-.ymaps-2-1-79-placemark {
-    transition: 
-        transform 0.3s cubic-bezier(0.18, 0.89, 0.32, 1.28),
-        filter 0.2s ease;
-    transform-origin: bottom center;
-}
-
-/* Анимации маркеров через CSS */
-.ymaps-2-1-79-placemark {
-    transition: transform 0.3s ease, filter 0.2s ease;
-    transform-origin: bottom center;
-}
-
-/* Эффект при наведении (только для десктопа) */
-@media (hover: hover) {
-    .ymaps-2-1-79-placemark:hover {
-        transform: scale(1.2);
-        filter: drop-shadow(0 0 8px rgba(255, 165, 0, 0.7));
-    }
-}
-
-/* Эффект при клике */
-.ymaps-2-1-79-placemark:active {
-    transform: scale(0.9);
-}
-/* 1. Анимация при клике (пульсация) */
-.ymaps-2-1-79-placemark__content {
-    animation: markerClick 0.4s ease-out;
-}
-
-@keyframes markerClick {
-    0% { transform: scale(1); }
-    50% { transform: scale(1.3); }
-    100% { transform: scale(1); }
-}
-
-/* 2. Эффект при наведении (только для десктопа) */
-@media (hover: hover) {
-    .ymaps-2-1-79-placemark:hover .ymaps-2-1-79-placemark__content {
-        transform: scale(1.15);
-        transition: transform 0.2s ease;
-    }
-}
-/* ===== Анимации маркеров ===== */
-/* Базовый стиль для всех маркеров */
-.ymaps-2-1-79-placemark-overlay {
-  transition: transform 0.3s ease, filter 0.2s ease;
-  transform-origin: bottom center;
-}
-
-/* Анимация при наведении (только для десктопа) */
-@media (hover: hover) {
-  .ymaps-2-1-79-placemark-overlay:hover {
-    transform: scale(1.15);
-    filter: drop-shadow(0 0 10px rgba(255, 165, 0, 0.7));
-  }
-}
-
-/* Анимация при клике */
-@keyframes markerClick {
-  0% { transform: scale(1); }
-  50% { transform: scale(1.2); }
-  100% { transform: scale(1); }
-}
-
-.ymaps-2-1-79-placemark-overlay.clicked {
-  animation: markerClick 0.5s ease;
-}
-
-/* ===== Исправление десктопной панели ===== */
-#close-sidebar {
-  position: absolute;
-  top: 20px;
-  left: 20px;
-  z-index: 1001; /* Важно: должен быть выше rating-badge */
-  background: rgba(255,255,255,0.9) !important;
-  box-shadow: 0 2px 5px rgba(0,0,0,0.2);
-}
-
-.rating-badge {
-  z-index: 1000; /* Должен быть ниже крестика */
-  right: 20px;
-  top: 20px;
 }
