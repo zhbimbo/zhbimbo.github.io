@@ -7,15 +7,28 @@ document.addEventListener('DOMContentLoaded', function() {
     const isMobile = () => 
         /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent);
 
-    // Отключаем балуны Яндекс.Карт [[1]]
+    // Инициализация карты
     ymaps.ready(() => {
         map = new ymaps.Map('map', {
             center: [55.7558, 37.6173],
             zoom: 12,
             controls: [],
-            balloonAutoOpen: false, // [[1]]
+            balloonAutoOpen: false, // Отключаем балуны [[1]]
             hintAutoOpen: false
         });
+
+        // Загрузка данных
+        fetch('data.json')
+            .then(response => response.json())
+            .then(data => {
+                data.forEach(place => {
+                    const placemark = createPlacemark(place);
+                    placemarks.push(placemark);
+                    map.geoObjects.add(placemark);
+                });
+                document.getElementById('count').textContent = data.length;
+            })
+            .catch(error => console.error('Ошибка:', error));
     });
 
     // Класс BottomSheet
@@ -24,7 +37,7 @@ document.addEventListener('DOMContentLoaded', function() {
             this.element = element;
             this.handle = element.querySelector('.swipe-handle');
             this.state = 'hidden';
-            this.collapsedHeight = window.innerHeight * 0.15; // [[7]]
+            this.collapsedHeight = window.innerHeight * 0.15;
             this.expandedHeight = window.innerHeight * 0.85;
             this.minTranslateY = -this.expandedHeight + this.collapsedHeight;
             this.init();
@@ -74,9 +87,10 @@ document.addEventListener('DOMContentLoaded', function() {
         }
 
         show() {
-            this.element.style.transform = `translateY(${this.collapsedHeight}px)`;
+            this.element.classList.remove('hidden');
             this.element.classList.add('visible');
             this.state = 'collapsed';
+            this.element.style.transform = `translateY(${this.collapsedHeight}px)`;
         }
 
         hide() {
@@ -111,11 +125,21 @@ document.addEventListener('DOMContentLoaded', function() {
 
     // Инициализация BottomSheet
     const mobileSheetElement = document.getElementById('mobile-bottom-sheet');
-    if (mobileSheetElement) {
-        const bottomSheet = new BottomSheet(mobileSheetElement);
+    const bottomSheet = mobileSheetElement ? new BottomSheet(mobileSheetElement) : null;
+
+    // Функция геолокации
+    function getLocation() {
+        if (navigator.geolocation) {
+            navigator.geolocation.getCurrentPosition(
+                (position) => {
+                    map.setCenter([position.coords.latitude, position.coords.longitude], 14);
+                },
+                () => alert("Ошибка геолокации [[5]]")
+            );
+        }
     }
 
-    // Функции для работы с картой
+    // Маркеры
     const getIconByRating = (rating) => {
         if (rating >= 4) return 'https://raw.githubusercontent.com/pointhi/leaflet-color-markers/master/img/marker-icon-green.png';
         if (rating >= 3) return 'https://raw.githubusercontent.com/pointhi/leaflet-color-markers/master/img/marker-icon-gold.png';
@@ -127,15 +151,6 @@ document.addEventListener('DOMContentLoaded', function() {
         const placemark = new ymaps.Placemark(
             place.coordinates,
             {
-                balloonContentHeader: `<b>${place.name}</b>`,
-                balloonContentBody: `
-                    <img src="${place.photo}" style="max-width:200px;margin-bottom:10px;">
-                    <p><b>Адрес:</b> ${place.address}</p>
-                    <p><b>Телефон:</b> ${place.phone}</p>
-                    <p><b>Режим работы:</b> ${place.hours}</p>
-                    <p><b>Рейтинг:</b> ${place.description}</p>
-                    <a href="${place.reviewLink}" target="_blank">Читать обзор</a>
-                `,
                 customData: place
             },
             {
@@ -151,13 +166,6 @@ document.addEventListener('DOMContentLoaded', function() {
             } else {
                 openDesktopSidebar(placeData);
             }
-            if (selectedPlacemark) {
-                selectedPlacemark.options.set('iconImageSize', [30, 30]);
-            }
-            e.get('target').options.set('iconImageSize', [40, 40]);
-            selectedPlacemark = e.get('target');
-            map.panTo(e.get('target').geometry.getCoordinates());
-            e.preventDefault();
         });
         return placemark;
     };
@@ -172,14 +180,11 @@ document.addEventListener('DOMContentLoaded', function() {
             hours: document.getElementById('sidebar-hours'),
             rating: document.getElementById('sidebar-rating'),
             link: document.getElementById('sidebar-review-link'),
-            container: document.getElementById('desktop-sidebar')
+            sidebar: document.getElementById('desktop-sidebar')
         };
 
-        // Проверяем все элементы на существование [[4]]
-        if (Object.values(elements).some(el => !el)) {
-            console.error("Элементы десктопной панели не найдены [[2]]");
-            return;
-        }
+        // Проверка существования элементов [[4]]
+        if (!elements.sidebar) return;
 
         elements.title.textContent = placeData.name;
         elements.image.src = placeData.photo;
@@ -188,15 +193,13 @@ document.addEventListener('DOMContentLoaded', function() {
         elements.hours.textContent = placeData.hours;
         elements.rating.textContent = placeData.description;
         elements.link.href = placeData.reviewLink;
-        elements.container.classList.remove('hidden');
-        elements.container.classList.add('visible');
+        elements.sidebar.classList.remove('hidden');
+        elements.sidebar.classList.add('visible');
     };
 
     // Мобильная панель
     const openMobilePanel = (placeData) => {
-        const balloonTitle = document.querySelector('.balloon-title');
-        if (!balloonTitle) return;
-        balloonTitle.textContent = placeData.name;
+        document.querySelector('.balloon-title').textContent = placeData.name;
         document.querySelector('.balloon-image').src = placeData.photo;
         document.querySelector('.balloon-address').textContent = placeData.address;
         document.querySelector('.balloon-phone').textContent = placeData.phone;
@@ -205,16 +208,6 @@ document.addEventListener('DOMContentLoaded', function() {
         document.querySelector('.balloon-review-link').href = placeData.reviewLink;
         bottomSheet.show();
     };
-
-    // Закрытие панелей
-    const closeDesktopSidebar = () => {
-        const sidebar = document.getElementById('desktop-sidebar');
-        if (sidebar) {
-            sidebar.classList.remove('visible');
-            sidebar.classList.add('hidden');
-        }
-    };
-    document.getElementById('close-sidebar').addEventListener('click', closeDesktopSidebar);
 
     // Фильтры
     const filterPlacemarks = () => {
@@ -231,84 +224,47 @@ document.addEventListener('DOMContentLoaded', function() {
                 (districtFilter === 'all' || data.district === districtFilter) &&
                 (hoursFilter === 'all' || data.hours === hoursFilter) &&
                 data.name.toLowerCase().includes(searchQuery);
+
             placemark.options.set('visible', show);
         });
     };
 
-    // Инициализация карты
-    ymaps.ready(() => {
-        if (!map) {
-            console.error("Карта не инициализирована [[9]]");
-            return;
-        }
-
-        // Загрузка данных
-        fetch('data.json')
-            .then(response => response.json())
-            .then(data => {
-                data.forEach(place => {
-                    const placemark = createPlacemark(place);
-                    placemarks.push(placemark);
-                    map.geoObjects.add(placemark);
-                });
-                document.getElementById('count').textContent = data.length;
-            })
-            .catch(error => console.error('Ошибка:', error));
-
-        // Обработчики фильтров
+    // Обработчики
+    document.getElementById('toggleFilters').addEventListener('click', (e) => {
+        e.stopPropagation();
         const filtersPanel = document.getElementById('filters-panel');
         if (filtersPanel) {
-            document.getElementById('toggleFilters').addEventListener('click', (e) => {
-                e.stopPropagation();
-                filtersPanel.classList.toggle('visible');
-            });
-
-            document.addEventListener('click', (e) => {
-                if (!e.target.closest('#filters-panel') && !e.target.closest('#toggleFilters')) {
-                    filtersPanel.classList.remove('visible');
-                }
-            });
+            filtersPanel.classList.toggle('visible');
         }
-
-        // Слушатели фильтров
-        document.getElementById('ratingFilter').addEventListener('change', filterPlacemarks);
-        document.getElementById('districtFilter').addEventListener('change', filterPlacemarks);
-        document.getElementById('hoursFilter').addEventListener('change', filterPlacemarks);
-        document.getElementById('searchInput').addEventListener('input', filterPlacemarks);
     });
 
-    // Проверка элементов
-    const checkElements = () => {
-        const required = [
-            'filters-panel',
-            'mobile-bottom-sheet',
-            'desktop-sidebar',
-            'sidebar-title',
-            'sidebar-image',
-            'sidebar-address',
-            'sidebar-phone',
-            'sidebar-hours',
-            'sidebar-rating',
-            'sidebar-review-link'
-        ];
-        required.forEach(id => {
-            if (!document.getElementById(id)) {
-                console.error(`Элемент ${id} не найден [[4]]`);
+    document.getElementById('toggleLocation').addEventListener('click', getLocation); // [[5]]
+
+    document.addEventListener('click', (e) => {
+        if (!e.target.closest('#filters-panel') && !e.target.closest('#toggleFilters')) {
+            const filtersPanel = document.getElementById('filters-panel');
+            if (filtersPanel) {
+                filtersPanel.classList.remove('visible');
             }
-        });
-    };
-    checkElements();
+        }
+    });
 
-    // Анимация иконок
-    const applyButtonAnimations = () => {
-        document.querySelectorAll('.animated-button').forEach(btn => {
-            btn.addEventListener('mouseover', () => btn.style.transform = 'scale(1.1)');
-            btn.addEventListener('mouseout', () => btn.style.transform = 'scale(1)');
-        });
-    };
-    applyButtonAnimations(); // [[6]]
+    // Слушатели фильтров
+    document.getElementById('ratingFilter').addEventListener('change', filterPlacemarks);
+    document.getElementById('districtFilter').addEventListener('change', filterPlacemarks);
+    document.getElementById('hoursFilter').addEventListener('change', filterPlacemarks);
+    document.getElementById('searchInput').addEventListener('input', filterPlacemarks);
 
-    // Убедитесь, что карта существует [[9]]
+    // Закрытие десктопной панели
+    document.getElementById('close-sidebar').addEventListener('click', () => {
+        const sidebar = document.getElementById('desktop-sidebar');
+        if (sidebar) {
+            sidebar.classList.remove('visible');
+            sidebar.classList.add('hidden');
+        }
+    });
+
+    // Проверка инициализации карты [[9]]
     if (!map) {
         console.error("Карта не инициализирована, долбоёб [[3]]");
     }
