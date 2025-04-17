@@ -5,28 +5,28 @@
     <meta charset="UTF-8">
     <title>Кальянный Патруль</title>
     <script src="https://api-maps.yandex.ru/2.1/?apikey=767b6b86-29dc-4346-b485-2ec344f0e567&lang=ru_RU" type="text/javascript"></script>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
     <link rel="stylesheet" href="style.css">
-    <link rel="stylesheet" href="dark-mode.css">
 </head>
 <body class="light-mode">
+    <!-- Cookie-уведомление [[3]] -->
+    <div id="cookie-consent" class="hidden">
+        Мы используем cookies и геолокацию для улучшения опыта. <button onclick="acceptCookies()">Принять</button>
+    </div>
+
     <!-- Геолокация -->
-    <div class="fixed-right-bottom">
-        <button onclick="getLocation()" class="animated-button">
-            <i class="fas fa-compass"></i>
-        </button>
-    </div>
-    
+    <button onclick="getLocation()" class="fixed-right-bottom animated-button">
+        <i class="fas fa-compass"></i>
+    </button>
+
     <!-- Темная тема -->
-    <div class="fixed-right-bottom" style="bottom: 120px;">
-        <button onclick="toggleTheme()" class="animated-button">
-            <i class="fas fa-moon"></i>
-        </button>
-    </div>
+    <button onclick="toggleTheme()" class="fixed-right-bottom animated-button" style="bottom: 120px;">
+        <i class="fas fa-moon"></i>
+    </button>
 
     <div id="map">
         <div id="header">
-            <h1>📍 Кальянный Патруль</h1>
+            <h1>📍 Карта Кальянного Патруля</h1>
             <button id="toggleFilters" class="animated-button">
                 <i class="fas fa-filter"></i>
             </button>
@@ -36,13 +36,16 @@
         </div>
     </div>
 
-    <!-- Фильтры -->
+    <!-- Панель фильтров -->
     <div id="filters-panel" class="hidden">
-        <div class="filter-slider">
-            <span>Рейтинг:</span>
-            <div id="ratingSlider"></div>
-            <div id="ratingDisplay">0+</div>
-        </div>
+        <select id="ratingFilter">
+            <option value="all">⭐ Все рейтинги</option>
+            <option value="5">⭐ 5+</option>
+            <option value="4">⭐ 4+</option>
+            <option value="3">⭐ 3+</option>
+            <option value="2">⭐ 2+</option>
+            <option value="1">⭐ 1+</option>
+        </select>
         <select id="districtFilter">
             <option value="all">📍 Все районы</option>
             <option value="САО">📍 САО</option>
@@ -88,14 +91,13 @@
             <h2 id="sidebar-title"></h2>
             <img id="sidebar-image" alt="Фото заведения">
             <p><b>Адрес:</b> <span id="sidebar-address"></span></p>
-            <p><b>Телефон:</b> <span id="sidebar-phone"></span></p>
+            <p><b>Телефон:</b> <span class="balloon-phone"></span></p>
             <p><b>Режим работы:</b> <span id="sidebar-hours"></span></p>
             <p><b>Рейтинг:</b> <span id="sidebar-rating"></span></p>
             <a id="sidebar-review-link" target="_blank">Читать обзор</a>
         </div>
     </div>
 
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/noUiSlider/15.7.0/nouislider.min.js"></script>
     <script src="script.js"></script>
 </body>
 </html>
