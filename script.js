@@ -4,7 +4,7 @@ document.addEventListener('DOMContentLoaded', function() {
     let selectedPlacemark = null;
     let cookiesAccepted = false;
 
-    // Cookie-уведомление [[3]]
+    // Cookie-уведомление [[2]]
     if (!localStorage.getItem('cookiesAccepted')) {
         document.getElementById('cookie-consent').classList.remove('hidden');
     }
@@ -14,13 +14,6 @@ document.addEventListener('DOMContentLoaded', function() {
         document.getElementById('cookie-consent').classList.add('hidden');
     }
 
-    // Темная тема [[5]]
-    function toggleTheme() {
-        document.body.classList.toggle('dark-mode');
-        document.getElementById('header').classList.toggle('dark-mode');
-        document.getElementById('mobile-bottom-sheet').classList.toggle('dark-mode');
-    }
-
     // Геолокация [[7]]
     function getLocation() {
         if (navigator.geolocation && cookiesAccepted) {
@@ -28,7 +21,7 @@ document.addEventListener('DOMContentLoaded', function() {
                 (position) => {
                     map.setCenter([position.coords.latitude, position.coords.longitude], 14);
                 },
-                () => alert("Геолокация недоступна :(")
+                () => alert("Геолокация недоступна")
             );
         }
     }
@@ -111,7 +104,6 @@ document.addEventListener('DOMContentLoaded', function() {
         }
     }
 
-    // Инициализация BottomSheet
     const bottomSheet = new BottomSheet(document.getElementById('mobile-bottom-sheet'));
 
     // Фильтры
@@ -124,7 +116,7 @@ document.addEventListener('DOMContentLoaded', function() {
         placemarks.forEach(placemark => {
             const data = placemark.properties.get('customData');
             const show = 
-                (rating === 'all' || data.description >= rating) &&
+                (rating === 'all' || data.description.split('/')[0] >= rating) && // Исправлено [[5]]
                 (district === 'all' || data.district === district) &&
                 (hours === 'all' || data.hours === hours) &&
                 data.name.toLowerCase().includes(search);
@@ -153,7 +145,7 @@ document.addEventListener('DOMContentLoaded', function() {
             .then(response => response.json())
             .then(data => {
                 data.forEach(place => {
-                    const rating = parseFloat(place.description.match(/\d\.\d|\d/)[0]);
+                    const rating = parseFloat(place.description.split('/')[0]);
                     const placemark = new ymaps.Placemark(
                         place.coordinates,
                         {
@@ -184,7 +176,10 @@ document.addEventListener('DOMContentLoaded', function() {
                 });
                 document.getElementById('count').textContent = data.length;
             })
-            .catch(error => console.error("Ошибка загрузки данных:", error));
+            .catch(error => {
+                console.error("Ошибка загрузки данных:", error);
+                document.getElementById('count').textContent = "Ошибка: " + error.message;
+            });
 
         // Обработчики
         document.getElementById('toggleFilters').addEventListener('click', () => {
@@ -192,7 +187,7 @@ document.addEventListener('DOMContentLoaded', function() {
         });
 
         document.addEventListener('click', (e) => {
-            if (!e.target.closest('#filters-panel')) {
+            if (!e.target.closest('#filters-panel') && !e.target.closest('#toggleFilters')) {
                 document.getElementById('filters-panel').classList.remove('visible');
             }
         });
