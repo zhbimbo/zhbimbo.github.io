@@ -52,43 +52,42 @@ function createPlacemark(place) {
     );
 
     // Анимация при клике
-    placemark.events.add('click', function(e) {
-        try {
-            e.preventDefault();
-            const target = e.get('target');
-            const placeData = target.properties.get('customData');
+placemark.events.add('click', function(e) {
+    try {
+        e.preventDefault();
+        const target = e.get('target');
+        const placeData = target.properties.get('customData');
 
-            // Сбрасываем анимацию у всех маркеров
-            placemarks.forEach(function(pm) {
-                pm.options.set('iconImageHref', getIconByRating(
-                    parseFloat(pm.properties.get('customData').description.split('/')[0])
-                );
-            });
+        // Сбрасываем анимацию у всех маркеров
+        placemarks.forEach(pm => {
+            pm.options.set('iconImageHref', getIconByRating(
+                parseFloat(pm.properties.get('customData').description.split('/')[0])
+            );
+        });
 
-            // Анимируем текущий маркер
-            target.options.set('iconImageHref', 'icons/star-orange.png');
-            
-            // Открываем панель
-            if (isMobile) {
-                openMobilePanel(placeData);
-            } else {
-                openDesktopSidebar(placeData);
-            }
-
-            // Возвращаем стандартный вид через 1.5 секунды
-            setTimeout(function() {
-                target.options.set({
-                    iconImageHref: getIconByRating(rating),
-                    preset: ''
-                });
-            }, 1500);
-
-            return false;
-        } catch (error) {
-            console.error('Error in placemark click handler:', error);
-            return false;
+        // Анимируем текущий маркер
+        target.options.set('iconImageHref', 'icons/star-orange.png');
+        
+        // Открываем соответствующую панель
+        if (isMobile) {
+            openMobilePanel(placeData);
+        } else {
+            openDesktopSidebar(placeData);
         }
-    });
+
+        // Возвращаем стандартную иконку через 1.5 секунды
+        setTimeout(() => {
+            target.options.set('iconImageHref', getIconByRating(
+                parseFloat(placeData.description.split('/')[0])
+            ));
+        }, 1500);
+
+        return false;
+    } catch (error) {
+        console.error('Ошибка в обработчике маркера:', error);
+        return false;
+    }
+});
 
     return placemark;
 }
