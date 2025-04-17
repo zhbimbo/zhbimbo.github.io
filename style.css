@@ -576,3 +576,11 @@ body {
     color: #999 !important;
     opacity: 1 !important;
 }
+/* Полное отключение стандартных балунов */
+.ymaps-2-1-79-balloon, 
+.ymaps-2-1-79-balloon__layout, 
+.ymaps-2-1-79-balloon__content {
+    display: none !important;
+    opacity: 0 !important;
+    pointer-events: none !important;
+}
