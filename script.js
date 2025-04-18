@@ -104,28 +104,41 @@ document.addEventListener('DOMContentLoaded', function() {
     }
 
     // Загрузка данных из JSON
-    async function loadPlacesData() {
-        try {
-            const response = await fetch('data.json');
-            if (!response.ok) throw new Error('Ошибка загрузки данных');
-            const data = await response.json();
-            
-            // Кэширование данных
-            localStorage.setItem('cachedPlaces', JSON.stringify(data));
-            localStorage.setItem('lastUpdated', Date.now());
-            
-            processData(data);
-        } catch (error) {
-            console.error('Ошибка загрузки данных:', error);
-            // Пробуем загрузить из кэша
-            const cachedData = localStorage.getItem('cachedPlaces');
-            if (cachedData) {
-                processData(JSON.parse(cachedData));
-            } else {
-                showError('Не удалось загрузить данные о местах');
-            }
+async function loadPlacesData() {
+    try {
+        const response = await fetch('data.json');
+        if (!response.ok) {
+            throw new Error(`Ошибка HTTP: ${response.status}`);
+        }
+        const data = await response.json();
+        
+        // Проверим структуру данных
+        if (!Array.isArray(data)) {
+            throw new Error("Данные должны быть массивом");
+        }
+        
+        // Проверим первую запись (если есть)
+        if (data.length > 0 && !data[0].coordinates) {
+            console.warn("Первая запись не содержит координат:", data[0]);
+        }
+
+        localStorage.setItem('cachedPlaces', JSON.stringify(data));
+        localStorage.setItem('lastUpdated', Date.now());
+        
+        processData(data);
+    } catch (error) {
+        console.error('Ошибка загрузки данных:', error);
+        
+        // Пробуем загрузить из кэша
+        const cachedData = localStorage.getItem('cachedPlaces');
+        if (cachedData) {
+            console.log("Используем кэшированные данные");
+            processData(JSON.parse(cachedData));
+        } else {
+            showError('Не удалось загрузить данные о местах');
         }
     }
+}
 
 function processData(data) {
     // Очищаем старые метки
@@ -135,43 +148,58 @@ function processData(data) {
         clusterer = new ymaps.Clusterer({
             clusterDisableClickZoom: true,
             clusterOpenBalloonOnClick: false,
-            clusterBalloonContentLayout: 'cluster#balloonCarousel',
-            clusterBalloonItemContentLayout: 'cluster#balloonCarouselItem',
             clusterIconColor: '#ff4500'
         });
-        map.geoObjects.add(clusterer);
+        map.geoObjects.add(clusterer); // Важно: кластеризатор должен быть добавлен на карту!
     }
-    
+
     placemarks = [];
-    
+
     if (!data || !Array.isArray(data)) {
-        showError('Некорректные данные');
+        console.error("Данные не являются массивом:", data);
+        showError("Ошибка: данные некорректны");
         return;
     }
-    
-    data.forEach(place => {
-        if (place.coordinates && place.coordinates.length === 2) {
+
+    // Фильтруем только валидные метки
+    const validPlaces = data.filter(place => {
+        if (!place.coordinates || !Array.isArray(place.coordinates)) {
+            console.warn("Пропущена запись без координат:", place.name);
+            return false;
+        }
+        return true;
+    });
+
+    // Создаём метки
+    validPlaces.forEach(place => {
+        try {
             const placemark = createPlacemark(place);
             placemarks.push(placemark);
             clusterer.add(placemark);
+        } catch (e) {
+            console.error("Ошибка создания метки для", place.name, ":", e);
         }
     });
-    
-    document.getElementById('count').textContent = data.length;
-    
-    // Автоматическое позиционирование карты
-    if (data.length > 0 && data[0].coordinates) {
+
+    // Обновляем счётчик
+    document.getElementById('count').textContent = validPlaces.length;
+
+    // Центрируем карту, если есть метки
+    if (validPlaces.length > 0) {
         try {
             const bounds = ymaps.util.bounds.fromPoints(
-                data.map(place => place.coordinates)
+                validPlaces.map(p => p.coordinates)
             );
             map.setBounds(bounds, { checkZoomRange: true });
         } catch (e) {
-            console.error('Ошибка установки границ:', e);
+            console.error("Ошибка установки границ:", e);
+            map.setCenter([55.7558, 37.6173], 12); // Москва по умолчанию
         }
+    } else {
+        showError("Нет мест для отображения");
     }
-    
-    // Применяем текущие фильтры
+
+    // Применяем фильтры
     filterPlacemarks();
 }
 
