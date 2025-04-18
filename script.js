@@ -111,7 +111,7 @@ async function loadPlacesData() {
             throw new Error(`Ошибка HTTP: ${response.status}`);
         }
         const data = await response.json();
-        
+        console.log("Загруженные данные:", data); // После получения данных
         // Проверим структуру данных
         if (!Array.isArray(data)) {
             throw new Error("Данные должны быть массивом");
@@ -149,6 +149,7 @@ function processData(data) {
             clusterDisableClickZoom: true,
             clusterOpenBalloonOnClick: false,
             clusterIconColor: '#ff4500'
+        console.log("Кластеризатор добавлен на карту?", map.geoObjects.contains(clusterer));
         });
         map.geoObjects.add(clusterer); // Важно: кластеризатор должен быть добавлен на карту!
     }
@@ -177,6 +178,7 @@ function processData(data) {
             placemarks.push(placemark);
             clusterer.add(placemark);
             console.log("Создаётся метка для:", place.name, "с координатами:", place.coordinates);
+            console.log("Меток в кластеризаторе:", clusterer.getGeoObjects().length);
         } catch (e) {
             console.error("Ошибка создания метки для", place.name, ":", e);
         }
@@ -678,4 +680,4 @@ function processData(data) {
         });
     }
 }); // Закрываем document.addEventListener('DOMContentLoaded')
-console.log("Загруженные данные:", data); // После получения данных
+
