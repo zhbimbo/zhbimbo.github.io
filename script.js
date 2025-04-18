@@ -416,7 +416,7 @@ function processData(data) {
         }, 10);
     }
 
-    // Фильтрация заведений
+       // Фильтрация заведений
     function filterPlacemarks() {
         currentFilters = {
             rating: document.getElementById('ratingFilter').value,
@@ -454,14 +454,14 @@ function processData(data) {
 
         document.getElementById('count').textContent = visibleCount;
         
-
-    // Для обновления кластеров просто удалите и добавьте их снова
-    clusterer.removeAll();
-    placemarks.forEach(pm => {
-        if (pm.options.get('visible')) {
-            clusterer.add(pm);
-        }
-    });
+        // Для обновления кластеров просто удалите и добавьте их снова
+        clusterer.removeAll();
+        placemarks.forEach(pm => {
+            if (pm.options.get('visible')) {
+                clusterer.add(pm);
+            }
+        });
+    }
 
     // Восстановление фильтров
     function restoreFilters() {
