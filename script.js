@@ -1,30 +1,17 @@
 document.addEventListener('DOMContentLoaded', function() {
     let map;
     let placemarks = [];
-    let clusterer;
     const isMobile = window.innerWidth <= 767;
-    let currentFilters = {
-        rating: 'all',
-        district: 'all',
-        hours: 'all',
-        search: ''
-    };
 
     // Проверка загрузки API Яндекс.Карт
     if (!window.ymaps) {
         console.error('Yandex Maps API не загружен');
-        showError('Не удалось загрузить карты. Пожалуйста, проверьте интернет-соединение и обновите страницу.');
         return;
     }
 
     // Инициализация карты
-    ymaps.ready(initMap);
-
-    function initMap() {
+    ymaps.ready(function() {
         try {
-            // Создаем индикатор загрузки
-            const loader = showLoading();
-            
             // Базовая инициализация карты
             map = new ymaps.Map('map', {
                 center: [55.7558, 37.6173],
@@ -37,16 +24,7 @@ document.addEventListener('DOMContentLoaded', function() {
                 inertiaDuration: 300
             });
 
-            // Инициализация кластеризатора
-            clusterer = new ymaps.Clusterer({
-                clusterDisableClickZoom: true,
-                clusterOpenBalloonOnClick: false,
-                clusterBalloonContentLayout: 'cluster#balloonCarousel',
-                clusterBalloonItemContentLayout: 'cluster#balloonCarouselItem',
-                clusterIconColor: '#ff4500'
-            });
-
-            // Стилизация карты
+            // Альтернативная стилизация через CSS
             const mapContainer = map.container.getElement();
             mapContainer.style.filter = 'hue-rotate(10deg) saturate(1.1)';
             mapContainer.style.borderRadius = '12px';
@@ -75,17 +53,11 @@ document.addEventListener('DOMContentLoaded', function() {
                 }
             });
 
-            // Восстанавливаем фильтры из localStorage
-            restoreFilters();
-            
             // Загрузка данных
-            loadPlacesData()
-                .finally(() => hideLoading(loader));
+            loadPlacesData();
 
         } catch (e) {
             console.error('Ошибка инициализации карты:', e);
-            hideLoading(loader);
-            showError('Ошибка при загрузке карты. Пожалуйста, попробуйте позже.');
             
             // Fallback-попытка
             try {
@@ -99,115 +71,31 @@ document.addEventListener('DOMContentLoaded', function() {
                 loadPlacesData();
             } catch (fallbackError) {
                 console.error('Fallback инициализация не удалась:', fallbackError);
+                alert('Не удалось загрузить карту. Пожалуйста, проверьте интернет-соединение и обновите страницу.');
             }
         }
-    }
+    });
 
     // Загрузка данных из JSON
-async function loadPlacesData() {
-    try {
-        const response = await fetch('data.json');
-        if (!response.ok) {
-            throw new Error(`Ошибка HTTP: ${response.status}`);
-        }
-        const data = await response.json();
-        console.log("Загруженные данные:", data); // После получения данных
-        // Проверим структуру данных
-        if (!Array.isArray(data)) {
-            throw new Error("Данные должны быть массивом");
-        }
-        
-        // Проверим первую запись (если есть)
-        if (data.length > 0 && !data[0].coordinates) {
-            console.warn("Первая запись не содержит координат:", data[0]);
-        }
-
-        localStorage.setItem('cachedPlaces', JSON.stringify(data));
-        localStorage.setItem('lastUpdated', Date.now());
-        
-        processData(data);
-    } catch (error) {
-        console.error('Ошибка загрузки данных:', error);
-        
-        // Пробуем загрузить из кэша
-        const cachedData = localStorage.getItem('cachedPlaces');
-        if (cachedData) {
-            console.log("Используем кэшированные данные");
-            processData(JSON.parse(cachedData));
-        } else {
-            showError('Не удалось загрузить данные о местах');
-        }
+    function loadPlacesData() {
+        fetch('data.json')
+            .then(response => {
+                if (!response.ok) throw new Error('Ошибка загрузки данных');
+                return response.json();
+            })
+            .then(data => {
+                data.forEach(place => {
+                    const placemark = createPlacemark(place);
+                    placemarks.push(placemark);
+                    map.geoObjects.add(placemark);
+                });
+                document.getElementById('count').textContent = data.length;
+            })
+            .catch(error => {
+                console.error('Ошибка загрузки данных:', error);
+                alert('Не удалось загрузить данные о местах');
+            });
     }
-}
-
-function processData(data) {
-    // Очищаем старые метки
-    if (clusterer) {
-        clusterer.removeAll();
-    } else {
-        clusterer = new ymaps.Clusterer({
-            clusterDisableClickZoom: true,
-            clusterOpenBalloonOnClick: false,
-            clusterIconColor: '#ff4500'
-        });
-        map.geoObjects.add(clusterer); // Важно: кластеризатор должен быть добавлен на карту!
-        console.log("Кластеризатор добавлен на карту?", map.geoObjects.contains(clusterer));
-    if (!map.geoObjects.contains(clusterer)) {
-        map.geoObjects.add(clusterer);
-    }
-    }
-
-    placemarks = [];
-
-    if (!data || !Array.isArray(data)) {
-        console.error("Данные не являются массивом:", data);
-        showError("Ошибка: данные некорректны");
-        return;
-    }
-
-    // Фильтруем только валидные метки
-    const validPlaces = data.filter(place => {
-        if (!place.coordinates || !Array.isArray(place.coordinates)) {
-            console.warn("Пропущена запись без координат:", place.name);
-            return false;
-        }
-        return true;
-    });
-
-    // Создаём метки
-    validPlaces.forEach(place => {
-        try {
-            const placemark = createPlacemark(place);
-            placemarks.push(placemark);
-            clusterer.add(placemark);
-            console.log("Создаётся метка для:", place.name, "с координатами:", place.coordinates);
-            console.log("Меток в кластеризаторе:", clusterer.getGeoObjects().length);
-        } catch (e) {
-            console.error("Ошибка создания метки для", place.name, ":", e);
-        }
-    });
-
-    // Обновляем счётчик
-    document.getElementById('count').textContent = validPlaces.length;
-
-    // Центрируем карту, если есть метки
-    if (validPlaces.length > 0) {
-        try {
-            const bounds = ymaps.util.bounds.fromPoints(
-                validPlaces.map(p => p.coordinates)
-            );
-            map.setBounds(bounds, { checkZoomRange: true });
-        } catch (e) {
-            console.error("Ошибка установки границ:", e);
-            map.setCenter([55.7558, 37.6173], 12); // Москва по умолчанию
-        }
-    } else {
-        showError("Нет мест для отображения");
-    }
-
-    // Применяем фильтры
-    filterPlacemarks();
-}
 
     // Создание метки
     function createPlacemark(place) {
@@ -268,6 +156,7 @@ function processData(data) {
         if (hoursString === 'Круглосуточно') return true;
         
         try {
+            // Парсим строку времени (формат: "Пн–Вс: 12:00–02:00")
             const [_, timeRange] = hoursString.split(': ');
             const [openTime, closeTime] = timeRange.split('–');
             
@@ -278,7 +167,7 @@ function processData(data) {
             // Парсим время открытия
             const [openHours, openMinutes] = openTime.split(':').map(Number);
             
-            // Парсим время закрытия
+            // Парсим время закрытия (может быть на следующий день, например 02:00)
             const [closeHours, closeMinutes] = closeTime.split(':').map(Number);
             
             // Создаем даты для сравнения
@@ -296,88 +185,90 @@ function processData(data) {
             return now >= openDate && now <= closeDate;
         } catch (e) {
             console.error('Ошибка парсинга времени:', e);
-            return true;
+            return true; // Если не удалось распарсить, показываем заведение
         }
     }
 
-    // Функция расчета времени до открытия/закрытия
-    function getTimeUntilClosing(hoursString) {
-        if (hoursString === 'Круглосуточно') return null;
+    // Функция расчета времени до закрытия
+// Функция расчета времени до открытия/закрытия с новой логикой
+function getTimeUntilClosing(hoursString) {
+    if (hoursString === 'Круглосуточно') return null;
+    
+    try {
+        const [_, timeRange] = hoursString.split(': ');
+        const [openTime, closeTime] = timeRange.split('–');
         
-        try {
-            const [_, timeRange] = hoursString.split(': ');
-            const [openTime, closeTime] = timeRange.split('–');
-            
-            const [openHours, openMinutes] = openTime.split(':').map(Number);
-            const [closeHours, closeMinutes] = closeTime.split(':').map(Number);
-            
-            const now = new Date();
-            const openDate = new Date();
-            openDate.setHours(openHours, openMinutes, 0, 0);
-            
-            const closeDate = new Date();
-            closeDate.setHours(closeHours, closeMinutes, 0, 0);
-            
-            // Если время закрытия меньше времени открытия
-            if (closeHours < openHours || (closeHours === openHours && closeMinutes <= openMinutes)) {
-                closeDate.setDate(closeDate.getDate() + 1);
+        const [openHours, openMinutes] = openTime.split(':').map(Number);
+        const [closeHours, closeMinutes] = closeTime.split(':').map(Number);
+        
+        const now = new Date();
+        const openDate = new Date();
+        openDate.setHours(openHours, openMinutes, 0, 0);
+        
+        const closeDate = new Date();
+        closeDate.setHours(closeHours, closeMinutes, 0, 0);
+        
+        // Если время закрытия меньше времени открытия (например, работает до 2 ночи)
+        if (closeHours < openHours || (closeHours === openHours && closeMinutes <= openMinutes)) {
+            closeDate.setDate(closeDate.getDate() + 1);
+        }
+        
+        // Проверяем, открыто ли заведение сейчас
+        const isOpen = now >= openDate && now <= closeDate;
+        
+        if (!isOpen) {
+            // Заведение закрыто - показываем время до открытия
+            // Если время открытия уже прошло сегодня, значит оно на завтра
+            if (openDate <= now) {
+                openDate.setDate(openDate.getDate() + 1);
             }
             
-            // Проверяем, открыто ли заведение сейчас
-            const isOpen = now >= openDate && now <= closeDate;
+            const diffMs = openDate - now;
+            const diffHours = Math.floor(diffMs / (1000 * 60 * 60));
+            const diffMinutes = Math.floor((diffMs % (1000 * 60 * 60)) / (1000 * 60));
             
-            if (!isOpen) {
-                // Заведение закрыто - показываем время до открытия
-                if (openDate <= now) {
-                    openDate.setDate(openDate.getDate() + 1);
-                }
-                
-                const diffMs = openDate - now;
-                const diffHours = Math.floor(diffMs / (1000 * 60 * 60));
-                const diffMinutes = Math.floor((diffMs % (1000 * 60 * 60)) / (1000 * 60));
-                
+            if (diffHours > 0) {
+                return { 
+                    text: `Откроется через ${diffHours} ч ${diffMinutes} мин`, 
+                    color: diffHours <= 1 ? '#4CAF50' : '#ff3333', // зеленый за 1 час до открытия
+                    type: 'opening'
+                };
+            } else {
+                return { 
+                    text: `Откроется через ${diffMinutes} мин`, 
+                    color: '#4CAF50', // зеленый когда меньше часа
+                    type: 'opening'
+                };
+            }
+        } else {
+            // Заведение открыто - показываем время до закрытия только если осталось меньше 3 часов
+            const diffMs = closeDate - now;
+            const diffHours = Math.floor(diffMs / (1000 * 60 * 60));
+            const diffMinutes = Math.floor((diffMs % (1000 * 60 * 60)) / (1000 * 60));
+            
+            if (diffHours < 3) {
                 if (diffHours > 0) {
                     return { 
-                        text: `Откроется через ${diffHours} ч ${diffMinutes} мин`, 
-                        color: diffHours <= 1 ? '#4CAF50' : '#ff3333',
-                        type: 'opening'
+                        text: `Закроется через ${diffHours} ч ${diffMinutes} мин`, 
+                        color: diffHours <= 1 ? '#ff3333' : '#ff8000', // красный за 1 час до закрытия
+                        type: 'closing'
                     };
                 } else {
                     return { 
-                        text: `Откроется через ${diffMinutes} мин`, 
-                        color: '#4CAF50',
-                        type: 'opening'
+                        text: `Закроется через ${diffMinutes} мин`, 
+                        color: '#ff3333', // красный когда меньше часа
+                        type: 'closing'
                     };
                 }
-            } else {
-                // Заведение открыто - показываем время до закрытия
-                const diffMs = closeDate - now;
-                const diffHours = Math.floor(diffMs / (1000 * 60 * 60));
-                const diffMinutes = Math.floor((diffMs % (1000 * 60 * 60)) / (1000 * 60));
-                
-                if (diffHours < 3) {
-                    if (diffHours > 0) {
-                        return { 
-                            text: `Закроется через ${diffHours} ч ${diffMinutes} мин`, 
-                            color: diffHours <= 1 ? '#ff3333' : '#ff8000',
-                            type: 'closing'
-                        };
-                    } else {
-                        return { 
-                            text: `Закроется через ${diffMinutes} мин`, 
-                            color: '#ff3333',
-                            type: 'closing'
-                        };
-                    }
-                }
             }
-            
-            return null;
-        } catch (e) {
-            console.error('Ошибка расчета времени:', e);
-            return null;
         }
+        
+        return null;
+    } catch (e) {
+        console.error('Ошибка расчета времени:', e);
+        return null;
     }
+}
 
     // Функция открытия мобильной панели
     function openMobilePanel(placeData) {
@@ -411,9 +302,6 @@ function processData(data) {
         setTimeout(() => {
             mobileSheet.classList.add('visible');
         }, 10);
-        
-        // Добавляем оверлей
-        document.getElementById('map-overlay').classList.remove('hidden');
     }
 
     // Функция открытия десктопного сайдбара
@@ -450,31 +338,28 @@ function processData(data) {
         }, 10);
     }
 
-       // Фильтрация заведений
+    // Фильтрация заведений
     function filterPlacemarks() {
-        currentFilters = {
-            rating: document.getElementById('ratingFilter').value,
-            district: document.getElementById('districtFilter').value,
-            hours: document.getElementById('hoursFilter').value,
-            search: document.getElementById('searchInput').value.toLowerCase()
-        };
-        
-        localStorage.setItem('filters', JSON.stringify(currentFilters));
-        
+        const ratingFilter = document.getElementById('ratingFilter').value;
+        const districtFilter = document.getElementById('districtFilter').value;
+        const hoursFilter = document.getElementById('hoursFilter').value;
+        const searchQuery = document.getElementById('searchInput').value.toLowerCase();
+
         let visibleCount = 0;
 
         placemarks.forEach(placemark => {
             const data = placemark.properties.get('customData');
             const rating = parseFloat(data.description.split('/')[0]);
             
-            const matchesRating = currentFilters.rating === 'all' || rating >= parseFloat(currentFilters.rating);
-            const matchesDistrict = currentFilters.district === 'all' || data.district === currentFilters.district;
-            const matchesSearch = data.name.toLowerCase().includes(currentFilters.search);
+            const matchesRating = ratingFilter === 'all' || rating >= parseFloat(ratingFilter);
+            const matchesDistrict = districtFilter === 'all' || data.district === districtFilter;
+            const matchesSearch = data.name.toLowerCase().includes(searchQuery);
             
+            // Новая логика фильтрации по времени
             let matchesHours = true;
-            if (currentFilters.hours === 'now') {
+            if (hoursFilter === 'now') {
                 matchesHours = isOpenNow(data.hours);
-            } else if (currentFilters.hours === '24/7') {
+            } else if (hoursFilter === '24/7') {
                 matchesHours = data.hours === 'Круглосуточно';
             }
 
@@ -487,63 +372,6 @@ function processData(data) {
         });
 
         document.getElementById('count').textContent = visibleCount;
-        
-        // Для обновления кластеров просто удалите и добавьте их снова
-        clusterer.removeAll();
-        placemarks.forEach(pm => {
-            if (pm.options.get('visible')) {
-                clusterer.add(pm);
-            }
-        });
-    }
-
-    // Восстановление фильтров
-    function restoreFilters() {
-        const savedFilters = localStorage.getItem('filters');
-        if (savedFilters) {
-            currentFilters = JSON.parse(savedFilters);
-            document.getElementById('ratingFilter').value = currentFilters.rating;
-            document.getElementById('districtFilter').value = currentFilters.district;
-            document.getElementById('hoursFilter').value = currentFilters.hours;
-            document.getElementById('searchInput').value = currentFilters.search;
-        }
-    }
-
-    // Показать индикатор загрузки
-    function showLoading() {
-        const loader = document.createElement('div');
-        loader.className = 'loading-indicator';
-        loader.textContent = 'Загрузка данных...';
-        document.getElementById('map').appendChild(loader);
-        return loader;
-    }
-
-    // Скрыть индикатор загрузки
-    function hideLoading(loader) {
-        if (loader) loader.remove();
-    }
-
-    // Показать ошибку
-    function showError(message) {
-        const errorElement = document.createElement('div');
-        errorElement.className = 'error-message';
-        errorElement.textContent = message;
-        errorElement.style.position = 'absolute';
-        errorElement.style.top = '50%';
-        errorElement.style.left = '50%';
-        errorElement.style.transform = 'translate(-50%, -50%)';
-        errorElement.style.zIndex = '1000';
-        errorElement.style.background = 'rgba(255, 255, 255, 0.9)';
-        errorElement.style.padding = '15px 25px';
-        errorElement.style.borderRadius = '20px';
-        errorElement.style.boxShadow = '0 5px 15px rgba(0, 0, 0, 0.2)';
-        errorElement.style.color = '#ff4500';
-        errorElement.style.fontWeight = '500';
-        document.getElementById('map').appendChild(errorElement);
-        
-        setTimeout(() => {
-            errorElement.remove();
-        }, 5000);
     }
 
     // Обработчики событий
@@ -567,7 +395,6 @@ function processData(data) {
         setTimeout(() => {
             mobileSheet.classList.add('hidden');
         }, 400);
-        document.getElementById('map-overlay').classList.add('hidden');
     });
 
     document.getElementById('close-sidebar')?.addEventListener('click', function() {
@@ -578,21 +405,6 @@ function processData(data) {
         }, 500);
     });
 
-    // Быстрый поиск по району
-    document.querySelectorAll('#districtFilter option').forEach(option => {
-        if (option.value !== 'all') {
-            option.addEventListener('click', function() {
-                const districtName = option.textContent;
-                ymaps.geocode(districtName, { results: 1 }).then(res => {
-                    const firstGeoObject = res.geoObjects.get(0);
-                    if (firstGeoObject) {
-                        map.setCenter(firstGeoObject.geometry.getCoordinates(), 13);
-                    }
-                });
-            });
-        }
-    });
-
     document.getElementById('ratingFilter').addEventListener('change', filterPlacemarks);
     document.getElementById('districtFilter').addEventListener('change', filterPlacemarks);
     document.getElementById('hoursFilter').addEventListener('change', filterPlacemarks);
@@ -601,8 +413,6 @@ function processData(data) {
     // Геолокация
     document.getElementById('toggleLocation').addEventListener('click', function() {
         if (navigator.geolocation) {
-            const loader = showLoading();
-            
             navigator.geolocation.getCurrentPosition(
                 function(position) {
                     map.setCenter([position.coords.latitude, position.coords.longitude], 14);
@@ -621,24 +431,19 @@ function processData(data) {
                     setTimeout(() => {
                         map.geoObjects.remove(placemark);
                     }, 5000);
-                    
-                    hideLoading(loader);
                 },
                 function() {
-                    hideLoading(loader);
-                    showError("Не удалось определить ваше местоположение");
+                    alert("Не удалось определить ваше местоположение");
                 }
             );
         } else {
-            showError("Геолокация не поддерживается вашим браузером");
+            alert("Геолокация не поддерживается вашим браузером");
         }
     });
 
     // Обработка свайпа для мобильной панели
     let startY = 0;
     const swipeHandle = document.querySelector('.swipe-handle');
-    const mobileSheet = document.getElementById('mobile-bottom-sheet');
-    const mapOverlay = document.getElementById('map-overlay');
     
     swipeHandle.addEventListener('touchstart', function(e) {
         startY = e.touches[0].clientY;
@@ -649,27 +454,23 @@ function processData(data) {
         const diff = startY - currentY;
         
         if (diff < 0) {
-            const newPosition = Math.min(Math.abs(diff), 100);
-            mobileSheet.style.transform = `translateY(${newPosition}px)`;
-            
-            // Затемнение фона при свайпе
-            const opacity = 0.7 * (1 - newPosition / 100);
-            mapOverlay.style.opacity = opacity;
+            const panel = document.getElementById('mobile-bottom-sheet');
+            const newPosition = Math.max(-diff, 0);
+            panel.style.transform = `translateY(${newPosition}px)`;
             
             if (newPosition > 100) {
-                mobileSheet.classList.remove('visible');
+                panel.classList.remove('visible');
                 setTimeout(() => {
-                    mobileSheet.classList.add('hidden');
-                    mobileSheet.style.transform = '';
-                    mapOverlay.classList.add('hidden');
+                    panel.classList.add('hidden');
+                    panel.style.transform = '';
                 }, 300);
             }
         }
     }, { passive: true });
     
     swipeHandle.addEventListener('touchend', function(e) {
-        mobileSheet.style.transform = '';
-        mapOverlay.style.opacity = '0.7';
+        const panel = document.getElementById('mobile-bottom-sheet');
+        panel.style.transform = '';
     }, { passive: true });
 
     // Touch-оптимизации для мобильных устройств
@@ -682,4 +483,4 @@ function processData(data) {
             e.preventDefault();
         });
     }
-}); // Закрываем document.addEventListener('DOMContentLoaded')
+});
