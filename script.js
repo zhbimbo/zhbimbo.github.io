@@ -190,43 +190,85 @@ document.addEventListener('DOMContentLoaded', function() {
     }
 
     // Функция расчета времени до закрытия
-    function getTimeUntilClosing(hoursString) {
-        if (hoursString === 'Круглосуточно') return null;
+// Функция расчета времени до открытия/закрытия с новой логикой
+function getTimeUntilClosing(hoursString) {
+    if (hoursString === 'Круглосуточно') return null;
+    
+    try {
+        const [_, timeRange] = hoursString.split(': ');
+        const [openTime, closeTime] = timeRange.split('–');
         
-        try {
-            const [_, timeRange] = hoursString.split(': ');
-            const [openTime, closeTime] = timeRange.split('–');
-            const [closeHours, closeMinutes] = closeTime.split(':').map(Number);
-            
-            const now = new Date();
-            const closeDate = new Date();
-            closeDate.setHours(closeHours, closeMinutes, 0, 0);
-            
-            // Если время закрытия уже прошло сегодня, значит оно на завтра
-            if (closeDate <= now) {
-                closeDate.setDate(closeDate.getDate() + 1);
+        const [openHours, openMinutes] = openTime.split(':').map(Number);
+        const [closeHours, closeMinutes] = closeTime.split(':').map(Number);
+        
+        const now = new Date();
+        const openDate = new Date();
+        openDate.setHours(openHours, openMinutes, 0, 0);
+        
+        const closeDate = new Date();
+        closeDate.setHours(closeHours, closeMinutes, 0, 0);
+        
+        // Если время закрытия меньше времени открытия (например, работает до 2 ночи)
+        if (closeHours < openHours || (closeHours === openHours && closeMinutes <= openMinutes)) {
+            closeDate.setDate(closeDate.getDate() + 1);
+        }
+        
+        // Проверяем, открыто ли заведение сейчас
+        const isOpen = now >= openDate && now <= closeDate;
+        
+        if (!isOpen) {
+            // Заведение закрыто - показываем время до открытия
+            // Если время открытия уже прошло сегодня, значит оно на завтра
+            if (openDate <= now) {
+                openDate.setDate(openDate.getDate() + 1);
             }
             
-            const diffMs = closeDate - now;
+            const diffMs = openDate - now;
             const diffHours = Math.floor(diffMs / (1000 * 60 * 60));
             const diffMinutes = Math.floor((diffMs % (1000 * 60 * 60)) / (1000 * 60));
             
             if (diffHours > 0) {
                 return { 
-                    text: `Закроется через ${diffHours} ч ${diffMinutes} мин`, 
-                    isCritical: diffHours < 1 
+                    text: `Откроется через ${diffHours} ч ${diffMinutes} мин`, 
+                    color: diffHours <= 1 ? '#4CAF50' : '#ff3333', // зеленый за 1 час до открытия
+                    type: 'opening'
                 };
             } else {
                 return { 
-                    text: `Закроется через ${diffMinutes} мин`, 
-                    isCritical: true 
+                    text: `Откроется через ${diffMinutes} мин`, 
+                    color: '#4CAF50', // зеленый когда меньше часа
+                    type: 'opening'
                 };
             }
-        } catch (e) {
-            console.error('Ошибка расчета времени:', e);
-            return null;
+        } else {
+            // Заведение открыто - показываем время до закрытия только если осталось меньше 3 часов
+            const diffMs = closeDate - now;
+            const diffHours = Math.floor(diffMs / (1000 * 60 * 60));
+            const diffMinutes = Math.floor((diffMs % (1000 * 60 * 60)) / (1000 * 60));
+            
+            if (diffHours < 3) {
+                if (diffHours > 0) {
+                    return { 
+                        text: `Закроется через ${diffHours} ч ${diffMinutes} мин`, 
+                        color: diffHours <= 1 ? '#ff3333' : '#ff8000', // красный за 1 час до закрытия
+                        type: 'closing'
+                    };
+                } else {
+                    return { 
+                        text: `Закроется через ${diffMinutes} мин`, 
+                        color: '#ff3333', // красный когда меньше часа
+                        type: 'closing'
+                    };
+                }
+            }
         }
+        
+        return null;
+    } catch (e) {
+        console.error('Ошибка расчета времени:', e);
+        return null;
     }
+}
 
     // Функция открытия мобильной панели
     function openMobilePanel(placeData) {
@@ -250,7 +292,7 @@ document.addEventListener('DOMContentLoaded', function() {
         if (timeInfo) {
             const timeSpan = document.createElement('span');
             timeSpan.textContent = ` (${timeInfo.text})`;
-            timeSpan.style.color = timeInfo.isCritical ? '#ff3333' : '#ff8000';
+            timeSpan.style.color = timeInfo.color;
             timeSpan.style.fontWeight = '500';
             hoursElement.appendChild(timeSpan);
         }
@@ -284,11 +326,11 @@ document.addEventListener('DOMContentLoaded', function() {
         if (timeInfo) {
             const timeSpan = document.createElement('span');
             timeSpan.textContent = ` (${timeInfo.text})`;
-            timeSpan.style.color = timeInfo.isCritical ? '#ff3333' : '#ff8000';
+            timeSpan.style.color = timeInfo.color;
             timeSpan.style.fontWeight = '500';
             hoursElement.appendChild(timeSpan);
         }
-        
+                
         const sidebar = document.getElementById('desktop-sidebar');
         sidebar.classList.remove('hidden');
         setTimeout(() => {
