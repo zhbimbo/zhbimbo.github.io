@@ -103,26 +103,28 @@ map.options.set('suppressObsoleteBrowserNotifier', true);
     }
 
     // Создание метки с вашими оригинальными иконками
-    function createPlacemark(place) {
-        const rating = parseFloat(place.description.split('/')[0]);
-        const placemark = new ymaps.Placemark(
-            place.coordinates,
-            {
-                customData: place,
-                balloonContentHeader: '',
-                balloonContentBody: '',
-                balloonContentFooter: ''
-            },
-            {
-                iconLayout: 'default#imageWithContent',
-                iconImageHref: getIconByRating(rating),
-                iconImageSize: [40, 40],
-                iconImageOffset: [-20, -40],
-                interactivityModel: 'default#layer',
-                hideIconOnBalloonOpen: false,
-                balloonInteractivityModel: 'default#opaque'
-            }
-        );
+        function createPlacemark(place) {
+            const rating = parseFloat(place.description.split('/')[0]);
+            return new ymaps.Placemark(
+                place.coordinates,
+                {
+                    customData: place,
+                    balloonContentHeader: '',
+                    balloonContentBody: '',
+                    balloonContentFooter: ''
+                },
+                {
+                    iconLayout: 'default#imageWithContent',
+                    iconImageHref: getIconByRating(rating),
+                    iconImageSize: [40, 40],
+                    iconImageOffset: [-20, -40],
+                    interactivityModel: 'default#layer',
+                    hideIconOnBalloonOpen: false,
+                    balloonInteractivityModel: 'default#opaque',
+                    preset: 'islands#circleIcon'
+                }
+            );
+        }
 
         // Обработчик клика с анимацией
         placemark.events.add('click', function(e) {
