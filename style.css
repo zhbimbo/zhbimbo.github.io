@@ -611,3 +611,9 @@ body {
     animation: markerClick 0.4s cubic-bezier(0.25, 0.8, 0.25, 1);
     animation-fill-mode: both;
 }
+/* Добавим в конец файла */
+.balloon-hours span,
+.sidebar-info p span {
+    margin-left: 5px;
+    transition: color 0.3s ease;
+}
