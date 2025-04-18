@@ -16,7 +16,7 @@ document.addEventListener('DOMContentLoaded', function() {
             map = new ymaps.Map('map', {
                 center: [55.7558, 37.6173],
                 zoom: 12,
-                controls: [],  // <- Запятая добавлена здесь
+                controls: [],
                 // Опции для плавности
                 smoothZoom: true,
                 smoothDrag: true,
@@ -97,7 +97,7 @@ document.addEventListener('DOMContentLoaded', function() {
             });
     }
 
-    // Создание метки с вашими оригинальными иконками
+    // Создание метки
     function createPlacemark(place) {
         const rating = parseFloat(place.description.split('/')[0]);
         const placemark = new ymaps.Placemark(
@@ -144,11 +144,88 @@ document.addEventListener('DOMContentLoaded', function() {
         return placemark;
     }
 
-    // Функция для получения иконки по рейтингу (ваши оригинальные иконки)
+    // Функция для получения иконки по рейтингу
     function getIconByRating(rating) {
         if (rating >= 4) return 'icons/star-green.png';
         if (rating >= 3) return 'icons/star-yellow.png';
         return 'icons/star-red.png';
+    }
+
+    // Функция проверки, работает ли заведение сейчас
+    function isOpenNow(hoursString) {
+        if (hoursString === 'Круглосуточно') return true;
+        
+        try {
+            // Парсим строку времени (формат: "Пн–Вс: 12:00–02:00")
+            const [_, timeRange] = hoursString.split(': ');
+            const [openTime, closeTime] = timeRange.split('–');
+            
+            const now = new Date();
+            const currentHours = now.getHours();
+            const currentMinutes = now.getMinutes();
+            
+            // Парсим время открытия
+            const [openHours, openMinutes] = openTime.split(':').map(Number);
+            
+            // Парсим время закрытия (может быть на следующий день, например 02:00)
+            const [closeHours, closeMinutes] = closeTime.split(':').map(Number);
+            
+            // Создаем даты для сравнения
+            const openDate = new Date();
+            openDate.setHours(openHours, openMinutes, 0, 0);
+            
+            const closeDate = new Date();
+            closeDate.setHours(closeHours, closeMinutes, 0, 0);
+            
+            // Если время закрытия меньше времени открытия (например, работает до 2 ночи)
+            if (closeHours < openHours || (closeHours === openHours && closeMinutes <= openMinutes)) {
+                closeDate.setDate(closeDate.getDate() + 1);
+            }
+            
+            return now >= openDate && now <= closeDate;
+        } catch (e) {
+            console.error('Ошибка парсинга времени:', e);
+            return true; // Если не удалось распарсить, показываем заведение
+        }
+    }
+
+    // Функция расчета времени до закрытия
+    function getTimeUntilClosing(hoursString) {
+        if (hoursString === 'Круглосуточно') return null;
+        
+        try {
+            const [_, timeRange] = hoursString.split(': ');
+            const [openTime, closeTime] = timeRange.split('–');
+            const [closeHours, closeMinutes] = closeTime.split(':').map(Number);
+            
+            const now = new Date();
+            const closeDate = new Date();
+            closeDate.setHours(closeHours, closeMinutes, 0, 0);
+            
+            // Если время закрытия уже прошло сегодня, значит оно на завтра
+            if (closeDate <= now) {
+                closeDate.setDate(closeDate.getDate() + 1);
+            }
+            
+            const diffMs = closeDate - now;
+            const diffHours = Math.floor(diffMs / (1000 * 60 * 60));
+            const diffMinutes = Math.floor((diffMs % (1000 * 60 * 60)) / (1000 * 60));
+            
+            if (diffHours > 0) {
+                return { 
+                    text: `Закроется через ${diffHours} ч ${diffMinutes} мин`, 
+                    isCritical: diffHours < 1 
+                };
+            } else {
+                return { 
+                    text: `Закроется через ${diffMinutes} мин`, 
+                    isCritical: true 
+                };
+            }
+        } catch (e) {
+            console.error('Ошибка расчета времени:', e);
+            return null;
+        }
     }
 
     // Функция открытия мобильной панели
@@ -163,6 +240,20 @@ document.addEventListener('DOMContentLoaded', function() {
         document.querySelector('.balloon-district').textContent = placeData.district;
         document.querySelector('.balloon-review-link').href = placeData.reviewLink;
         document.querySelector('.balloon-rating-badge').textContent = rating.toFixed(1);
+        
+        // Очищаем предыдущее время до закрытия
+        const hoursElement = document.querySelector('.balloon-hours');
+        hoursElement.querySelector('span')?.remove();
+        
+        // Добавляем информацию о времени до закрытия
+        const timeInfo = getTimeUntilClosing(placeData.hours);
+        if (timeInfo) {
+            const timeSpan = document.createElement('span');
+            timeSpan.textContent = ` (${timeInfo.text})`;
+            timeSpan.style.color = timeInfo.isCritical ? '#ff3333' : '#ff8000';
+            timeSpan.style.fontWeight = '500';
+            hoursElement.appendChild(timeSpan);
+        }
         
         const mobileSheet = document.getElementById('mobile-bottom-sheet');
         mobileSheet.classList.remove('hidden');
@@ -183,6 +274,20 @@ document.addEventListener('DOMContentLoaded', function() {
         document.getElementById('sidebar-district').textContent = placeData.district;
         document.getElementById('sidebar-review-link').href = placeData.reviewLink;
         document.getElementById('sidebar-rating-badge').textContent = rating.toFixed(1);
+        
+        // Очищаем предыдущее время до закрытия
+        const hoursElement = document.getElementById('sidebar-hours');
+        hoursElement.querySelector('span')?.remove();
+        
+        // Добавляем информацию о времени до закрытия
+        const timeInfo = getTimeUntilClosing(placeData.hours);
+        if (timeInfo) {
+            const timeSpan = document.createElement('span');
+            timeSpan.textContent = ` (${timeInfo.text})`;
+            timeSpan.style.color = timeInfo.isCritical ? '#ff3333' : '#ff8000';
+            timeSpan.style.fontWeight = '500';
+            hoursElement.appendChild(timeSpan);
+        }
         
         const sidebar = document.getElementById('desktop-sidebar');
         sidebar.classList.remove('hidden');
@@ -206,8 +311,15 @@ document.addEventListener('DOMContentLoaded', function() {
             
             const matchesRating = ratingFilter === 'all' || rating >= parseFloat(ratingFilter);
             const matchesDistrict = districtFilter === 'all' || data.district === districtFilter;
-            const matchesHours = hoursFilter === 'all' || data.hours === hoursFilter;
             const matchesSearch = data.name.toLowerCase().includes(searchQuery);
+            
+            // Новая логика фильтрации по времени
+            let matchesHours = true;
+            if (hoursFilter === 'now') {
+                matchesHours = isOpenNow(data.hours);
+            } else if (hoursFilter === '24/7') {
+                matchesHours = data.hours === 'Круглосуточно';
+            }
 
             if (matchesRating && matchesDistrict && matchesHours && matchesSearch) {
                 placemark.options.set('visible', true);
