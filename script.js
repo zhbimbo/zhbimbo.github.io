@@ -152,6 +152,9 @@ function processData(data) {
         });
         map.geoObjects.add(clusterer); // Важно: кластеризатор должен быть добавлен на карту!
         console.log("Кластеризатор добавлен на карту?", map.geoObjects.contains(clusterer));
+    if (!map.geoObjects.contains(clusterer)) {
+        map.geoObjects.add(clusterer);
+    }
     }
 
     placemarks = [];
@@ -254,11 +257,11 @@ function processData(data) {
     }
 
     // Функция для получения иконки по рейтингу
-function getIconByRating(rating) {
-    if (rating >= 4) return 'https://maps.google.com/mapfiles/ms/icons/green-dot.png';
-    if (rating >= 3) return 'https://maps.google.com/mapfiles/ms/icons/yellow-dot.png';
-    return 'https://maps.google.com/mapfiles/ms/icons/red-dot.png';
-}
+    function getIconByRating(rating) {
+        if (rating >= 4) return 'icons/star-green.png';
+        if (rating >= 3) return 'icons/star-yellow.png';
+        return 'icons/star-red.png';
+    }
 
     // Функция проверки, работает ли заведение сейчас
     function isOpenNow(hoursString) {
@@ -680,4 +683,3 @@ function getIconByRating(rating) {
         });
     }
 }); // Закрываем document.addEventListener('DOMContentLoaded')
-
