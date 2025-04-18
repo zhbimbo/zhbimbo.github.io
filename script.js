@@ -16,12 +16,17 @@ document.addEventListener('DOMContentLoaded', function() {
             map = new ymaps.Map('map', {
                 center: [55.7558, 37.6173],
                 zoom: 12,
-                controls: [],  // <- Запятая добавлена здесь
+                controls: [],
                 // Опции для плавности
                 smoothZoom: true,
                 smoothDrag: true,
                 inertia: true,
-                inertiaDuration: 300
+                inertiaDuration: 300,
+                // Дополнительные настройки производительности
+                avoidFractionalZoom: true,
+                preciseZoom: false,
+                yandexMapDisablePoiInteractivity: true,
+                suppressMapOpenBlock: true
             });
 
             // Альтернативная стилизация через CSS
@@ -75,7 +80,7 @@ document.addEventListener('DOMContentLoaded', function() {
             }
         }
     });
-
+map.options.set('suppressObsoleteBrowserNotifier', true);
     // Загрузка данных из JSON
     function loadPlacesData() {
         fetch('data.json')
