@@ -176,6 +176,7 @@ function processData(data) {
             const placemark = createPlacemark(place);
             placemarks.push(placemark);
             clusterer.add(placemark);
+            console.log("Создаётся метка для:", place.name, "с координатами:", place.coordinates);
         } catch (e) {
             console.error("Ошибка создания метки для", place.name, ":", e);
         }
@@ -677,3 +678,4 @@ function processData(data) {
         });
     }
 }); // Закрываем document.addEventListener('DOMContentLoaded')
+console.log("Загруженные данные:", data); // После получения данных
