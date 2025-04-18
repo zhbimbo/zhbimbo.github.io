@@ -127,32 +127,53 @@ document.addEventListener('DOMContentLoaded', function() {
         }
     }
 
-    function processData(data) {
-        // Очищаем старые метки
+function processData(data) {
+    // Очищаем старые метки
+    if (clusterer) {
         clusterer.removeAll();
-        placemarks = [];
-        
-        data.forEach(place => {
+    } else {
+        clusterer = new ymaps.Clusterer({
+            clusterDisableClickZoom: true,
+            clusterOpenBalloonOnClick: false,
+            clusterBalloonContentLayout: 'cluster#balloonCarousel',
+            clusterBalloonItemContentLayout: 'cluster#balloonCarouselItem',
+            clusterIconColor: '#ff4500'
+        });
+        map.geoObjects.add(clusterer);
+    }
+    
+    placemarks = [];
+    
+    if (!data || !Array.isArray(data)) {
+        showError('Некорректные данные');
+        return;
+    }
+    
+    data.forEach(place => {
+        if (place.coordinates && place.coordinates.length === 2) {
             const placemark = createPlacemark(place);
             placemarks.push(placemark);
             clusterer.add(placemark);
-        });
-        
-        map.geoObjects.add(clusterer);
-        document.getElementById('count').textContent = data.length;
-        
-        // Автоматическое позиционирование карты
-        if (data.length > 0) {
-            const bounds = data.reduce((acc, place) => {
-                return acc.extend(place.coordinates);
-            }, new ymaps.GeoObjectCollection().getBounds());
-            
-            map.setBounds(bounds, { checkZoomRange: true });
         }
-        
-        // Применяем текущие фильтры
-        filterPlacemarks();
+    });
+    
+    document.getElementById('count').textContent = data.length;
+    
+    // Автоматическое позиционирование карты
+    if (data.length > 0 && data[0].coordinates) {
+        try {
+            const bounds = ymaps.util.bounds.fromPoints(
+                data.map(place => place.coordinates)
+            );
+            map.setBounds(bounds, { checkZoomRange: true });
+        } catch (e) {
+            console.error('Ошибка установки границ:', e);
+        }
     }
+    
+    // Применяем текущие фильтры
+    filterPlacemarks();
+}
 
     // Создание метки
     function createPlacemark(place) {
@@ -433,9 +454,14 @@ document.addEventListener('DOMContentLoaded', function() {
 
         document.getElementById('count').textContent = visibleCount;
         
-        // Обновляем кластеры после фильтрации
-        clusterer.repaint();
-    }
+
+    // Для обновления кластеров просто удалите и добавьте их снова
+    clusterer.removeAll();
+    placemarks.forEach(pm => {
+        if (pm.options.get('visible')) {
+            clusterer.add(pm);
+        }
+    });
 
     // Восстановление фильтров
     function restoreFilters() {
