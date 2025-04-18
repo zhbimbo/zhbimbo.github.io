@@ -144,19 +144,32 @@ body {
     padding-right: 40px;
 }
 
-#filters-panel select option {
-    background: linear-gradient(135deg, rgba(255, 105, 0, 0.95), rgba(255, 179, 0, 0.95)) !important;
+/* Специальные стили для заголовков (value="all") */
+#filters-panel select option[value="all"] {
     color: white !important;
-    padding: 10px;
-    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+    background: transparent !important;
 }
 
-/* Для Firefox */
+#filters-panel select option:not([value="all"]) {
+    color: transparent !important;
+    background-clip: text !important;
+    -webkit-background-clip: text !important;
+    background-image: linear-gradient(135deg, #ff8a00, #ff4d00) !important;
+}
+#filters-panel select option {
+    text-shadow: 0 0 0 white; /* Эмодзи остаются белыми */
+}
+#filters-panel select option:not([value="all"]):hover {
+    background-image: linear-gradient(135deg, #ff9a00, #ff5d00) !important;
+}
+
+/* Для Firefox (градиентный текст не поддерживается) */
 @-moz-document url-prefix() {
-    #filters-panel select {
+    #filters-panel select option:not([value="all"]) {
         color: #ff6a00 !important;
     }
 }
+
 /* Стили для текста в опциях */
 #filters-panel select option {
     color: #ff6a00 !important;
