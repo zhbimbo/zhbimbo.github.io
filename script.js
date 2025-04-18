@@ -254,11 +254,11 @@ function processData(data) {
     }
 
     // Функция для получения иконки по рейтингу
-    function getIconByRating(rating) {
-        if (rating >= 4) return 'icons/star-green.png';
-        if (rating >= 3) return 'icons/star-yellow.png';
-        return 'icons/star-red.png';
-    }
+function getIconByRating(rating) {
+    if (rating >= 4) return 'https://maps.google.com/mapfiles/ms/icons/green-dot.png';
+    if (rating >= 3) return 'https://maps.google.com/mapfiles/ms/icons/yellow-dot.png';
+    return 'https://maps.google.com/mapfiles/ms/icons/red-dot.png';
+}
 
     // Функция проверки, работает ли заведение сейчас
     function isOpenNow(hoursString) {
