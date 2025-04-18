@@ -144,39 +144,19 @@ body {
     padding-right: 40px;
 }
 
-/* Заголовки (value="all") всегда белые */
-#filters-panel select option[value="all"] {
-    color: white !important;
-    background: transparent !important;
-}
-
-/* Стиль для выпадающего списка (оранжевый градиент) */
-#filters-panel select option:not([value="all"]) {
-    color: transparent !important;
-    background-clip: text !important;
-    -webkit-background-clip: text !important;
-    background-image: linear-gradient(135deg, #ff8a00, #ff4d00) !important;
-}
 #filters-panel select option {
-    text-shadow: 0 0 0 white; /* Эмодзи остаются белыми */
-}
-#filters-panel select option:not([value="all"]):hover {
-    background-image: linear-gradient(135deg, #ff9a00, #ff5d00) !important;
+    background: linear-gradient(135deg, rgba(255, 105, 0, 0.95), rgba(255, 179, 0, 0.95)) !important;
+    color: white !important;
+    padding: 10px;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
 }
 
-/* Fallback для Firefox (обычный оранжевый) */
+/* Для Firefox */
 @-moz-document url-prefix() {
-    #filters-panel select option:not([value="all"]) {
+    #filters-panel select {
         color: #ff6a00 !important;
-        background: white !important;
     }
 }
-
-/* Эмодзи остаются белыми */
-#filters-panel select option {
-    text-shadow: 0 0 0 white;
-}
-
 /* Стили для текста в опциях */
 #filters-panel select option {
     color: #ff6a00 !important;
