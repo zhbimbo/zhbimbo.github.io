@@ -149,9 +149,9 @@ function processData(data) {
             clusterDisableClickZoom: true,
             clusterOpenBalloonOnClick: false,
             clusterIconColor: '#ff4500'
-        console.log("Кластеризатор добавлен на карту?", map.geoObjects.contains(clusterer));
         });
         map.geoObjects.add(clusterer); // Важно: кластеризатор должен быть добавлен на карту!
+        console.log("Кластеризатор добавлен на карту?", map.geoObjects.contains(clusterer));
     }
 
     placemarks = [];
