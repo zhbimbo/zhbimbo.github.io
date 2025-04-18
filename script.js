@@ -648,4 +648,4 @@ function processData(data) {
             e.preventDefault();
         });
     }
-});
+}); // Закрываем document.addEventListener('DOMContentLoaded')
