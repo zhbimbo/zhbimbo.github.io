@@ -117,7 +117,7 @@ body {
     -webkit-appearance: none;
     -moz-appearance: none;
     appearance: none;
-    background: linear-gradient(135deg, rgba(255, 105, 0, 0.95), rgba(255, 179, 0, 0.95)) !important;
+    background: rgba(255, 255, 255, 0.15) !important;
     color: white !important;
     border: 1px solid rgba(255, 255, 255, 0.3) !important;
     padding: 12px 15px;
@@ -125,6 +125,12 @@ body {
     cursor: pointer;
     width: 100%;
     margin-bottom: 15px;
+    font-weight: 500;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' fill='white' viewBox='0 0 16 16'%3E%3Cpath d='M7.247 11.14 2.451 5.658C1.885 5.013 2.345 4 3.204 4h9.592a1 1 0 0 1 .753 1.659l-4.796 5.48a1 1 0 0 1-1.506 0z'/%3E%3C/svg%3E");
+    background-repeat: no-repeat;
+    background-position: right 15px center;
+    background-size: 16px;
+    padding-right: 40px;
 }
 
 /* Стиль для стрелки в select (белая иконка) */
@@ -136,15 +142,18 @@ body {
     padding-right: 40px;
 }
 
-/* Стиль для выпадающего списка (dropdown) */
 #filters-panel select option {
     background: linear-gradient(135deg, rgba(255, 105, 0, 0.95), rgba(255, 179, 0, 0.95)) !important;
     color: white !important;
     padding: 10px;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
 }
 
-/* Для Firefox (чтобы фон option не был белым) */
+/* Для Firefox */
 @-moz-document url-prefix() {
+    #filters-panel select {
+        background-color: rgba(255, 105, 0, 0.95) !important;
+    }
     #filters-panel select option {
         background-color: rgba(255, 105, 0, 0.95) !important;
     }
@@ -166,9 +175,8 @@ body {
 }
 
 /* Стили для фокуса */
-#filters-panel select:focus,
-#filters-panel input:focus {
-    border-color: rgba(255, 255, 255, 0.5) !important;
+#filters-panel select:focus {
+    background: rgba(255, 255, 255, 0.25) !important;
     box-shadow: 0 0 0 3px rgba(255, 255, 255, 0.2) !important;
 }
 
@@ -504,6 +512,23 @@ body {
         transform 0.3s cubic-bezier(0.18, 0.89, 0.32, 1.28),
         filter 0.2s ease;
     transform-origin: bottom center;
+}
+/* Плавность карты */
+.ymaps-2-1-79-map {
+    will-change: transform;
+    backface-visibility: hidden;
+    transform: translateZ(0);
+}
+
+.ymaps-2-1-79-inner-panes {
+    transform-style: preserve-3d;
+}
+
+/* Улучшение анимации маркеров */
+.ymaps-2-1-79-placemark-overlay {
+    will-change: transform;
+    transform: translateZ(0);
+    transition: transform 0.2s cubic-bezier(0.18, 0.89, 0.32, 1.28);
 }
 
 /* ===== MEDIA QUERIES ===== */
