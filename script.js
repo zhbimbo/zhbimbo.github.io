@@ -16,17 +16,12 @@ document.addEventListener('DOMContentLoaded', function() {
             map = new ymaps.Map('map', {
                 center: [55.7558, 37.6173],
                 zoom: 12,
-                controls: [],
+                controls: [],  // <- Запятая добавлена здесь
                 // Опции для плавности
                 smoothZoom: true,
                 smoothDrag: true,
                 inertia: true,
-                inertiaDuration: 300,
-                // Дополнительные настройки производительности
-                avoidFractionalZoom: true,
-                preciseZoom: false,
-                yandexMapDisablePoiInteractivity: true,
-                suppressMapOpenBlock: true
+                inertiaDuration: 300
             });
 
             // Альтернативная стилизация через CSS
@@ -80,7 +75,7 @@ document.addEventListener('DOMContentLoaded', function() {
             }
         }
     });
-map.options.set('suppressObsoleteBrowserNotifier', true);
+
     // Загрузка данных из JSON
     function loadPlacesData() {
         fetch('data.json')
@@ -103,28 +98,26 @@ map.options.set('suppressObsoleteBrowserNotifier', true);
     }
 
     // Создание метки с вашими оригинальными иконками
-        function createPlacemark(place) {
-            const rating = parseFloat(place.description.split('/')[0]);
-            return new ymaps.Placemark(
-                place.coordinates,
-                {
-                    customData: place,
-                    balloonContentHeader: '',
-                    balloonContentBody: '',
-                    balloonContentFooter: ''
-                },
-                {
-                    iconLayout: 'default#imageWithContent',
-                    iconImageHref: getIconByRating(rating),
-                    iconImageSize: [40, 40],
-                    iconImageOffset: [-20, -40],
-                    interactivityModel: 'default#layer',
-                    hideIconOnBalloonOpen: false,
-                    balloonInteractivityModel: 'default#opaque',
-                    preset: 'islands#circleIcon'
-                }
-            );
-        }
+    function createPlacemark(place) {
+        const rating = parseFloat(place.description.split('/')[0]);
+        const placemark = new ymaps.Placemark(
+            place.coordinates,
+            {
+                customData: place,
+                balloonContentHeader: '',
+                balloonContentBody: '',
+                balloonContentFooter: ''
+            },
+            {
+                iconLayout: 'default#imageWithContent',
+                iconImageHref: getIconByRating(rating),
+                iconImageSize: [40, 40],
+                iconImageOffset: [-20, -40],
+                interactivityModel: 'default#layer',
+                hideIconOnBalloonOpen: false,
+                balloonInteractivityModel: 'default#opaque'
+            }
+        );
 
         // Обработчик клика с анимацией
         placemark.events.add('click', function(e) {
