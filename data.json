@@ -51,7 +51,7 @@
         "photo": "https://avatars.mds.yandex.net/get-altay/13671440/2a00000194895aae51a9c7ee1b7e60a706a6/XXXL",
         "address": "Каширский проезд, 25к2",
         "phone": "+7 (495) 166-25-25",
-        "hours": "11:00–05:00",
+        "hours": "пн-пт 11:00–05:00","сб-вс 12:00–05:00",
         "district": "ЮАО"
     }
 ]
