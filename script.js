@@ -151,23 +151,50 @@ document.addEventListener('DOMContentLoaded', function() {
         return 'icons/star-red.png';
     }
 
-    // Функция проверки, работает ли заведение сейчас
-    function isOpenNow(hoursString) {
-        if (hoursString === 'Круглосуточно') return true;
+function isOpenNow(hoursString) {
+    if (hoursString === 'Круглосуточно') return true;
+    
+    try {
+        const now = new Date();
+        const currentDay = now.getDay(); // 0 - воскресенье, 1 - понедельник и т.д.
+        const currentHours = now.getHours();
+        const currentMinutes = now.getMinutes();
         
-        try {
-            // Парсим строку времени (формат: "Пн–Вс: 12:00–02:00")
-            const [_, timeRange] = hoursString.split(': ');
-            const [openTime, closeTime] = timeRange.split('–');
+        // Разбиваем строку на части по запятым
+        const parts = hoursString.split(',');
+        
+        for (const part of parts) {
+            const trimmedPart = part.trim();
             
-            const now = new Date();
-            const currentHours = now.getHours();
-            const currentMinutes = now.getMinutes();
+            // Определяем дни недели и время
+            const [daysPart, timeRange] = trimmedPart.split(':').map(s => s.trim());
+            if (!timeRange) continue;
             
-            // Парсим время открытия
+            const [openTime, closeTime] = timeRange.split('–').map(s => s.trim());
+            
+            // Определяем диапазон дней
+            let dayStart, dayEnd;
+            if (daysPart.includes('–')) {
+                const [startDay, endDay] = daysPart.split('–').map(s => s.trim());
+                dayStart = parseDay(startDay);
+                dayEnd = parseDay(endDay);
+            } else {
+                dayStart = dayEnd = parseDay(daysPart);
+            }
+            
+            // Проверяем, попадает ли текущий день в диапазон
+            let isDayMatch = false;
+            if (dayEnd >= dayStart) {
+                isDayMatch = currentDay >= dayStart && currentDay <= dayEnd;
+            } else {
+                // Если диапазон переходит через воскресенье (например, Сб–Пн)
+                isDayMatch = currentDay >= dayStart || currentDay <= dayEnd;
+            }
+            
+            if (!isDayMatch) continue;
+            
+            // Парсим время
             const [openHours, openMinutes] = openTime.split(':').map(Number);
-            
-            // Парсим время закрытия (может быть на следующий день, например 02:00)
             const [closeHours, closeMinutes] = closeTime.split(':').map(Number);
             
             // Создаем даты для сравнения
@@ -177,18 +204,37 @@ document.addEventListener('DOMContentLoaded', function() {
             const closeDate = new Date();
             closeDate.setHours(closeHours, closeMinutes, 0, 0);
             
-            // Если время закрытия меньше времени открытия (например, работает до 2 ночи)
+            // Если время закрытия меньше времени открытия (например, работает до 5 утра)
             if (closeHours < openHours || (closeHours === openHours && closeMinutes <= openMinutes)) {
                 closeDate.setDate(closeDate.getDate() + 1);
             }
             
-            return now >= openDate && now <= closeDate;
-        } catch (e) {
-            console.error('Ошибка парсинга времени:', e);
-            return true; // Если не удалось распарсить, показываем заведение
+            if (now >= openDate && now <= closeDate) {
+                return true;
+            }
         }
+        
+        return false;
+    } catch (e) {
+        console.error('Ошибка парсинга времени:', e);
+        return true; // Если не удалось распарсить, показываем заведение
     }
+}
 
+// Вспомогательная функция для преобразования дня недели в число
+function parseDay(dayStr) {
+    const days = {
+        'Пн': 1, 'Понедельник': 1,
+        'Вт': 2, 'Вторник': 2,
+        'Ср': 3, 'Среда': 3,
+        'Чт': 4, 'Четверг': 4,
+        'Пт': 5, 'Пятница': 5,
+        'Сб': 6, 'Суббота': 6,
+        'Вс': 0, 'Воскресенье': 0
+    };
+    
+    return days[dayStr] ?? 0;
+}
     // Функция расчета времени до закрытия
 // Функция расчета времени до открытия/закрытия с новой логикой
 function getTimeUntilClosing(hoursString) {
