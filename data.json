@@ -43,4 +43,15 @@
         "hours": "Круглосуточно",
         "district": "ЮВАО"
     }
+    {
+        "name": "МСК Lounge Варшавская",
+        "description": "2.8/5",
+        "coordinates": [55.654035, 37.624391],
+        "reviewLink": "https://t.me/KudaHookah/22",
+        "photo": "https://avatars.mds.yandex.net/get-altay/13671440/2a00000194895aae51a9c7ee1b7e60a706a6/XXXL",
+        "address": "Каширский проезд, 25к2",
+        "phone": "+7 (495) 166-25-25",
+        "hours": "11:00–05:00",
+        "district": "ЮАО"
+    }
 ]
