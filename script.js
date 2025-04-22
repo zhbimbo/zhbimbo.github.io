@@ -160,42 +160,49 @@ function isOpenNow(hoursString) {
         const currentHours = now.getHours();
         const currentMinutes = now.getMinutes();
         
-        // Разбиваем строку на части по запятым
-        const parts = hoursString.split(',');
+        // Разбиваем строку на части по запятым (для разных периодов)
+        const periods = hoursString.split(',').map(p => p.trim());
         
-        for (const part of parts) {
-            const trimmedPart = part.trim();
-            
-            // Определяем дни недели и время
-            const [daysPart, timeRange] = trimmedPart.split(':').map(s => s.trim());
+        for (const period of periods) {
+            // Разделяем дни и время
+            const [daysPart, timeRange] = period.split(':').map(s => s.trim());
             if (!timeRange) continue;
             
-            const [openTime, closeTime] = timeRange.split('–').map(s => s.trim());
+            // Обрабатываем диапазон времени
+            const [openTimeStr, closeTimeStr] = timeRange.split('–').map(s => s.trim());
             
             // Определяем диапазон дней
-            let dayStart, dayEnd;
+            let days = [];
             if (daysPart.includes('–')) {
+                // Диапазон дней (например, "Пн–Пт")
                 const [startDay, endDay] = daysPart.split('–').map(s => s.trim());
-                dayStart = parseDay(startDay);
-                dayEnd = parseDay(endDay);
+                const startIndex = parseDay(startDay);
+                const endIndex = parseDay(endDay);
+                
+                if (endIndex >= startIndex) {
+                    // Обычный диапазон (Пн-Пт)
+                    for (let i = startIndex; i <= endIndex; i++) {
+                        days.push(i);
+                    }
+                } else {
+                    // Диапазон через воскресенье (Сб-Пн)
+                    for (let i = startIndex; i <= 6; i++) days.push(i);
+                    for (let i = 0; i <= endIndex; i++) days.push(i);
+                }
+            } else if (daysPart.includes(',')) {
+                // Перечисление дней (например, "Пн,Ср,Пт")
+                days = daysPart.split(',').map(d => parseDay(d.trim()));
             } else {
-                dayStart = dayEnd = parseDay(daysPart);
+                // Один день
+                days = [parseDay(daysPart)];
             }
             
-            // Проверяем, попадает ли текущий день в диапазон
-            let isDayMatch = false;
-            if (dayEnd >= dayStart) {
-                isDayMatch = currentDay >= dayStart && currentDay <= dayEnd;
-            } else {
-                // Если диапазон переходит через воскресенье (например, Сб–Пн)
-                isDayMatch = currentDay >= dayStart || currentDay <= dayEnd;
-            }
+            // Проверяем, совпадает ли текущий день
+            if (!days.includes(currentDay)) continue;
             
-            if (!isDayMatch) continue;
-            
-            // Парсим время
-            const [openHours, openMinutes] = openTime.split(':').map(Number);
-            const [closeHours, closeMinutes] = closeTime.split(':').map(Number);
+            // Парсим время открытия и закрытия
+            const [openHours, openMinutes] = openTimeStr.split(':').map(Number);
+            const [closeHours, closeMinutes] = closeTimeStr.split(':').map(Number);
             
             // Создаем даты для сравнения
             const openDate = new Date();
@@ -209,6 +216,7 @@ function isOpenNow(hoursString) {
                 closeDate.setDate(closeDate.getDate() + 1);
             }
             
+            // Проверяем, попадает ли текущее время в диапазон
             if (now >= openDate && now <= closeDate) {
                 return true;
             }
@@ -216,14 +224,14 @@ function isOpenNow(hoursString) {
         
         return false;
     } catch (e) {
-        console.error('Ошибка парсинга времени:', e);
+        console.error('Ошибка парсинга времени:', e, 'для строки:', hoursString);
         return true; // Если не удалось распарсить, показываем заведение
     }
 }
 
 // Вспомогательная функция для преобразования дня недели в число
 function parseDay(dayStr) {
-    const days = {
+    const daysMap = {
         'Пн': 1, 'Понедельник': 1,
         'Вт': 2, 'Вторник': 2,
         'Ср': 3, 'Среда': 3,
@@ -233,7 +241,7 @@ function parseDay(dayStr) {
         'Вс': 0, 'Воскресенье': 0
     };
     
-    return days[dayStr] ?? 0;
+    return daysMap[dayStr] ?? 0;
 }
     // Функция расчета времени до закрытия
 // Функция расчета времени до открытия/закрытия с новой логикой
