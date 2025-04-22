@@ -147,7 +147,7 @@ document.addEventListener('DOMContentLoaded', function() {
     // Функция для получения иконки по рейтингу
     function getIconByRating(rating) {
         if (rating >= 4) return 'icons/star-green.png';
-        if (rating >= 3) return 'icons/star-yellow.png';
+        if (rating >= 2.5) return 'icons/star-yellow.png';
         return 'icons/star-red.png';
     }
 
