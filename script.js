@@ -249,69 +249,116 @@ function getTimeUntilClosing(hoursString) {
     if (hoursString === 'Круглосуточно') return null;
     
     try {
-        const [_, timeRange] = hoursString.split(': ');
-        const [openTime, closeTime] = timeRange.split('–');
-        
-        const [openHours, openMinutes] = openTime.split(':').map(Number);
-        const [closeHours, closeMinutes] = closeTime.split(':').map(Number);
-        
         const now = new Date();
-        const openDate = new Date();
-        openDate.setHours(openHours, openMinutes, 0, 0);
+        const currentDay = now.getDay();
+        const currentHours = now.getHours();
+        const currentMinutes = now.getMinutes();
         
-        const closeDate = new Date();
-        closeDate.setHours(closeHours, closeMinutes, 0, 0);
+        // Разбиваем строку на части по запятым (для разных периодов)
+        const periods = hoursString.split(',').map(p => p.trim());
         
-        // Если время закрытия меньше времени открытия (например, работает до 2 ночи)
-        if (closeHours < openHours || (closeHours === openHours && closeMinutes <= openMinutes)) {
-            closeDate.setDate(closeDate.getDate() + 1);
-        }
-        
-        // Проверяем, открыто ли заведение сейчас
-        const isOpen = now >= openDate && now <= closeDate;
-        
-        if (!isOpen) {
-            // Заведение закрыто - показываем время до открытия
-            // Если время открытия уже прошло сегодня, значит оно на завтра
-            if (openDate <= now) {
-                openDate.setDate(openDate.getDate() + 1);
-            }
+        for (const period of periods) {
+            // Разделяем дни и время
+            const [daysPart, timeRange] = period.split(':').map(s => s.trim());
+            if (!timeRange) continue;
             
-            const diffMs = openDate - now;
-            const diffHours = Math.floor(diffMs / (1000 * 60 * 60));
-            const diffMinutes = Math.floor((diffMs % (1000 * 60 * 60)) / (1000 * 60));
+            // Обрабатываем диапазон времени
+            const [openTimeStr, closeTimeStr] = timeRange.split('–').map(s => s.trim());
             
-            if (diffHours > 0) {
-                return { 
-                    text: `Откроется через ${diffHours} ч ${diffMinutes} мин`, 
-                    color: diffHours <= 1 ? '#4CAF50' : '#ff3333', // зеленый за 1 час до открытия
-                    type: 'opening'
-                };
+            // Определяем диапазон дней
+            let days = [];
+            if (daysPart.includes('–')) {
+                // Диапазон дней (например, "Пн–Пт")
+                const [startDay, endDay] = daysPart.split('–').map(s => s.trim());
+                const startIndex = parseDay(startDay);
+                const endIndex = parseDay(endDay);
+                
+                if (endIndex >= startIndex) {
+                    // Обычный диапазон (Пн-Пт)
+                    for (let i = startIndex; i <= endIndex; i++) {
+                        days.push(i);
+                    }
+                } else {
+                    // Диапазон через воскресенье (Сб-Пн)
+                    for (let i = startIndex; i <= 6; i++) days.push(i);
+                    for (let i = 0; i <= endIndex; i++) days.push(i);
+                }
+            } else if (daysPart.includes(',')) {
+                // Перечисление дней (например, "Пн,Ср,Пт")
+                days = daysPart.split(',').map(d => parseDay(d.trim()));
             } else {
-                return { 
-                    text: `Откроется через ${diffMinutes} мин`, 
-                    color: '#4CAF50', // зеленый когда меньше часа
-                    type: 'opening'
-                };
+                // Один день
+                days = [parseDay(daysPart)];
             }
-        } else {
-            // Заведение открыто - показываем время до закрытия только если осталось меньше 3 часов
-            const diffMs = closeDate - now;
-            const diffHours = Math.floor(diffMs / (1000 * 60 * 60));
-            const diffMinutes = Math.floor((diffMs % (1000 * 60 * 60)) / (1000 * 60));
             
-            if (diffHours < 3) {
+            // Проверяем, совпадает ли текущий день
+            if (!days.includes(currentDay)) continue;
+            
+            // Парсим время открытия и закрытия
+            const [openHours, openMinutes] = openTimeStr.split(':').map(Number);
+            const [closeHours, closeMinutes] = closeTimeStr.split(':').map(Number);
+            
+            // Создаем даты для сравнения
+            const openDate = new Date();
+            openDate.setHours(openHours, openMinutes, 0, 0);
+            
+            const closeDate = new Date();
+            closeDate.setHours(closeHours, closeMinutes, 0, 0);
+            
+            // Если время закрытия меньше времени открытия (например, работает до 5 утра)
+            if (closeHours < openHours || (closeHours === openHours && closeMinutes <= openMinutes)) {
+                closeDate.setDate(closeDate.getDate() + 1);
+            }
+            
+            // Проверяем, попадает ли текущее время в диапазон
+            const isOpen = now >= openDate && now <= closeDate;
+            
+            if (isOpen) {
+                // Заведение открыто - показываем время до закрытия только если осталось меньше 3 часов
+                const diffMs = closeDate - now;
+                const diffHours = Math.floor(diffMs / (1000 * 60 * 60));
+                const diffMinutes = Math.floor((diffMs % (1000 * 60 * 60)) / (1000 * 60));
+                
+                if (diffHours < 3) {
+                    if (diffHours > 0) {
+                        return { 
+                            text: `Закроется через ${diffHours} ч ${diffMinutes} мин`, 
+                            color: diffHours <= 1 ? '#ff3333' : '#ff8000',
+                            type: 'closing'
+                        };
+                    } else {
+                        return { 
+                            text: `Закроется через ${diffMinutes} мин`, 
+                            color: '#ff3333',
+                            type: 'closing'
+                        };
+                    }
+                }
+            } else {
+                // Заведение закрыто - показываем время до открытия
+                // Если время открытия уже прошло сегодня, значит оно на завтра
+                let nextOpenDate = new Date();
+                nextOpenDate.setHours(openHours, openMinutes, 0, 0);
+                
+                if (nextOpenDate <= now) {
+                    nextOpenDate.setDate(nextOpenDate.getDate() + 1);
+                }
+                
+                const diffMs = nextOpenDate - now;
+                const diffHours = Math.floor(diffMs / (1000 * 60 * 60));
+                const diffMinutes = Math.floor((diffMs % (1000 * 60 * 60)) / (1000 * 60));
+                
                 if (diffHours > 0) {
                     return { 
-                        text: `Закроется через ${diffHours} ч ${diffMinutes} мин`, 
-                        color: diffHours <= 1 ? '#ff3333' : '#ff8000', // красный за 1 час до закрытия
-                        type: 'closing'
+                        text: `Откроется через ${diffHours} ч ${diffMinutes} мин`, 
+                        color: diffHours <= 1 ? '#4CAF50' : '#ff3333',
+                        type: 'opening'
                     };
                 } else {
                     return { 
-                        text: `Закроется через ${diffMinutes} мин`, 
-                        color: '#ff3333', // красный когда меньше часа
-                        type: 'closing'
+                        text: `Откроется через ${diffMinutes} мин`, 
+                        color: '#4CAF50',
+                        type: 'opening'
                     };
                 }
             }
@@ -323,7 +370,6 @@ function getTimeUntilClosing(hoursString) {
         return null;
     }
 }
-
     // Функция открытия мобильной панели
     function openMobilePanel(placeData) {
         const rating = parseFloat(placeData.description.split('/')[0]);
