@@ -53,5 +53,16 @@
         "phone": "+7 (495) 166-25-25",
         "hours": "Пн–Пт: 11:00–05:00, Сб–Вс: 12:00–05:00",
         "district": "ЮАО"
+    },
+    {
+        "name": "Flame by Lui",
+        "description": "4.1/5",
+        "coordinates": [55.736392, 37.467383],
+        "reviewLink": "https://t.me/KudaHookah/27",
+        "photo": "https://avatars.mds.yandex.net/get-altay/13719877/2a00000192683dabc92d6536e2055cbf94ef/XXXL",
+        "address": "Малая Филёвская ул., 13",
+        "phone": "+7 (996) 647-65-30",
+        "hours": "Вс–Чт: 12:00–02:00, Пт–Сб: 12:00–04:00",
+        "district": "ЗАО"
     }
 ]
