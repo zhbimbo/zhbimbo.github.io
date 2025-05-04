@@ -64,5 +64,16 @@
         "phone": "+7 (996) 647-65-30",
         "hours": "Вс–Чт: 12:00–02:00, Пт–Сб: 12:00–04:00",
         "district": "ЗАО"
+    },
+    {
+        "name": "Мята Signature Электродная",
+        "description": "4.6/5",
+        "coordinates": [55.754329, 37.752454],
+        "reviewLink": "https://t.me/KudaHookah/31",
+        "photo": "https://avatars.mds.yandex.net/get-tycoon/6287049/2a0000018ae03f35ea59d5ce4030d1a9751f/priority-headline-background",
+        "address": "Электродная ул., 2, стр. 32",
+        "phone": "+7 (993) 344-76-08",
+        "hours": "Пн–Вс: 11:00–05:00",
+        "district": "ВАО"
     }
 ]
