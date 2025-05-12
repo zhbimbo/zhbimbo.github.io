@@ -75,5 +75,16 @@
         "phone": "+7 (993) 344-76-08",
         "hours": "Пн–Вс: 11:00–05:00",
         "district": "ВАО"
+    },
+    {
+        "name": "Дуть",
+        "description": "3.6/5",
+        "coordinates": [55.757384, 37.633706],
+        "reviewLink": "https://t.me/KudaHookah/35",
+        "photo": "https://avatars.mds.yandex.net/get-altay/6311095/2a00000180dbbeddc404399b572b11717e52/XXXL",
+        "address": "ул. Маросейка, 4/2с1, Москва",
+        "phone": "+7 (963) 923-42-42",
+        "hours": "Вс–Чт: 11:00–02:00, Пт–Сб: 11:00–04:00",
+        "district": "ЦАО"
     }
 ]
