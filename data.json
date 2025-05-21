@@ -86,5 +86,16 @@
         "phone": "+7 (963) 923-42-42",
         "hours": "Вс–Чт: 11:00–02:00, Пт–Сб: 11:00–04:00",
         "district": "ЦАО"
+    },
+    {
+        "name": "Magma Lounge",
+        "description": "5/5",
+        "coordinates": [55.748179, 37.540245],
+        "reviewLink": "https://t.me/KudaHookah/39",
+        "photo": "https://avatars.mds.yandex.net/get-altay/13925334/2a000001926742cb018444234b9aab001796/XXXL",
+        "address": "ул. Маросейка, 4/2с1, Москва",
+        "phone": "Пресненская наб., 6, стр. 2, Москва",
+        "hours": "Пн–Вс: 12:00–05:00",
+        "district": "ЦАО"
     }
 ]
