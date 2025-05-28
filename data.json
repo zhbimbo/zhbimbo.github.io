@@ -93,9 +93,20 @@
         "coordinates": [55.748179, 37.540245],
         "reviewLink": "https://t.me/KudaHookah/39",
         "photo": "https://avatars.mds.yandex.net/get-altay/13925334/2a000001926742cb018444234b9aab001796/XXXL",
-        "address": "ул. Маросейка, 4/2с1, Москва",
-        "phone": "Пресненская наб., 6, стр. 2, Москва",
+        "address": "Пресненская наб., 6, стр. 2, Москва",
+        "phone": "8 (495) 210-22-52",
         "hours": "Пн–Вс: 12:00–05:00",
+        "district": "ЦАО"
+    },
+    {
+        "name": "Библиотека Shisha Lounge",
+        "description": "4.5/5",
+        "coordinates": [55.771601, 37.632664],
+        "reviewLink": "https://t.me/KudaHookah/43",
+        "photo": "https://avatars.mds.yandex.net/get-tycoon/6228105/2a00000189f9397ee373897c999630993c90/priority-headline-background",
+        "address": "ул. Сретенка, 36, Москва",
+        "phone": "+7 (915) 342-00-22",
+        "hours": "Вс–Чт: 11:00–00:00, Пт–Сб: 11:00–05:00",
         "district": "ЦАО"
     }
 ]
