@@ -108,5 +108,16 @@
         "phone": "+7 (915) 342-00-22",
         "hours": "Вс–Чт: 11:00–00:00, Пт–Сб: 11:00–05:00",
         "district": "ЦАО"
+    },
+    {
+        "name": "HookahPlace Izakaya",
+        "description": "5/5",
+        "coordinates": [55.777105, 37.523716],
+        "reviewLink": "https://t.me/KudaHookah/46",
+        "photo": "https://avatars.mds.yandex.net/get-tycoon/13818393/2a000001910e3de6724167fc9208e6eb2fde/priority-headline-background",
+        "address": "Хорошёвское ш., 27",
+        "phone": "+7 (993) 632-20-09",
+        "hours": "Пн–Вс: 12:00–02:00",
+        "district": "САО"
     }
 ]
