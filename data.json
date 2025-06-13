@@ -119,5 +119,16 @@
         "phone": "+7 (993) 632-20-09",
         "hours": "Пн–Вс: 12:00–02:00",
         "district": "САО"
+    },
+    {
+        "name": "Everest Continental",
+        "description": "4.8/5",
+        "coordinates": [55.762064, 37.554636],
+        "reviewLink": "https://t.me/KudaHookah/52",
+        "photo": "https://avatars.mds.yandex.net/get-altay/10767865/2a0000018d9e008a95e1ab0a546b2591e54a/XXXL",
+        "address": "2-я Звенигородская ул., 13, стр. 4",
+        "phone": "+7 (495) 127-85-36",
+        "hours": "Пн–Вс: 10:00–05:00",
+        "district": "ЦАО"
     }
 ]
