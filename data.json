@@ -130,5 +130,16 @@
         "phone": "+7 (495) 127-85-36",
         "hours": "Пн–Вс: 10:00–05:00",
         "district": "ЦАО"
+    },
+        {
+        "name": "Юнити",
+        "description": "3.6/5",
+        "coordinates": [55.744384, 37.649867],
+        "reviewLink": "https://t.me/KudaHookah/60",
+        "photo": "https://avatars.mds.yandex.net/get-altay/14372341/2a000001964da0e623f3a23da6d63e9566d3/XXXL",
+        "address": "Верхняя Радищевская ул., 9А, стр. 1, Москва",
+        "phone": "+7 (985) 351-20-45",
+        "hours": "Вс–Чт: 16:00–02:00, Пт–Сб: 16:00–04:00",
+        "district": "ЦАО"
     }
 ]
