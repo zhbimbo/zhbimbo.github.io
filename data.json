@@ -132,6 +132,17 @@
         "district": "ЦАО"
     },
         {
+        "name": "Шишка Lounge",
+        "description": "4.8/5",
+        "coordinates": [55.766805, 37.596624],
+        "reviewLink": "https://t.me/KudaHookah/67",
+        "photo": "https://avatars.mds.yandex.net/get-altay/13482651/2a00000191471ff346515fea87d3770a3ae1/XXXL",
+        "address": "Большая Садовая ул., 14, стр. 6, Вход в Tsunami Sushi",
+        "phone": "+7 (977) 457-87-17",
+        "hours": "Вс–Чт: 13:00–02:00, Пт–Сб: 13:00–04:00",
+        "district": "ЦАО"
+    },
+        {
         "name": "Юнити",
         "description": "3.6/5",
         "coordinates": [55.744384, 37.649867],
