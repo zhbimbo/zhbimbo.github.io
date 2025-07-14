@@ -143,6 +143,17 @@
         "district": "ЦАО"
     },
         {
+        "name": "Tea and Smoke",
+        "description": "2/5",
+        "coordinates": [55.748219, 37.675648],
+        "reviewLink": "https://t.me/KudaHookah/70",
+        "photo": "https://avatars.mds.yandex.net/get-altay/1545421/2a0000016e94a9dd82e45119e94965d48956/XXXL",
+        "address": "Гжельский пер., 1/25",
+        "phone": "+7 (499) 495-14-62",
+        "hours": "Вс–Чт: 12:00–02:00, Пт–Сб: 12:00–04:00",
+        "district": "ЦАО"
+    },
+        {
         "name": "Юнити",
         "description": "3.6/5",
         "coordinates": [55.744384, 37.649867],
