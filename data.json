@@ -165,6 +165,17 @@
         "district": "ЦАО"
     },
         {
+        "name": "MOS Lounge",
+        "description": "1.8/5",
+        "coordinates": [55.673905, 37.559541],
+        "reviewLink": "https://t.me/KudaHookah/80",
+        "photo": "https://avatars.mds.yandex.net/get-altay/1429587/2a000001696ca40220911510eae71306a695/XXXL",
+        "address": "Профсоюзная ул., 27, корп. 1",
+        "phone": "+7 (925) 720-51-05",
+        "hours": "Пн–Вс: 12:00–05:00",
+        "district": "ЮЗАО"
+    },
+        {
         "name": "Юнити",
         "description": "3.6/5",
         "coordinates": [55.744384, 37.649867],
@@ -176,3 +187,4 @@
         "district": "ЦАО"
     }
 ]
+
