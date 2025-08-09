@@ -72,7 +72,7 @@
         </div>
     </div>
 
-    <!-- Кнопка внизу -->
+    <!-- Кнопка внизу как ШАПКА -->
     <div class="bottom-button">
         <div class="button-container">
             <button class="main-button" onclick="contactMe()">
@@ -85,72 +85,6 @@
         function contactMe() {
             alert('Спасибо за интерес! Свяжитесь со мной по телефону или email.');
         }
-
-        // Анимация при прокрутке и автоплей видео
-        document.addEventListener('DOMContentLoaded', function() {
-            const slidesContainer = document.getElementById('slidesContainer');
-            const items = document.querySelectorAll('.slide-item, .video-item');
-            const videos = document.querySelectorAll('.video-item video');
-            
-            function checkAnimation() {
-                const containerRect = slidesContainer.getBoundingClientRect();
-                const scrollTop = slidesContainer.scrollTop;
-                const containerHeight = slidesContainer.clientHeight;
-                
-                items.forEach(item => {
-                    const itemRect = item.getBoundingClientRect();
-                    const itemTop = itemRect.top - containerRect.top + scrollTop;
-                    const itemBottom = itemTop + item.offsetHeight;
-                    
-                    // Анимация появления
-                    if (itemTop < scrollTop + containerHeight * 0.8 && 
-                        itemBottom > scrollTop) {
-                        item.classList.add('animate');
-                    }
-                });
-            }
-            
-            // Автоплей видео при попадании в зону видимости
-            function checkVideoPlayback() {
-                const containerRect = slidesContainer.getBoundingClientRect();
-                const scrollTop = slidesContainer.scrollTop;
-                const containerHeight = slidesContainer.clientHeight;
-                
-                videos.forEach(video => {
-                    const videoRect = video.getBoundingClientRect();
-                    const videoTop = videoRect.top - containerRect.top + scrollTop;
-                    const videoBottom = videoTop + video.offsetHeight;
-                    const videoMiddle = videoTop + video.offsetHeight / 2;
-                    
-                    // Если видео в зоне видимости
-                    if (videoTop < scrollTop + containerHeight && 
-                        videoBottom > scrollTop) {
-                        // Проверяем, не играет ли уже
-                        if (video.paused && !video.classList.contains('played')) {
-                            video.play().catch(e => console.log('Автоплей заблокирован:', e));
-                            video.classList.add('played');
-                        }
-                    }
-                });
-            }
-            
-            // Объединяем функции
-            function handleScroll() {
-                checkAnimation();
-                checkVideoPlayback();
-            }
-            
-            slidesContainer.addEventListener('scroll', handleScroll);
-            setTimeout(handleScroll, 100);
-            
-            // Анимируем первый элемент
-            if (items.length > 0) {
-                setTimeout(() => {
-                    items[0].classList.add('animate');
-                }, 300);
-            }
-        });
     </script>
 </body>
 </html>
-
