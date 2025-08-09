@@ -1,0 +1,190 @@
+[
+    {
+        "name": "Мята Lounge",
+        "description": "1.6/5",
+        "coordinates": [55.798358, 37.527462],
+        "reviewLink": "https://t.me/KudaHookah/7",
+        "photo": "https://avatars.mds.yandex.net/get-altay/1546430/2a0000016ce304cb92798b379a97ed1dc2bf/XXXL",
+        "address": "ул. Викторенко, 4, корп. 1",
+        "phone": "+7 (968) 430-82-82",
+        "hours": "Круглосуточно",
+        "district": "САО"
+    },
+    {
+        "name": "MistyWood Парк Мира",
+        "description": "4.2/5",
+        "coordinates": [55.800595, 37.636680],
+        "reviewLink": "https://t.me/KudaHookah/11",
+        "photo": "https://avatars.mds.yandex.net/get-altay/5485499/2a0000017e7c753f72263912131ec6850b30/XXXL",
+        "address": "просп. Мира, 102, корп. 1",
+        "phone": "+7 (499) 455-55-45 (доб. 3)",
+        "hours": "Пн–Вс: 12:00–02:00",
+        "district": "СВАО"
+    },
+    {
+        "name": "Мята Platinum Symbol",
+        "description": "4.6/5",
+        "coordinates": [55.750683, 37.706840],
+        "reviewLink": "https://t.me/KudaHookah/13",
+        "photo": "https://avatars.mds.yandex.net/get-altay/16230048/2a0000019513cf4ccc9b8af1dea577852068/XXXL",
+        "address": "ул. Крузенштерна, 12, корп. 3",
+        "phone": "+7 (903) 770-77-11",
+        "hours": "Пн–Вс: 12:00–03:00",
+        "district": "ЮВАО"
+    },
+    {
+        "name": "HookahPlace Haven",
+        "description": "4.9/5",
+        "coordinates": [55.714044, 37.670142],
+        "reviewLink": "https://t.me/KudaHookah/17",
+        "photo": "https://avatars.mds.yandex.net/get-tycoon/14443915/2a000001963f3df05f7c06a148c915aafb10/priority-headline-background",
+        "address": "1-я ул. Машиностроения, 10",
+        "phone": "+7 (925) 750-01-74",
+        "hours": "Круглосуточно",
+        "district": "ЮВАО"
+    },
+    {
+        "name": "МСК Lounge Варшавская",
+        "description": "2.8/5",
+        "coordinates": [55.654035, 37.624391],
+        "reviewLink": "https://t.me/KudaHookah/22",
+        "photo": "https://avatars.mds.yandex.net/get-altay/13671440/2a00000194895aae51a9c7ee1b7e60a706a6/XXXL",
+        "address": "Каширский проезд, 25к2",
+        "phone": "+7 (495) 166-25-25",
+        "hours": "Пн–Пт: 11:00–05:00, Сб–Вс: 12:00–05:00",
+        "district": "ЮАО"
+    },
+    {
+        "name": "Flame by Lui",
+        "description": "4.1/5",
+        "coordinates": [55.736392, 37.467383],
+        "reviewLink": "https://t.me/KudaHookah/27",
+        "photo": "https://avatars.mds.yandex.net/get-altay/13719877/2a00000192683dabc92d6536e2055cbf94ef/XXXL",
+        "address": "Малая Филёвская ул., 13",
+        "phone": "+7 (996) 647-65-30",
+        "hours": "Вс–Чт: 12:00–02:00, Пт–Сб: 12:00–04:00",
+        "district": "ЗАО"
+    },
+    {
+        "name": "Мята Signature Электродная",
+        "description": "4.6/5",
+        "coordinates": [55.754329, 37.752454],
+        "reviewLink": "https://t.me/KudaHookah/31",
+        "photo": "https://avatars.mds.yandex.net/get-tycoon/6287049/2a0000018ae03f35ea59d5ce4030d1a9751f/priority-headline-background",
+        "address": "Электродная ул., 2, стр. 32",
+        "phone": "+7 (993) 344-76-08",
+        "hours": "Пн–Вс: 11:00–05:00",
+        "district": "ВАО"
+    },
+    {
+        "name": "Дуть",
+        "description": "3.6/5",
+        "coordinates": [55.757384, 37.633706],
+        "reviewLink": "https://t.me/KudaHookah/35",
+        "photo": "https://avatars.mds.yandex.net/get-altay/6311095/2a00000180dbbeddc404399b572b11717e52/XXXL",
+        "address": "ул. Маросейка, 4/2с1, Москва",
+        "phone": "+7 (963) 923-42-42",
+        "hours": "Вс–Чт: 11:00–02:00, Пт–Сб: 11:00–04:00",
+        "district": "ЦАО"
+    },
+    {
+        "name": "Magma Lounge",
+        "description": "5/5",
+        "coordinates": [55.748179, 37.540245],
+        "reviewLink": "https://t.me/KudaHookah/39",
+        "photo": "https://avatars.mds.yandex.net/get-altay/13925334/2a000001926742cb018444234b9aab001796/XXXL",
+        "address": "Пресненская наб., 6, стр. 2, Москва",
+        "phone": "8 (495) 210-22-52",
+        "hours": "Пн–Вс: 12:00–05:00",
+        "district": "ЦАО"
+    },
+    {
+        "name": "Библиотека Shisha Lounge",
+        "description": "4.5/5",
+        "coordinates": [55.771601, 37.632664],
+        "reviewLink": "https://t.me/KudaHookah/43",
+        "photo": "https://avatars.mds.yandex.net/get-tycoon/6228105/2a00000189f9397ee373897c999630993c90/priority-headline-background",
+        "address": "ул. Сретенка, 36, Москва",
+        "phone": "+7 (915) 342-00-22",
+        "hours": "Вс–Чт: 11:00–00:00, Пт–Сб: 11:00–05:00",
+        "district": "ЦАО"
+    },
+    {
+        "name": "HookahPlace Izakaya",
+        "description": "5/5",
+        "coordinates": [55.777105, 37.523716],
+        "reviewLink": "https://t.me/KudaHookah/46",
+        "photo": "https://avatars.mds.yandex.net/get-tycoon/13818393/2a000001910e3de6724167fc9208e6eb2fde/priority-headline-background",
+        "address": "Хорошёвское ш., 27",
+        "phone": "+7 (993) 632-20-09",
+        "hours": "Пн–Вс: 12:00–02:00",
+        "district": "САО"
+    },
+    {
+        "name": "Everest Continental",
+        "description": "4.8/5",
+        "coordinates": [55.762064, 37.554636],
+        "reviewLink": "https://t.me/KudaHookah/52",
+        "photo": "https://avatars.mds.yandex.net/get-altay/10767865/2a0000018d9e008a95e1ab0a546b2591e54a/XXXL",
+        "address": "2-я Звенигородская ул., 13, стр. 4",
+        "phone": "+7 (495) 127-85-36",
+        "hours": "Пн–Вс: 10:00–05:00",
+        "district": "ЦАО"
+    },
+        {
+        "name": "Шишка Lounge",
+        "description": "4.8/5",
+        "coordinates": [55.766805, 37.596624],
+        "reviewLink": "https://t.me/KudaHookah/67",
+        "photo": "https://avatars.mds.yandex.net/get-altay/13482651/2a00000191471ff346515fea87d3770a3ae1/XXXL",
+        "address": "Большая Садовая ул., 14, стр. 6, Вход в Tsunami Sushi",
+        "phone": "+7 (977) 457-87-17",
+        "hours": "Вс–Чт: 13:00–02:00, Пт–Сб: 13:00–04:00",
+        "district": "ЦАО"
+    },
+        {
+        "name": "HookahPlace WILD",
+        "description": "4.9/5",
+        "coordinates": [55.687715, 37.474507],
+        "reviewLink": "https://t.me/KudaHookah/75",
+        "photo": "https://avatars.mds.yandex.net/get-altay/14244043/2a000001947811759aef032ac9ef620bbf53/XXXL",
+        "address": "ул. Лобачевского, 37, стр. 1",
+        "phone": "+7 (937) 113-11-12",
+        "hours": "Пн–Вс: 12:00–02:00",
+        "district": "ЗАО"
+    },
+        {
+        "name": "Tea and Smoke",
+        "description": "2/5",
+        "coordinates": [55.748219, 37.675648],
+        "reviewLink": "https://t.me/KudaHookah/70",
+        "photo": "https://avatars.mds.yandex.net/get-altay/1545421/2a0000016e94a9dd82e45119e94965d48956/XXXL",
+        "address": "Гжельский пер., 1/25",
+        "phone": "+7 (499) 495-14-62",
+        "hours": "Вс–Чт: 12:00–02:00, Пт–Сб: 12:00–04:00",
+        "district": "ЦАО"
+    },
+        {
+        "name": "MOS Lounge",
+        "description": "1.8/5",
+        "coordinates": [55.673905, 37.559541],
+        "reviewLink": "https://t.me/KudaHookah/80",
+        "photo": "https://avatars.mds.yandex.net/get-altay/1429587/2a000001696ca40220911510eae71306a695/XXXL",
+        "address": "Профсоюзная ул., 27, корп. 1",
+        "phone": "+7 (925) 720-51-05",
+        "hours": "Пн–Вс: 12:00–05:00",
+        "district": "ЮЗАО"
+    },
+        {
+        "name": "Юнити",
+        "description": "3.6/5",
+        "coordinates": [55.744384, 37.649867],
+        "reviewLink": "https://t.me/KudaHookah/60",
+        "photo": "https://avatars.mds.yandex.net/get-altay/14372341/2a000001964da0e623f3a23da6d63e9566d3/XXXL",
+        "address": "Верхняя Радищевская ул., 9А, стр. 1, Москва",
+        "phone": "+7 (985) 351-20-45",
+        "hours": "Вс–Чт: 16:00–02:00, Пт–Сб: 16:00–04:00",
+        "district": "ЦАО"
+    }
+]
+

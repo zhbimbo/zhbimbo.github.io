@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <!-- Yandex.Metrika counter -->
+    <script type="text/javascript" >
+       (function(m,e,t,r,i,k,a){m[i]=m[i]||function(){(m[i].a=m[i].a||[]).push(arguments)};
+       m[i].l=1*new Date();
+       for (var j = 0; j < document.scripts.length; j++) {if (document.scripts[j].src === r) { return; }}
+       k=e.createElement(t),a=e.getElementsByTagName(t)[0],k.async=1,k.src=r,a.parentNode.insertBefore(k,a)})
+       (window, document, "script", "https://mc.yandex.ru/metrika/tag.js", "ym");
+    
+       ym(102320641, "init", {
+            clickmap:true,
+            trackLinks:true,
+            accurateTrackBounce:true,
+            webvisor:true
+       });
+    </script>
+    <noscript><div><img src="https://mc.yandex.ru/watch/102320641" style="position:absolute; left:-9999px;" alt="" /></div></noscript>
+    <!-- /Yandex.Metrika counter -->
+    <meta http-equiv="Content-Security-Policy" content="upgrade-insecure-requests">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <meta charset="UTF-8">
+    <title>КП</title>
+    <script src="https://api-maps.yandex.ru/2.1/?apikey=767b6b86-29dc-4346-b485-2ec344f0e567&lang=ru_RU" type="text/javascript"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css">
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div id="map">
+        <div id="header" class="animate__animated animate__fadeInDown">
+            <h1>КудаХука</h1>
+            <button id="toggleFilters" class="animated-button">
+                <i class="fas fa-filter"></i>
+            </button>
+            <button id="toggleLocation" class="animated-button">
+                <i class="fas fa-compass"></i>
+            </button>
+        </div>
+        <div id="stats-overlay" class="animate__animated animate__fadeIn">
+            Найдено: <span id="count">0</span> заведений
+        </div>
+    </div>
+    
+    <!-- Панель фильтров -->
+    <div id="filters-panel" class="hidden animate__animated animate__fadeIn">
+        <select id="ratingFilter">
+            <option value="all">⭐ Все рейтинги</option>
+            <option value="5">⭐ 5+</option>
+            <option value="4">⭐ 4+</option>
+            <option value="3">⭐ 3+</option>
+            <option value="2">⭐ 2+</option>
+            <option value="1">⭐ 1+</option>
+        </select>
+        <select id="districtFilter">
+            <option value="all">📍 Все районы</option>
+            <option value="САО">САО</option>
+            <option value="СВАО">СВАО</option>
+            <option value="ЮВАО">ЮВАО</option>
+            <option value="ЮАО">ЮАО</option>
+            <option value="ЗАО">ЗАО</option>
+            <option value="ВАО">ВАО</option>
+            <option value="ЦАО">ЦАО</option>
+            <option value="ЮЗАО">ЮЗАО</option>
+        </select>
+        <select id="hoursFilter">
+    <option value="all">🕒 Любой режим</option>
+    <option value="now">Работают сейчас</option>
+    <option value="24/7">Круглосуточно</option>
+        </select>
+        <input type="text" id="searchInput" placeholder="🔍 Поиск по названию..." class="search-input animated-button">
+    </div>
+
+    <!-- Мобильная панель -->
+    <div id="mobile-bottom-sheet" class="hidden">
+        <div class="swipe-handle"></div>
+        <div class="bottom-sheet-content">
+            <div class="balloon-header">
+                <h2 class="balloon-title"></h2>
+                <button class="close-balloon animated-button">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+            <div class="balloon-rating-badge"></div>
+            <div class="balloon-body">
+                <img class="balloon-image" alt="Фото заведения">
+                <p><b>Адрес:</b> <span class="balloon-address"></span></p>
+                <p><b>Телефон:</b> <span class="balloon-phone"></span></p>
+                <p><b>Режим работы:</b> <span class="balloon-hours"></span></p>
+                <p><b>Район:</b> <span class="balloon-district"></span></p>
+                <a class="balloon-review-link" target="_blank">Читать обзор</a>
+            </div>
+        </div>
+    </div>
+
+    <!-- Десктопная панель -->
+    <div id="desktop-sidebar" class="hidden">
+        <div class="sidebar-content">
+            <button id="close-sidebar" class="animated-button">
+                <i class="fas fa-times"></i>
+            </button>
+            <h2 id="sidebar-title"></h2>
+            <div id="sidebar-rating-badge" class="rating-badge"></div>
+            <img id="sidebar-image" alt="Фото заведения">
+            <div class="sidebar-info">
+                <p><i class="fas fa-map-marker-alt"></i> <span id="sidebar-address"></span></p>
+                <p><i class="fas fa-phone"></i> <span id="sidebar-phone"></span></p>
+                <p><i class="fas fa-clock"></i> <span id="sidebar-hours"></span></p>
+                <p><i class="fas fa-map"></i> <span id="sidebar-district"></span></p>
+            </div>
+            <a id="sidebar-review-link" class="review-button" target="_blank">
+                <i class="fas fa-book-open"></i> Читать обзор
+            </a>
+        </div>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>
+
