@@ -1,121 +1,155 @@
 <!DOCTYPE html>
 <html lang="ru">
 <head>
-    <!-- Yandex.Metrika counter -->
-    <script type="text/javascript" >
-       (function(m,e,t,r,i,k,a){m[i]=m[i]||function(){(m[i].a=m[i].a||[]).push(arguments)};
-       m[i].l=1*new Date();
-       for (var j = 0; j < document.scripts.length; j++) {if (document.scripts[j].src === r) { return; }}
-       k=e.createElement(t),a=e.getElementsByTagName(t)[0],k.async=1,k.src=r,a.parentNode.insertBefore(k,a)})
-       (window, document, "script", "https://mc.yandex.ru/metrika/tag.js", "ym");
-    
-       ym(102320641, "init", {
-            clickmap:true,
-            trackLinks:true,
-            accurateTrackBounce:true,
-            webvisor:true
-       });
-    </script>
-    <noscript><div><img src="https://mc.yandex.ru/watch/102320641" style="position:absolute; left:-9999px;" alt="" /></div></noscript>
-    <!-- /Yandex.Metrika counter -->
-    <meta http-equiv="Content-Security-Policy" content="upgrade-insecure-requests">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <meta charset="UTF-8">
-    <title>КП</title>
-    <script src="https://api-maps.yandex.ru/2.1/?apikey=767b6b86-29dc-4346-b485-2ec344f0e567&lang=ru_RU" type="text/javascript"></script>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Театр историй</title>
     <link rel="stylesheet" href="style.css">
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@700;900&display=swap" rel="stylesheet">
 </head>
 <body>
-    <div id="map">
-        <div id="header" class="animate__animated animate__fadeInDown">
-            <h1>КудаХука</h1>
-            <button id="toggleFilters" class="animated-button">
-                <i class="fas fa-filter"></i>
-            </button>
-            <button id="toggleLocation" class="animated-button">
-                <i class="fas fa-compass"></i>
-            </button>
+    <!-- Шапка -->
+    <header class="new-header">
+        <div class="header-container">
+            <h1 class="header-title">ТЕАТР ИСТОРИЙ</h1>
         </div>
-        <div id="stats-overlay" class="animate__animated animate__fadeIn">
-            Найдено: <span id="count">0</span> заведений
-        </div>
-    </div>
-    
-    <!-- Панель фильтров -->
-    <div id="filters-panel" class="hidden animate__animated animate__fadeIn">
-        <select id="ratingFilter">
-            <option value="all">⭐ Все рейтинги</option>
-            <option value="5">⭐ 5+</option>
-            <option value="4">⭐ 4+</option>
-            <option value="3">⭐ 3+</option>
-            <option value="2">⭐ 2+</option>
-            <option value="1">⭐ 1+</option>
-        </select>
-        <select id="districtFilter">
-            <option value="all">📍 Все районы</option>
-            <option value="САО">САО</option>
-            <option value="СВАО">СВАО</option>
-            <option value="ЮВАО">ЮВАО</option>
-            <option value="ЮАО">ЮАО</option>
-            <option value="ЗАО">ЗАО</option>
-            <option value="ВАО">ВАО</option>
-            <option value="ЦАО">ЦАО</option>
-            <option value="ЮЗАО">ЮЗАО</option>
-        </select>
-        <select id="hoursFilter">
-    <option value="all">🕒 Любой режим</option>
-    <option value="now">Работают сейчас</option>
-    <option value="24/7">Круглосуточно</option>
-        </select>
-        <input type="text" id="searchInput" placeholder="🔍 Поиск по названию..." class="search-input animated-button">
-    </div>
+    </header>
 
-    <!-- Мобильная панель -->
-    <div id="mobile-bottom-sheet" class="hidden">
-        <div class="swipe-handle"></div>
-        <div class="bottom-sheet-content">
-            <div class="balloon-header">
-                <h2 class="balloon-title"></h2>
-                <button class="close-balloon animated-button">
-                    <i class="fas fa-times"></i>
-                </button>
+    <!-- Слайды и видео -->
+    <div class="slides-container" id="slidesContainer">
+        <div class="slide-wrapper">
+            <!-- Слайды 1-5 -->
+            <div class="slide-item" data-slide="1">
+                <img src="Images/img1.png" alt="Слайд 1">
             </div>
-            <div class="balloon-rating-badge"></div>
-            <div class="balloon-body">
-                <img class="balloon-image" alt="Фото заведения">
-                <p><b>Адрес:</b> <span class="balloon-address"></span></p>
-                <p><b>Телефон:</b> <span class="balloon-phone"></span></p>
-                <p><b>Режим работы:</b> <span class="balloon-hours"></span></p>
-                <p><b>Район:</b> <span class="balloon-district"></span></p>
-                <a class="balloon-review-link" target="_blank">Читать обзор</a>
+            <div class="slide-item" data-slide="2">
+                <img src="Images/img2.png" alt="Слайд 2">
+            </div>
+            <div class="slide-item" data-slide="3">
+                <img src="Images/img3.png" alt="Слайд 3">
+            </div>
+            <div class="slide-item" data-slide="4">
+                <img src="Images/img4.png" alt="Слайд 4">
+            </div>
+            <div class="slide-item" data-slide="5">
+                <img src="Images/img5.png" alt="Слайд 5">
+            </div>
+            
+            <!-- Первое видео -->
+            <div class="video-item" data-video="1">
+                <video src="video1.mp4" controls preload="none"></video>
+            </div>
+            
+            <!-- Слайды 6-11 -->
+            <div class="slide-item" data-slide="6">
+                <img src="Images/img6.png" alt="Слайд 6">
+            </div>
+            <div class="slide-item" data-slide="7">
+                <img src="Images/img7.png" alt="Слайд 7">
+            </div>
+            <div class="slide-item" data-slide="8">
+                <img src="Images/img8.png" alt="Слайд 8">
+            </div>
+            <div class="slide-item" data-slide="9">
+                <img src="Images/img9.png" alt="Слайд 9">
+            </div>
+            <div class="slide-item" data-slide="10">
+                <img src="Images/img10.png" alt="Слайд 10">
+            </div>
+            <div class="slide-item" data-slide="11">
+                <img src="Images/img11.png" alt="Слайд 11">
+            </div>
+            
+            <!-- Второе видео -->
+            <div class="video-item" data-video="2">
+                <video src="video2.mp4" controls preload="none"></video>
+            </div>
+            
+            <!-- Третье видео -->
+            <div class="video-item" data-video="3">
+                <video src="video3.mp4" controls preload="none"></video>
             </div>
         </div>
     </div>
 
-    <!-- Десктопная панель -->
-    <div id="desktop-sidebar" class="hidden">
-        <div class="sidebar-content">
-            <button id="close-sidebar" class="animated-button">
-                <i class="fas fa-times"></i>
+    <!-- Кнопка внизу -->
+    <div class="bottom-button">
+        <div class="button-container">
+            <button class="main-button" onclick="contactMe()">
+                <span class="button-text">Купить билет</span>
             </button>
-            <h2 id="sidebar-title"></h2>
-            <div id="sidebar-rating-badge" class="rating-badge"></div>
-            <img id="sidebar-image" alt="Фото заведения">
-            <div class="sidebar-info">
-                <p><i class="fas fa-map-marker-alt"></i> <span id="sidebar-address"></span></p>
-                <p><i class="fas fa-phone"></i> <span id="sidebar-phone"></span></p>
-                <p><i class="fas fa-clock"></i> <span id="sidebar-hours"></span></p>
-                <p><i class="fas fa-map"></i> <span id="sidebar-district"></span></p>
-            </div>
-            <a id="sidebar-review-link" class="review-button" target="_blank">
-                <i class="fas fa-book-open"></i> Читать обзор
-            </a>
         </div>
     </div>
 
-    <script src="script.js"></script>
+    <script>
+        function contactMe() {
+            alert('Спасибо за интерес! Свяжитесь со мной по телефону или email.');
+        }
+
+        // Анимация при прокрутке и автоплей видео
+        document.addEventListener('DOMContentLoaded', function() {
+            const slidesContainer = document.getElementById('slidesContainer');
+            const items = document.querySelectorAll('.slide-item, .video-item');
+            const videos = document.querySelectorAll('.video-item video');
+            
+            function checkAnimation() {
+                const containerRect = slidesContainer.getBoundingClientRect();
+                const scrollTop = slidesContainer.scrollTop;
+                const containerHeight = slidesContainer.clientHeight;
+                
+                items.forEach(item => {
+                    const itemRect = item.getBoundingClientRect();
+                    const itemTop = itemRect.top - containerRect.top + scrollTop;
+                    const itemBottom = itemTop + item.offsetHeight;
+                    
+                    // Анимация появления
+                    if (itemTop < scrollTop + containerHeight * 0.8 && 
+                        itemBottom > scrollTop) {
+                        item.classList.add('animate');
+                    }
+                });
+            }
+            
+            // Автоплей видео при попадании в зону видимости
+            function checkVideoPlayback() {
+                const containerRect = slidesContainer.getBoundingClientRect();
+                const scrollTop = slidesContainer.scrollTop;
+                const containerHeight = slidesContainer.clientHeight;
+                
+                videos.forEach(video => {
+                    const videoRect = video.getBoundingClientRect();
+                    const videoTop = videoRect.top - containerRect.top + scrollTop;
+                    const videoBottom = videoTop + video.offsetHeight;
+                    const videoMiddle = videoTop + video.offsetHeight / 2;
+                    
+                    // Если видео в зоне видимости
+                    if (videoTop < scrollTop + containerHeight && 
+                        videoBottom > scrollTop) {
+                        // Проверяем, не играет ли уже
+                        if (video.paused && !video.classList.contains('played')) {
+                            video.play().catch(e => console.log('Автоплей заблокирован:', e));
+                            video.classList.add('played');
+                        }
+                    }
+                });
+            }
+            
+            // Объединяем функции
+            function handleScroll() {
+                checkAnimation();
+                checkVideoPlayback();
+            }
+            
+            slidesContainer.addEventListener('scroll', handleScroll);
+            setTimeout(handleScroll, 100);
+            
+            // Анимируем первый элемент
+            if (items.length > 0) {
+                setTimeout(() => {
+                    items[0].classList.add('animate');
+                }, 300);
+            }
+        });
+    </script>
 </body>
 </html>
-
