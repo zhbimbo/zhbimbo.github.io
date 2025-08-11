@@ -176,6 +176,17 @@
         "district": "ЮЗАО"
     },
         {
+        "name": "HookahPlace 360",
+        "description": "4.8/5",
+        "coordinates": [55.750879, 37.819936],
+        "reviewLink": "https://t.me/KudaHookah/82",
+        "photo": "https://avatars.mds.yandex.net/get-altay/16483787/2a0000019823dd402686cd73851ba28ae902/XXXL",
+        "address": "Зелёный просп., 62",
+        "phone": "+7 (932) 000-03-60",
+        "hours": "Пн–Вс: 12:00–03:00",
+        "district": "ВАО"
+    },
+        {
         "name": "Юнити",
         "description": "3.6/5",
         "coordinates": [55.744384, 37.649867],
@@ -187,4 +198,5 @@
         "district": "ЦАО"
     }
 ]
+
 
