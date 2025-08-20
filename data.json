@@ -189,7 +189,7 @@
         {
         "name": "Nebo Lounge",
         "description": "3.5/5",
-        "coordinates": [55.748179, 37.540245],
+        "coordinates": [55.74697041856728, 37.54062652587891],
         "reviewLink": "https://t.me/KudaHookah/85",
         "photo": "https://avatars.mds.yandex.net/get-altay/13925334/2a000001926742cb018444234b9aab001796/XXXL",
         "address": "Пресненская наб., 6, стр. 2, Москва",
@@ -209,6 +209,7 @@
         "district": "ЦАО"
     }
 ]
+
 
 
 
