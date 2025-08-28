@@ -198,6 +198,17 @@
         "district": "ЦАО"
     },
         {
+        "name": "Everest Siberia",
+        "description": "4.6/5",
+        "coordinates": [55.771464, 37.603828],
+        "reviewLink": "https://t.me/KudaHookah/89",
+        "photo": "https://avatars.mds.yandex.net/get-altay/14763372/2a0000019479d6632cf696abc0c8283d83b7/XXXL",
+        "address": "Садовая-Триумфальная ул., 22/31",
+        "phone": "+7 (919) 999-22-31",
+        "hours": "Пн–Вс: 10:00–05:00",
+        "district": "ЦАО"
+    },
+        {
         "name": "Юнити",
         "description": "3.6/5",
         "coordinates": [55.744384, 37.649867],
@@ -209,6 +220,7 @@
         "district": "ЦАО"
     }
 ]
+
 
 
 
