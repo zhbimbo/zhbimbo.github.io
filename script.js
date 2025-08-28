@@ -1,12 +1,278 @@
 document.addEventListener('DOMContentLoaded', function() {
     let map;
     let placemarks = [];
+    let clusterer;
     const isMobile = window.innerWidth <= 767;
 
     // Проверка загрузки API Яндекс.Карт
     if (!window.ymaps) {
         console.error('Yandex Maps API не загружен');
         return;
+    }
+
+    // Вспомогательные функции для работы со временем
+    function parseDays(daysString) {
+        const daysMap = {
+            'Пн': 1, 'Понедельник': 1,
+            'Вт': 2, 'Вторник': 2,
+            'Ср': 3, 'Среда': 3,
+            'Чт': 4, 'Четверг': 4,
+            'Пт': 5, 'Пятница': 5,
+            'Сб': 6, 'Суббота': 6,
+            'Вс': 0, 'Воскресенье': 0
+        };
+        
+        const result = new Set();
+        
+        if (daysString.includes('–')) {
+            // Диапазон дней
+            const [start, end] = daysString.split('–').map(d => d.trim());
+            const startDay = daysMap[start];
+            const endDay = daysMap[end];
+            
+            if (startDay !== undefined && endDay !== undefined) {
+                if (endDay >= startDay) {
+                    for (let i = startDay; i <= endDay; i++) {
+                        result.add(i);
+                    }
+                } else {
+                    // Через воскресенье
+                    for (let i = startDay; i <= 6; i++) result.add(i);
+                    for (let i = 0; i <= endDay; i++) result.add(i);
+                }
+            }
+        } else if (daysString.includes(',')) {
+            // Перечисление дней
+            daysString.split(',').forEach(day => {
+                const trimmed = day.trim();
+                if (daysMap[trimmed] !== undefined) {
+                    result.add(daysMap[trimmed]);
+                }
+            });
+        } else {
+            // Один день
+            const day = daysMap[daysString.trim()];
+            if (day !== undefined) {
+                result.add(day);
+            }
+        }
+        
+        return Array.from(result);
+    }
+
+    function timeToMinutes(timeStr) {
+        const [hours, minutes] = timeStr.split(':').map(Number);
+        return hours * 60 + (minutes || 0);
+    }
+
+    function isOpenNow(hoursString) {
+        if (hoursString === 'Круглосуточно') return true;
+        
+        try {
+            const now = new Date();
+            const currentDay = now.getDay();
+            const currentTime = now.getHours() * 60 + now.getMinutes();
+            
+            // Приводим к единому формату
+            const normalizedHours = hoursString
+                .replace(/пн/gi, 'Пн')
+                .replace(/вт/gi, 'Вт')
+                .replace(/ср/gi, 'Ср')
+                .replace(/чт/gi, 'Чт')
+                .replace(/пт/gi, 'Пт')
+                .replace(/сб/gi, 'Сб')
+                .replace(/вс/gi, 'Вс')
+                .replace(/понед/gi, 'Понедельник')
+                .replace(/вторник/gi, 'Вторник')
+                .replace(/среда/gi, 'Среда')
+                .replace(/четверг/gi, 'Четверг')
+                .replace(/пятница/gi, 'Пятница')
+                .replace(/суббота/gi, 'Суббота')
+                .replace(/воскресенье/gi, 'Воскресенье');
+
+            // Разбиваем на периоды
+            const periods = normalizedHours.split(',').map(p => p.trim());
+            
+            for (const period of periods) {
+                if (!period.includes(':')) continue;
+                
+                const [daysPart, timeRange] = period.split(':').map(s => s.trim());
+                if (!timeRange) continue;
+                
+                // Парсим дни
+                const days = parseDays(daysPart);
+                if (!days.includes(currentDay)) continue;
+                
+                // Парсим время
+                const [openTime, closeTime] = timeRange.split('–').map(t => t.trim());
+                const openMinutes = timeToMinutes(openTime);
+                const closeMinutes = timeToMinutes(closeTime);
+                
+                if (openMinutes <= closeMinutes) {
+                    // Обычный диапазон в пределах одних суток
+                    if (currentTime >= openMinutes && currentTime <= closeMinutes) {
+                        return true;
+                    }
+                } else {
+                    // Работает через полночь (например, до 5 утра)
+                    if (currentTime >= openMinutes || currentTime <= closeMinutes) {
+                        return true;
+                    }
+                }
+            }
+            
+            return false;
+        } catch (e) {
+            console.error('Ошибка парсинга времени:', e, 'для строки:', hoursString);
+            return false;
+        }
+    }
+
+    function getTimeUntilClosing(hoursString) {
+        if (hoursString === 'Круглосуточно') return null;
+        
+        try {
+            const now = new Date();
+            const currentDay = now.getDay();
+            const currentTime = now.getHours() * 60 + now.getMinutes();
+            
+            const normalizedHours = hoursString
+                .replace(/пн/gi, 'Пn')
+                .replace(/вт/gi, 'Вт')
+                .replace(/ср/gi, 'Ср')
+                .replace(/чт/gi, 'Чт')
+                .replace(/пт/gi, 'Пт')
+                .replace(/сб/gi, 'Сб')
+                .replace(/вс/gi, 'Вс');
+
+            const periods = normalizedHours.split(',').map(p => p.trim());
+            
+            for (const period of periods) {
+                if (!period.includes(':')) continue;
+                
+                const [daysPart, timeRange] = period.split(':').map(s => s.trim());
+                if (!timeRange) continue;
+                
+                const days = parseDays(daysPart);
+                if (!days.includes(currentDay)) continue;
+                
+                const [openTime, closeTime] = timeRange.split('–').map(t => t.trim());
+                const openMinutes = timeToMinutes(openTime);
+                const closeMinutes = timeToMinutes(closeTime);
+                
+                if (openMinutes <= closeMinutes) {
+                    // Обычный диапазон
+                    if (currentTime >= openMinutes && currentTime <= closeMinutes) {
+                        // Открыто сейчас
+                        const timeLeft = closeMinutes - currentTime;
+                        if (timeLeft <= 180) { // Показывать только если осталось меньше 3 часов
+                            const hoursLeft = Math.floor(timeLeft / 60);
+                            const minutesLeft = timeLeft % 60;
+                            
+                            if (hoursLeft > 0) {
+                                return { 
+                                    text: `Закроется через ${hoursLeft} ч ${minutesLeft} мин`, 
+                                    color: hoursLeft <= 1 ? '#ff3333' : '#ff8000',
+                                    type: 'closing'
+                                };
+                            } else {
+                                return { 
+                                    text: `Закроется через ${minutesLeft} мин`, 
+                                    color: '#ff3333',
+                                    type: 'closing'
+                                };
+                            }
+                        }
+                    } else if (currentTime < openMinutes) {
+                        // Ещё не открылось сегодня
+                        const timeUntilOpen = openMinutes - currentTime;
+                        const hoursLeft = Math.floor(timeUntilOpen / 60);
+                        const minutesLeft = timeUntilOpen % 60;
+                        
+                        if (hoursLeft > 0) {
+                            return { 
+                                text: `Откроется через ${hoursLeft} ч ${minutesLeft} мин`, 
+                                color: hoursLeft <= 1 ? '#4CAF50' : '#ff3333',
+                                type: 'opening'
+                            };
+                        } else {
+                            return { 
+                                text: `Откроется через ${minutesLeft} мин`, 
+                                color: '#4CAF50',
+                                type: 'opening'
+                            };
+                        }
+                    }
+                } else {
+                    // Работает через полночь
+                    if (currentTime >= openMinutes || currentTime <= closeMinutes) {
+                        // Открыто сейчас
+                        let timeLeft;
+                        if (currentTime >= openMinutes) {
+                            timeLeft = (24 * 60 - currentTime) + closeMinutes;
+                        } else {
+                            timeLeft = closeMinutes - currentTime;
+                        }
+                        
+                        if (timeLeft <= 180) {
+                            const hoursLeft = Math.floor(timeLeft / 60);
+                            const minutesLeft = timeLeft % 60;
+                            
+                            if (hoursLeft > 0) {
+                                return { 
+                                    text: `Закроется через ${hoursLeft} ч ${minutesLeft} мин`, 
+                                    color: hoursLeft <= 1 ? '#ff3333' : '#ff8000',
+                                    type: 'closing'
+                                };
+                            } else {
+                                return { 
+                                    text: `Закроется через ${minutesLeft} мин`, 
+                                    color: '#ff3333',
+                                    type: 'closing'
+                                };
+                            }
+                        }
+                    } else if (currentTime > closeMinutes && currentTime < openMinutes) {
+                        // Закрыто, откроется позже
+                        const timeUntilOpen = openMinutes - currentTime;
+                        const hoursLeft = Math.floor(timeUntilOpen / 60);
+                        const minutesLeft = timeUntilOpen % 60;
+                        
+                        if (hoursLeft > 0) {
+                            return { 
+                                text: `Откроется через ${hoursLeft} ч ${minutesLeft} мин`, 
+                                color: hoursLeft <= 1 ? '#4CAF50' : '#ff3333',
+                                type: 'opening'
+                            };
+                        } else {
+                            return { 
+                                text: `Откроется через ${minutesLeft} мин`, 
+                                color: '#4CAF50',
+                                type: 'opening'
+                            };
+                        }
+                    }
+                }
+            }
+            
+            return null;
+        } catch (e) {
+            console.error('Ошибка расчета времени:', e);
+            return null;
+        }
+    }
+
+    function formatTimeInfo(timeInfo) {
+        if (!timeInfo) return '';
+        
+        let emoji = '';
+        if (timeInfo.type === 'closing') {
+            emoji = timeInfo.color === '#ff3333' ? '🔴 ' : '🟠 ';
+        } else {
+            emoji = timeInfo.color === '#4CAF50' ? '🟢 ' : '🔵 ';
+        }
+        
+        return emoji + timeInfo.text;
     }
 
     // Инициализация карты
@@ -23,6 +289,28 @@ document.addEventListener('DOMContentLoaded', function() {
                 inertia: true,
                 inertiaDuration: 300
             });
+
+            // Инициализация кластеризатора
+            clusterer = new ymaps.Clusterer({
+                clusterDisableClickZoom: true,
+                clusterOpenBalloonOnClick: false,
+                clusterBalloonContentLayout: 'cluster#balloonAccordion',
+                clusterBalloonPanelMaxMapArea: 0,
+                clusterBalloonContentLayoutWidth: 300,
+                clusterBalloonContentLayoutHeight: 200,
+                clusterBalloonPagerSize: 5,
+                clusterHideIconOnBalloonOpen: false,
+                geoObjectHideIconOnBalloonOpen: false,
+                clusterIcons: [
+                    {
+                        href: 'data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iNTAiIGhlaWdodD0iNTAiIHZpZXdCb3g9IjAgMCA1MCA1MCIgZmlsbD0ibm9uZSIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj4KPGNpcmNsZSBjeD0iMjUiIGN5PSIyNSIgcj0iMjUiIGZpbGw9IiNGRjgwMDAiIGZpbGwtb3BhY2l0eT0iMC44Ii8+CjxjaXJjbGUgY3g9IjI1IiBjeT0iMjUiIHI9IjE4IiBmaWxsPSJ3aGl0ZSIvPgo8dGV4dCB4PSIyNSIgeT0iMjgiIGZvbnQtc2l6ZT0iMTYiIGZvbnQtd2VpZ2h0PSJib2xkIiBmaWxsPSIjRkY4MDAwIiB0ZXh0LWFuY2hvcj0ibWlkZGxlIj57Y291bnR9PC90ZXh0Pgo8L3N2Zz4=',
+                        size: [50, 50],
+                        offset: [-25, -25]
+                    }
+                ]
+            });
+
+            map.geoObjects.add(clusterer);
 
             // Альтернативная стилизация через CSS
             const mapContainer = map.container.getElement();
@@ -87,7 +375,7 @@ document.addEventListener('DOMContentLoaded', function() {
                 data.forEach(place => {
                     const placemark = createPlacemark(place);
                     placemarks.push(placemark);
-                    map.geoObjects.add(placemark);
+                    clusterer.add(placemark);
                 });
                 document.getElementById('count').textContent = data.length;
             })
@@ -151,225 +439,6 @@ document.addEventListener('DOMContentLoaded', function() {
         return 'icons/star-red.png';
     }
 
-function isOpenNow(hoursString) {
-    if (hoursString === 'Круглосуточно') return true;
-    
-    try {
-        const now = new Date();
-        const currentDay = now.getDay(); // 0 - воскресенье, 1 - понедельник и т.д.
-        const currentHours = now.getHours();
-        const currentMinutes = now.getMinutes();
-        
-        // Разбиваем строку на части по запятым (для разных периодов)
-        const periods = hoursString.split(',').map(p => p.trim());
-        
-        for (const period of periods) {
-            // Разделяем дни и время
-            const [daysPart, timeRange] = period.split(':').map(s => s.trim());
-            if (!timeRange) continue;
-            
-            // Обрабатываем диапазон времени
-            const [openTimeStr, closeTimeStr] = timeRange.split('–').map(s => s.trim());
-            
-            // Определяем диапазон дней
-            let days = [];
-            if (daysPart.includes('–')) {
-                // Диапазон дней (например, "Пн–Пт")
-                const [startDay, endDay] = daysPart.split('–').map(s => s.trim());
-                const startIndex = parseDay(startDay);
-                const endIndex = parseDay(endDay);
-                
-                if (endIndex >= startIndex) {
-                    // Обычный диапазон (Пн-Пт)
-                    for (let i = startIndex; i <= endIndex; i++) {
-                        days.push(i);
-                    }
-                } else {
-                    // Диапазон через воскресенье (Сб-Пн)
-                    for (let i = startIndex; i <= 6; i++) days.push(i);
-                    for (let i = 0; i <= endIndex; i++) days.push(i);
-                }
-            } else if (daysPart.includes(',')) {
-                // Перечисление дней (например, "Пн,Ср,Пт")
-                days = daysPart.split(',').map(d => parseDay(d.trim()));
-            } else {
-                // Один день
-                days = [parseDay(daysPart)];
-            }
-            
-            // Проверяем, совпадает ли текущий день
-            if (!days.includes(currentDay)) continue;
-            
-            // Парсим время открытия и закрытия
-            const [openHours, openMinutes] = openTimeStr.split(':').map(Number);
-            const [closeHours, closeMinutes] = closeTimeStr.split(':').map(Number);
-            
-            // Создаем даты для сравнения
-            const openDate = new Date();
-            openDate.setHours(openHours, openMinutes, 0, 0);
-            
-            const closeDate = new Date();
-            closeDate.setHours(closeHours, closeMinutes, 0, 0);
-            
-            // Если время закрытия меньше времени открытия (например, работает до 5 утра)
-            if (closeHours < openHours || (closeHours === openHours && closeMinutes <= openMinutes)) {
-                closeDate.setDate(closeDate.getDate() + 1);
-            }
-            
-            // Проверяем, попадает ли текущее время в диапазон
-            if (now >= openDate && now <= closeDate) {
-                return true;
-            }
-        }
-        
-        return false;
-    } catch (e) {
-        console.error('Ошибка парсинга времени:', e, 'для строки:', hoursString);
-        return true; // Если не удалось распарсить, показываем заведение
-    }
-}
-
-// Вспомогательная функция для преобразования дня недели в число
-function parseDay(dayStr) {
-    const daysMap = {
-        'Пн': 1, 'Понедельник': 1,
-        'Вт': 2, 'Вторник': 2,
-        'Ср': 3, 'Среда': 3,
-        'Чт': 4, 'Четверг': 4,
-        'Пт': 5, 'Пятница': 5,
-        'Сб': 6, 'Суббота': 6,
-        'Вс': 0, 'Воскресенье': 0
-    };
-    
-    return daysMap[dayStr] ?? 0;
-}
-    // Функция расчета времени до закрытия
-// Функция расчета времени до открытия/закрытия с новой логикой
-function getTimeUntilClosing(hoursString) {
-    if (hoursString === 'Круглосуточно') return null;
-    
-    try {
-        const now = new Date();
-        const currentDay = now.getDay();
-        const currentHours = now.getHours();
-        const currentMinutes = now.getMinutes();
-        
-        // Разбиваем строку на части по запятым (для разных периодов)
-        const periods = hoursString.split(',').map(p => p.trim());
-        
-        for (const period of periods) {
-            // Разделяем дни и время
-            const [daysPart, timeRange] = period.split(':').map(s => s.trim());
-            if (!timeRange) continue;
-            
-            // Обрабатываем диапазон времени
-            const [openTimeStr, closeTimeStr] = timeRange.split('–').map(s => s.trim());
-            
-            // Определяем диапазон дней
-            let days = [];
-            if (daysPart.includes('–')) {
-                // Диапазон дней (например, "Пн–Пт")
-                const [startDay, endDay] = daysPart.split('–').map(s => s.trim());
-                const startIndex = parseDay(startDay);
-                const endIndex = parseDay(endDay);
-                
-                if (endIndex >= startIndex) {
-                    // Обычный диапазон (Пн-Пт)
-                    for (let i = startIndex; i <= endIndex; i++) {
-                        days.push(i);
-                    }
-                } else {
-                    // Диапазон через воскресенье (Сб-Пн)
-                    for (let i = startIndex; i <= 6; i++) days.push(i);
-                    for (let i = 0; i <= endIndex; i++) days.push(i);
-                }
-            } else if (daysPart.includes(',')) {
-                // Перечисление дней (например, "Пн,Ср,Пт")
-                days = daysPart.split(',').map(d => parseDay(d.trim()));
-            } else {
-                // Один день
-                days = [parseDay(daysPart)];
-            }
-            
-            // Проверяем, совпадает ли текущий день
-            if (!days.includes(currentDay)) continue;
-            
-            // Парсим время открытия и закрытия
-            const [openHours, openMinutes] = openTimeStr.split(':').map(Number);
-            const [closeHours, closeMinutes] = closeTimeStr.split(':').map(Number);
-            
-            // Создаем даты для сравнения
-            const openDate = new Date();
-            openDate.setHours(openHours, openMinutes, 0, 0);
-            
-            const closeDate = new Date();
-            closeDate.setHours(closeHours, closeMinutes, 0, 0);
-            
-            // Если время закрытия меньше времени открытия (например, работает до 5 утра)
-            if (closeHours < openHours || (closeHours === openHours && closeMinutes <= openMinutes)) {
-                closeDate.setDate(closeDate.getDate() + 1);
-            }
-            
-            // Проверяем, попадает ли текущее время в диапазон
-            const isOpen = now >= openDate && now <= closeDate;
-            
-            if (isOpen) {
-                // Заведение открыто - показываем время до закрытия только если осталось меньше 3 часов
-                const diffMs = closeDate - now;
-                const diffHours = Math.floor(diffMs / (1000 * 60 * 60));
-                const diffMinutes = Math.floor((diffMs % (1000 * 60 * 60)) / (1000 * 60));
-                
-                if (diffHours < 3) {
-                    if (diffHours > 0) {
-                        return { 
-                            text: `Закроется через ${diffHours} ч ${diffMinutes} мин`, 
-                            color: diffHours <= 1 ? '#ff3333' : '#ff8000',
-                            type: 'closing'
-                        };
-                    } else {
-                        return { 
-                            text: `Закроется через ${diffMinutes} мин`, 
-                            color: '#ff3333',
-                            type: 'closing'
-                        };
-                    }
-                }
-            } else {
-                // Заведение закрыто - показываем время до открытия
-                // Если время открытия уже прошло сегодня, значит оно на завтра
-                let nextOpenDate = new Date();
-                nextOpenDate.setHours(openHours, openMinutes, 0, 0);
-                
-                if (nextOpenDate <= now) {
-                    nextOpenDate.setDate(nextOpenDate.getDate() + 1);
-                }
-                
-                const diffMs = nextOpenDate - now;
-                const diffHours = Math.floor(diffMs / (1000 * 60 * 60));
-                const diffMinutes = Math.floor((diffMs % (1000 * 60 * 60)) / (1000 * 60));
-                
-                if (diffHours > 0) {
-                    return { 
-                        text: `Откроется через ${diffHours} ч ${diffMinutes} мин`, 
-                        color: diffHours <= 1 ? '#4CAF50' : '#ff3333',
-                        type: 'opening'
-                    };
-                } else {
-                    return { 
-                        text: `Откроется через ${diffMinutes} мин`, 
-                        color: '#4CAF50',
-                        type: 'opening'
-                    };
-                }
-            }
-        }
-        
-        return null;
-    } catch (e) {
-        console.error('Ошибка расчета времени:', e);
-        return null;
-    }
-}
     // Функция открытия мобильной панели
     function openMobilePanel(placeData) {
         const rating = parseFloat(placeData.description.split('/')[0]);
@@ -391,7 +460,7 @@ function getTimeUntilClosing(hoursString) {
         const timeInfo = getTimeUntilClosing(placeData.hours);
         if (timeInfo) {
             const timeSpan = document.createElement('span');
-            timeSpan.textContent = ` (${timeInfo.text})`;
+            timeSpan.textContent = ` (${formatTimeInfo(timeInfo)})`;
             timeSpan.style.color = timeInfo.color;
             timeSpan.style.fontWeight = '500';
             hoursElement.appendChild(timeSpan);
@@ -425,7 +494,7 @@ function getTimeUntilClosing(hoursString) {
         const timeInfo = getTimeUntilClosing(placeData.hours);
         if (timeInfo) {
             const timeSpan = document.createElement('span');
-            timeSpan.textContent = ` (${timeInfo.text})`;
+            timeSpan.textContent = ` (${formatTimeInfo(timeInfo)})`;
             timeSpan.style.color = timeInfo.color;
             timeSpan.style.fontWeight = '500';
             hoursElement.appendChild(timeSpan);
@@ -447,27 +516,24 @@ function getTimeUntilClosing(hoursString) {
 
         let visibleCount = 0;
 
-        placemarks.forEach(placemark => {
+        // Временно удаляем все метки из кластеризатора
+        const allPlacemarks = clusterer.getGeoObjects();
+        clusterer.removeAll();
+
+        allPlacemarks.forEach(placemark => {
             const data = placemark.properties.get('customData');
             const rating = parseFloat(data.description.split('/')[0]);
             
             const matchesRating = ratingFilter === 'all' || rating >= parseFloat(ratingFilter);
             const matchesDistrict = districtFilter === 'all' || data.district === districtFilter;
             const matchesSearch = data.name.toLowerCase().includes(searchQuery);
-            
-            // Новая логика фильтрации по времени
-            let matchesHours = true;
-            if (hoursFilter === 'now') {
-                matchesHours = isOpenNow(data.hours);
-            } else if (hoursFilter === '24/7') {
-                matchesHours = data.hours === 'Круглосуточно';
-            }
+            const matchesHours = hoursFilter === 'all' || 
+                               (hoursFilter === 'now' && isOpenNow(data.hours)) ||
+                               (hoursFilter === '24/7' && data.hours === 'Круглосуточно');
 
             if (matchesRating && matchesDistrict && matchesHours && matchesSearch) {
-                placemark.options.set('visible', true);
+                clusterer.add(placemark);
                 visibleCount++;
-            } else {
-                placemark.options.set('visible', false);
             }
         });
 
