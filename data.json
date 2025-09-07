@@ -209,6 +209,17 @@
         "district": "ЦАО"
     },
         {
+        "name": "МСК Lounge",
+        "description": "3/5",
+        "coordinates": [55.965103, 37.187540],
+        "reviewLink": "https://t.me/KudaHookah/95",
+        "photo": "https://avatars.mds.yandex.net/get-altay/2447509/2a0000017045106d5439ed61fdb522b1ac06/XXXL",
+        "address": "Зеленоград, к2309А",
+        "phone": "+7 (495) 997-52-55",
+        "hours": "Пн–Пт: 11:00–05:00, Сб–Вс: 12:00–05:00",
+        "district": "ЗелАО"
+    },
+        {
         "name": "Юнити",
         "description": "3.6/5",
         "coordinates": [55.744384, 37.649867],
@@ -220,6 +231,7 @@
         "district": "ЦАО"
     }
 ]
+
 
 
 
