@@ -220,6 +220,17 @@
         "district": "ЗелАО"
     },
         {
+        "name": "IGLOOBAR",
+        "description": "0.8/5",
+        "coordinates": [55.759375, 37.666045],
+        "reviewLink": "https://t.me/KudaHookah/105",
+        "photo": "https://avatars.mds.yandex.net/get-altay/6145759/2a00000182cc2372e181782f824550c61506/XXXL",
+        "address": "Нижний Сусальный пер., 5, стр. 19",
+        "phone": "+7 (499) 648-84-57",
+        "hours": "Пн–Вс: 13:00–04:00",
+        "district": "ЦАО"
+    },
+        {
         "name": "Юнити",
         "description": "3.6/5",
         "coordinates": [55.744384, 37.649867],
@@ -231,6 +242,7 @@
         "district": "ЦАО"
     }
 ]
+
 
 
 
