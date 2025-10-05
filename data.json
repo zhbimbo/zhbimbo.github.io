@@ -241,6 +241,17 @@
         "hours": "Пн–Вс: 12:00–05:00",
         "district": "ЦАО"
     },
+            {
+        "name": "Pipe",
+        "description": "4.4/5",
+        "coordinates": [55.780527, 37.592590],
+        "reviewLink": "https://t.me/KudaHookah/117",
+        "photo": "https://avatars.mds.yandex.net/get-altay/15167717/2a0000019596db253410a2dffd920e42d346/XXXL",
+        "address": "Лесная ул., 20, стр. 8",
+        "phone": "+7 (926) 354-88-55",
+        "hours": "Вс–Чт: 12:00–00:00, Пт–Сб: 12:00–06:00",
+        "district": "ЦАО"
+    },
         {
         "name": "Юнити",
         "description": "3.6/5",
@@ -253,6 +264,7 @@
         "district": "ЦАО"
     }
 ]
+
 
 
 
