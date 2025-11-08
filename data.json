@@ -263,6 +263,28 @@
         "hours": "Пн–Вс: 12:00–05:00",
         "district": "ЦАО"
     },
+            {
+        "name": "TNG Lounge",
+        "description": "4.6/5",
+        "coordinates": [55.694139, 37.665677],
+        "reviewLink": "https://t.me/KudaHookah/131",
+        "photo": "https://avatars.mds.yandex.net/get-altay/16457969/2a0000019994c2ea9571d581f68e912d7808/XXXL",
+        "address": "просп. Андропова, 10",
+        "phone": "+7 (925) 206-70-55",
+        "hours": "Вс–Чт: 12:00–00:00, Пт–Сб: 12:00–02:00",
+        "district": "ЮАО"
+    },
+            {
+        "name": "HookahPlace Lago",
+        "description": "4.6/5",
+        "coordinates": [55.671280, 37.449632],
+        "reviewLink": "https://t.me/KudaHookah/135",
+        "photo": "https://avatars.mds.yandex.net/get-altay/14091921/2a000001938354ce00d5ba10ce2abed85e0a/XXXL",
+        "address": "Озёрная ул., 33 (этаж 1)",
+        "phone": "+7 (925) 564-56-75",
+        "hours": "Вс–Чт: 12:00–01:00, Пт–Сб: 12:00–03:00",
+        "district": "ЗАО"
+    },
         {
         "name": "Юнити",
         "description": "3.6/5",
@@ -275,6 +297,7 @@
         "district": "ЦАО"
     }
 ]
+
 
 
 
