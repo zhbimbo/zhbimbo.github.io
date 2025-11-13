@@ -1,7 +1,7 @@
 [
     {
         "name": "Мята Lounge",
-        "description": "1.6/5",
+        "description": "1.9/5",
         "coordinates": [55.798358, 37.527462],
         "reviewLink": "https://t.me/KudaHookah/7",
         "photo": "https://avatars.mds.yandex.net/get-altay/1546430/2a0000016ce304cb92798b379a97ed1dc2bf/XXXL",
@@ -12,7 +12,7 @@
     },
     {
         "name": "MistyWood Парк Мира",
-        "description": "4.2/5",
+        "description": "4.5/5",
         "coordinates": [55.800595, 37.636680],
         "reviewLink": "https://t.me/KudaHookah/11",
         "photo": "https://avatars.mds.yandex.net/get-altay/5485499/2a0000017e7c753f72263912131ec6850b30/XXXL",
@@ -23,7 +23,7 @@
     },
     {
         "name": "Мята Platinum Symbol",
-        "description": "4.6/5",
+        "description": "4.4/5",
         "coordinates": [55.750683, 37.706840],
         "reviewLink": "https://t.me/KudaHookah/13",
         "photo": "https://avatars.mds.yandex.net/get-altay/16230048/2a0000019513cf4ccc9b8af1dea577852068/XXXL",
@@ -45,7 +45,7 @@
     },
     {
         "name": "МСК Lounge Варшавская",
-        "description": "2.8/5",
+        "description": "2.9/5",
         "coordinates": [55.654035, 37.624391],
         "reviewLink": "https://t.me/KudaHookah/22",
         "photo": "https://avatars.mds.yandex.net/get-altay/13671440/2a00000194895aae51a9c7ee1b7e60a706a6/XXXL",
@@ -56,7 +56,7 @@
     },
     {
         "name": "Flame by Lui",
-        "description": "4.1/5",
+        "description": "4.2/5",
         "coordinates": [55.736392, 37.467383],
         "reviewLink": "https://t.me/KudaHookah/27",
         "photo": "https://avatars.mds.yandex.net/get-altay/13719877/2a00000192683dabc92d6536e2055cbf94ef/XXXL",
@@ -67,7 +67,7 @@
     },
     {
         "name": "Мята Signature Электродная",
-        "description": "4.6/5",
+        "description": "4.7/5",
         "coordinates": [55.754329, 37.752454],
         "reviewLink": "https://t.me/KudaHookah/31",
         "photo": "https://avatars.mds.yandex.net/get-tycoon/6287049/2a0000018ae03f35ea59d5ce4030d1a9751f/priority-headline-background",
@@ -78,7 +78,7 @@
     },
     {
         "name": "Дуть",
-        "description": "3.6/5",
+        "description": "4/5",
         "coordinates": [55.757384, 37.633706],
         "reviewLink": "https://t.me/KudaHookah/35",
         "photo": "https://avatars.mds.yandex.net/get-altay/6311095/2a00000180dbbeddc404399b572b11717e52/XXXL",
@@ -100,7 +100,7 @@
     },
     {
         "name": "Библиотека Shisha Lounge",
-        "description": "4.5/5",
+        "description": "4.3/5",
         "coordinates": [55.771601, 37.632664],
         "reviewLink": "https://t.me/KudaHookah/43",
         "photo": "https://avatars.mds.yandex.net/get-tycoon/6228105/2a00000189f9397ee373897c999630993c90/priority-headline-background",
@@ -122,7 +122,7 @@
     },
     {
         "name": "Everest Continental",
-        "description": "4.8/5",
+        "description": "4.9/5",
         "coordinates": [55.762064, 37.554636],
         "reviewLink": "https://t.me/KudaHookah/52",
         "photo": "https://avatars.mds.yandex.net/get-altay/10767865/2a0000018d9e008a95e1ab0a546b2591e54a/XXXL",
@@ -133,7 +133,7 @@
     },
         {
         "name": "Шишка Lounge",
-        "description": "4.8/5",
+        "description": "4.7/5",
         "coordinates": [55.766805, 37.596624],
         "reviewLink": "https://t.me/KudaHookah/67",
         "photo": "https://avatars.mds.yandex.net/get-altay/13482651/2a00000191471ff346515fea87d3770a3ae1/XXXL",
@@ -155,7 +155,7 @@
     },
         {
         "name": "Tea and Smoke",
-        "description": "2/5",
+        "description": "2.3/5",
         "coordinates": [55.748219, 37.675648],
         "reviewLink": "https://t.me/KudaHookah/70",
         "photo": "https://avatars.mds.yandex.net/get-altay/1545421/2a0000016e94a9dd82e45119e94965d48956/XXXL",
@@ -166,7 +166,7 @@
     },
         {
         "name": "MOS Lounge",
-        "description": "1.8/5",
+        "description": "1.6/5",
         "coordinates": [55.673905, 37.559541],
         "reviewLink": "https://t.me/KudaHookah/80",
         "photo": "https://avatars.mds.yandex.net/get-altay/1429587/2a000001696ca40220911510eae71306a695/XXXL",
@@ -177,7 +177,7 @@
     },
         {
         "name": "HookahPlace 360",
-        "description": "4.8/5",
+        "description": "4.9/5",
         "coordinates": [55.750879, 37.819936],
         "reviewLink": "https://t.me/KudaHookah/82",
         "photo": "https://avatars.mds.yandex.net/get-altay/16483787/2a0000019823dd402686cd73851ba28ae902/XXXL",
@@ -188,7 +188,7 @@
     },
         {
         "name": "Nebo Lounge",
-        "description": "3.5/5",
+        "description": "3.3/5",
         "coordinates": [55.74697041856728, 37.54062652587891],
         "reviewLink": "https://t.me/KudaHookah/85",
         "photo": "https://avatars.mds.yandex.net/get-altay/15267123/2a000001970c6af58fc9c5e7a47f08c6d43e/XXXL",
@@ -199,7 +199,7 @@
     },
         {
         "name": "Everest Siberia",
-        "description": "4.6/5",
+        "description": "4.3/5",
         "coordinates": [55.771464, 37.603828],
         "reviewLink": "https://t.me/KudaHookah/89",
         "photo": "https://avatars.mds.yandex.net/get-altay/14763372/2a0000019479d6632cf696abc0c8283d83b7/XXXL",
@@ -221,7 +221,7 @@
     },
         {
         "name": "IGLOOBAR",
-        "description": "0.8/5",
+        "description": "0.9/5",
         "coordinates": [55.759375, 37.666045],
         "reviewLink": "https://t.me/KudaHookah/105",
         "photo": "https://avatars.mds.yandex.net/get-altay/6145759/2a00000182cc2372e181782f824550c61506/XXXL",
@@ -232,7 +232,7 @@
     },
             {
         "name": "Высота 57",
-        "description": "4.4/5",
+        "description": "4.2/5",
         "coordinates": [55.748924, 37.542949],
         "reviewLink": "https://t.me/KudaHookah/115",
         "photo": "https://avatars.mds.yandex.net/get-tycoon/15386568/2a000001961bf1c55f35949855075f72f4d8/priority-headline-background",
@@ -254,7 +254,7 @@
     },
             {
         "name": "Weston Lounge",
-        "description": "4.3/5",
+        "description": "4.2/5",
         "coordinates": [55.762920, 37.568138],
         "reviewLink": "https://t.me/KudaHookah/121",
         "photo": "https://avatars.mds.yandex.net/get-altay/4361937/2a00000178c5b64de7c88942e0b88b6b46e3/XXXL",
@@ -276,7 +276,7 @@
     },
             {
         "name": "HookahPlace Lago",
-        "description": "4.6/5",
+        "description": "4.3/5",
         "coordinates": [55.671280, 37.449632],
         "reviewLink": "https://t.me/KudaHookah/135",
         "photo": "https://avatars.mds.yandex.net/get-altay/14091921/2a000001938354ce00d5ba10ce2abed85e0a/XXXL",
@@ -287,7 +287,7 @@
     },
         {
         "name": "Юнити",
-        "description": "3.6/5",
+        "description": "4.3/5",
         "coordinates": [55.744384, 37.649867],
         "reviewLink": "https://t.me/KudaHookah/60",
         "photo": "https://avatars.mds.yandex.net/get-altay/14372341/2a000001964da0e623f3a23da6d63e9566d3/XXXL",
@@ -297,6 +297,7 @@
         "district": "ЦАО"
     }
 ]
+
 
 
 
