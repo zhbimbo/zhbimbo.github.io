@@ -285,6 +285,17 @@
         "hours": "Вс–Чт: 12:00–01:00, Пт–Сб: 12:00–03:00",
         "district": "ЗАО"
     },
+            {
+        "name": "White Star Lounge",
+        "description": "1.3/5",
+        "coordinates": [55.704134, 37.750972],
+        "reviewLink": "https://t.me/KudaHookah/142",
+        "photo": "https://avatars.mds.yandex.net/get-altay/4916794/2a000001902742631af541be31ac52882dc6/XXXL",
+        "address": "Волжский бул., 27, корп. 1, Москва",
+        "phone": "+7 (499) 715-88-71",
+        "hours": "Вс–Чт: 15:00–03:00, Пт–Сб: 15:00–05:00",
+        "district": "ЮВАО"
+    },
         {
         "name": "Юнити",
         "description": "4.3/5",
@@ -297,6 +308,7 @@
         "district": "ЦАО"
     }
 ]
+
 
 
 
