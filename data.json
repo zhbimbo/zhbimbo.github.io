@@ -302,10 +302,21 @@
         "coordinates": [55.776563, 37.602373],
         "reviewLink": "https://t.me/KudaHookah/154",
         "photo": "https://avatars.mds.yandex.net/get-altay/13668123/2a0000019659759fd00dabd1a13b84c58f51/XXXL",
-        "address": "Долгоруковская ул., 25, стр. 1, Москваа",
+        "address": "Долгоруковская ул., 25, стр. 1, Москва",
         "phone": "+7 (495) 191-51-70",
         "hours": "Вс–Чт: 12:00–02:00, Пт–Сб: 12:00–04:00",
         "district": "ЦАО"
+    },
+             {
+        "name": "ChilL in Zil",
+        "description": "4.2/5",
+        "coordinates": [55.699111, 37.634721],
+        "reviewLink": "https://t.me/KudaHookah/158",
+        "photo": "https://avatars.mds.yandex.net/get-altay/16771051/2a0000019afd16f5dd2e084e3512ad279706/XXXL",
+        "address": "ул. Архитектора Щусева, 2, корп. 2, Вход с улицы Кандинского, через магазин HookahMarket",
+        "phone": "+7 (903) 509-07-07",
+        "hours": "Вс–Чт: 12:00–01:00, Пт–Сб: 12:00–03:00",
+        "district": "ЮАО"
     },
         {
         "name": "Юнити",
@@ -319,6 +330,7 @@
         "district": "ЦАО"
     }
 ]
+
 
 
 
