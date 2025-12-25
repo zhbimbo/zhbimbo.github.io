@@ -88,7 +88,7 @@
         "district": "ЦАО"
     },
     {
-        "name": "Magma Lounge",
+        "name": "Magma Lounge(ВЫБОР ЗРИТЕЛЕЙ)",
         "description": "5/5",
         "coordinates": [55.748179, 37.540245],
         "reviewLink": "https://t.me/KudaHookah/39",
@@ -143,7 +143,7 @@
         "district": "ЦАО"
     },
         {
-        "name": "HookahPlace WILD",
+        "name": "HookahPlace WILD(ВЫБОР ЗРИТЕЛЕЙ)",
         "description": "4.9/5",
         "coordinates": [55.687715, 37.474507],
         "reviewLink": "https://t.me/KudaHookah/75",
@@ -308,7 +308,7 @@
         "district": "ЦАО"
     },
              {
-        "name": "ChilL in Zil",
+        "name": "ChilL in Zil(ВЫБОР ЗРИТЕЛЕЙ)",
         "description": "4.2/5",
         "coordinates": [55.699111, 37.634721],
         "reviewLink": "https://t.me/KudaHookah/158",
@@ -330,6 +330,7 @@
         "district": "ЦАО"
     }
 ]
+
 
 
 
